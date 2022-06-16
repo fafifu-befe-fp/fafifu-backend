@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
       Produk.belongsTo(models.User, {
         foreignKey: "userId",
       });
+
+      Produk.hasMany(models.PotoProduk, {
+        foreignKey: "produkId",
+      });
     }
   }
   Produk.init(

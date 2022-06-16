@@ -1,6 +1,7 @@
 const { Produk, ProdukKategori, Kategori, PotoProduk } = require("../models");
+const getUserId = require("./getUserId");
 
-module.exports = async () => {
+module.exports = async (publicIdParam) => {
   const data = await Produk.findAll({
     attributes: ["publicId", "nama", "deskripsi", "harga"],
     include: [
@@ -14,6 +15,9 @@ module.exports = async () => {
         ],
       },
     ],
+    where: {
+      userId: await getUserId(publicIdParam),
+    },
   });
 
   const result = data.map((item) => {
