@@ -13,6 +13,10 @@ module.exports = async () => {
           },
         ],
       },
+      {
+        model: PotoProduk,
+        attributes: ["urlFotoProduk"],
+      },
     ],
   });
 
@@ -27,6 +31,11 @@ module.exports = async () => {
         return {
           kategoriId: item.Kategori.id,
           nama: item.Kategori.nama,
+        };
+      }),
+      foto: item.PotoProduks.map((item) => {
+        return {
+          urlFotoProduk: item.urlFotoProduk,
         };
       }),
     };

@@ -1,7 +1,5 @@
 ("use strict");
 const { faker } = require("@faker-js/faker");
-const generateUUID = require("../../api/helpers/generateUUID");
-const hashPassword = require("../../api/helpers/hashPassword");
 
 module.exports = {
   async up(queryInterface, Sequelize) {

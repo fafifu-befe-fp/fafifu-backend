@@ -22,6 +22,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("StatusNotifikasiDetails");
+    await queryInterface.dropTable("StatusNotifikasiDetail");
   },
 };

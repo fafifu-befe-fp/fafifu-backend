@@ -1,5 +1,4 @@
-const { Produk, ProdukKategori, Kategori } = require("../models");
-const getUserId = require("./getUserId");
+const { Produk, ProdukKategori, Kategori, PotoProduk } = require("../models");
 
 module.exports = async (publicIdParam) => {
   const data = await Produk.findAll({
@@ -13,6 +12,10 @@ module.exports = async (publicIdParam) => {
             attributes: ["id", "nama"],
           },
         ],
+      },
+      {
+        model: PotoProduk,
+        attributes: ["urlFotoProduk"],
       },
     ],
     where: {
@@ -31,6 +34,11 @@ module.exports = async (publicIdParam) => {
         return {
           kategoriId: item.Kategori.id,
           nama: item.Kategori.nama,
+        };
+      }),
+      foto: item.PotoProduks.map((item) => {
+        return {
+          urlFotoProduk: item.urlFotoProduk,
         };
       }),
     };

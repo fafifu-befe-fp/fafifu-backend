@@ -14,6 +14,10 @@ module.exports = async (publicIdParam) => {
           },
         ],
       },
+      {
+        model: PotoProduk,
+        attributes: ["urlFotoProduk"],
+      },
     ],
     where: {
       userId: await getUserId(publicIdParam),
@@ -31,6 +35,11 @@ module.exports = async (publicIdParam) => {
         return {
           kategoriId: item.Kategori.id,
           nama: item.Kategori.nama,
+        };
+      }),
+      foto: item.PotoProduks.map((item) => {
+        return {
+          urlFotoProduk: item.urlFotoProduk,
         };
       }),
     };

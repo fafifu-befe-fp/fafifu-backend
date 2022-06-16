@@ -19,6 +19,8 @@ module.exports = {
       });
     }
 
+    dummyProdukData[0].publicId = "0225dec5-33a1-467f-8567-592628c2ec5f";
+
     await queryInterface.bulkInsert("Produk", dummyProdukData, {});
   },
 

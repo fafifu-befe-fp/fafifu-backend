@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      productId: {
+      produkId: {
         type: Sequelize.INTEGER,
       },
       urlFotoProduk: {
@@ -25,6 +25,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("PotoProduks");
+    await queryInterface.dropTable("PotoProduk");
   },
 };
