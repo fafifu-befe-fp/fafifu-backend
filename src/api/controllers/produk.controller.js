@@ -1,11 +1,33 @@
 // const { sequelize, Produk, ProdukKategori, Kategori } = require("../models");
 const getProdukList = require("../services/getProdukList");
+const getUserByPublicId = require("../services/getUserByPublicId");
+const getProdukListByUserId = require("../services/getProdukListByUserId");
+
 class ProdukController {
   static async list(req, res, next) {
     try {
       res.status(200).json({
         data: await getProdukList(),
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getProdukListByUserId(req, res, next) {
+    try {
+      const user = await getUserByPublicId(req.params.id);
+
+      if (user) {
+        res.status(200).json({
+          data: await getProdukListByUserId(req.params.id),
+        });
+      } else {
+        throw {
+          status: 404,
+          message: "Seller not found",
+        };
+      }
     } catch (error) {
       next(error);
     }
