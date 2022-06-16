@@ -2,8 +2,27 @@
 const getProdukList = require("../services/getProdukList");
 const getUserByPublicId = require("../services/getUserByPublicId");
 const getProdukListByUserId = require("../services/getProdukListByUserId");
+const getProduk = require("../services/getProduk");
 
 class ProdukController {
+  static async get(req, res, next) {
+    try {
+      const produk = await getProduk(req.params.id);
+      if (produk) {
+        res.status(200).json({
+          data: produk,
+        });
+      } else {
+        throw {
+          status: 404,
+          message: "Product not found",
+        };
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async list(req, res, next) {
     try {
       res.status(200).json({
