@@ -7,7 +7,7 @@ const {
 } = require("../services");
 
 class UserController {
-  static async add(req, res, next) {
+  static async register(req, res, next) {
     try {
       const user = await User.create({
         email: req.body.email,
@@ -16,7 +16,7 @@ class UserController {
       });
 
       res.status(200).json({
-        message: "Success add user",
+        message: "Success register user",
       });
     } catch (error) {
       next(error);
@@ -27,7 +27,7 @@ class UserController {
     try {
       const userBiodata = await UserBiodata.findOne({
         where: {
-          userId: await getUserId(req.params.id),
+          userId: req.user.id,
         },
       });
 
@@ -52,7 +52,7 @@ class UserController {
       if (req.file) {
         req.body.avatar = `http://127.0.0.1:3000/avatar/${req.file.filename}`;
       }
-      const user = await getUserByPublicId(req.params.id);
+      const user = req.user;
 
       if (user) {
         await completeDataUser(

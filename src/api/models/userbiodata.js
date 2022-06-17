@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   UserBiodata.init(
     {
-      userId: DataTypes.INTEGER,
+      userId: { type: DataTypes.INTEGER, primaryKey: true },
       nama: DataTypes.STRING,
       kota: DataTypes.STRING,
       alamat: DataTypes.TEXT,
