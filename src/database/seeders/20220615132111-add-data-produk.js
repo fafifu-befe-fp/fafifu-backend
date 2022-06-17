@@ -8,7 +8,6 @@ module.exports = {
 
     for (let index = 1; index < 21; index++) {
       dummyProdukData.push({
-        id: index,
         publicId: await generateUUID(),
         nama: faker.commerce.product(),
         deskripsi: faker.commerce.productDescription(),

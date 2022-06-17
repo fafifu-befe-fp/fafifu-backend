@@ -7,7 +7,6 @@ module.exports = {
 
     for (let index = 1; index < 21; index++) {
       dummyProdukKategoriData.push({
-        id: index,
         produkId: faker.datatype.number({ min: 1, max: 20 }),
         kategoriId: faker.datatype.number({ min: 1, max: 5 }),
         createdAt: new Date(),

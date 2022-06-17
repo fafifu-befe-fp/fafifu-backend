@@ -10,7 +10,6 @@ module.exports = {
 
     for (let index = 1; index < 21; index++) {
       dummyUserData.push({
-        id: index,
         publicId: await generateUUID(),
         email: (tempEmail = faker.internet.email()),
         password: await hashPassword(tempEmail),

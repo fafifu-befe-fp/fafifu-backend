@@ -7,7 +7,6 @@ module.exports = {
 
     for (let index = 1; index < 6; index++) {
       dummyPotoProdukData.push({
-        id: index,
         produkId: 1,
         urlFotoProduk: faker.internet.url(),
         createdAt: new Date(),
