@@ -49,6 +49,9 @@ class UserController {
 
   static async completeData(req, res, next) {
     try {
+      if (req.file) {
+        req.body.avatar = `http://127.0.0.1:3000/avatar/${req.file.filename}`;
+      }
       const user = await getUserByPublicId(req.params.id);
 
       if (user) {
@@ -57,6 +60,7 @@ class UserController {
           req.body.kota,
           req.body.alamat,
           req.body.handphone,
+          req.body.avatar,
           user.id
         );
         res.status(200).json({

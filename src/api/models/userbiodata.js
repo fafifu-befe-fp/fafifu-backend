@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       kota: DataTypes.STRING,
       alamat: DataTypes.TEXT,
       handphone: DataTypes.STRING,
-      urlProfilePicture: DataTypes.STRING,
+      avatarUrl: DataTypes.STRING,
     },
     {
       sequelize,
