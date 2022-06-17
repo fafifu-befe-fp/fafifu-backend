@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const UserController = require("../controllers/user.controller");
+const { authorization } = require("../middlewares");
 
 const multer = require("multer");
 const { storage } = require("../helpers");
@@ -18,8 +19,17 @@ const upload = multer({
   },
 });
 
-router.post("/", UserController.add);
-router.post("/is-data-completed/:id", UserController.isDataCompleted);
-router.put("/:id", upload.single("avatar"), UserController.completeData);
+router.post("/", UserController.register);
+router.post(
+  "/is-data-completed",
+  authorization,
+  UserController.isDataCompleted
+);
+router.put(
+  "/complete-data",
+  authorization,
+  upload.single("avatar"),
+  UserController.completeData
+);
 
 module.exports = router;
