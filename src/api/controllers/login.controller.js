@@ -1,6 +1,5 @@
-const isEmailExists = require("../services/isEmailExists");
-const comparePassword = require("../helpers/comparePassword");
-const generateJWT = require("../helpers/generateJWT");
+const { isEmailExists } = require("../services");
+const { comparePassword, generateJWT } = require("../helpers");
 
 class LoginController {
   static async login(req, res, next) {
