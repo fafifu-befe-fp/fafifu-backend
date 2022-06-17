@@ -5,21 +5,15 @@ module.exports = async (
   kotaParam,
   alamatParam,
   handphoneParam,
+  avatarUrlParam,
   userIdParam
 ) => {
-  console.log(
-    "namaParam",
-    namaParam,
-    kotaParam,
-    alamatParam,
-    handphoneParam,
-    userIdParam
-  );
   await UserBiodata.create({
     nama: namaParam,
     kota: kotaParam,
     alamat: alamatParam,
     handphone: handphoneParam,
+    avatarUrl: avatarUrlParam,
     userId: userIdParam,
   });
 };
