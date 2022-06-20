@@ -34,11 +34,6 @@ router.post(
   authorization,
   UserController.isDataCompleted
 );
-router.put(
-  "/complete-data",
-  authorization,
-  upload.single("avatar"),
-  UserController.completeData
-);
+router.put("/", authorization, upload.single("avatar"), UserController.update);
 
 module.exports = router;

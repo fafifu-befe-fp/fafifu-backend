@@ -1,10 +1,6 @@
 const { sequelize, User, UserBiodata } = require("../models");
 const { hashPassword, generateUUID } = require("../helpers");
-const {
-  getUserByPublicId,
-  completeDataUser,
-  getUserId,
-} = require("../services");
+const { updateUser } = require("../services");
 
 class UserController {
   static async register(req, res, next) {
@@ -41,20 +37,27 @@ class UserController {
   static async isDataCompleted(req, res, next) {
     try {
       const userBiodata = await UserBiodata.findOne({
+        attributes: ["nama", "kota", "alamat", "handphone", "avatarUrl"],
         where: {
           userId: req.user.id,
         },
       });
 
-      if (userBiodata) {
-        res.status(200).json({
-          value: true,
-          message: "user data is completed",
-        });
-      } else {
+      if (
+        userBiodata.kota === null ||
+        userBiodata.alamat === null ||
+        userBiodata.handphone === null ||
+        userBiodata.avatarUrl === null
+      ) {
         res.status(400).json({
           value: false,
           message: "user data is not completed, please complete the data.",
+          data: userBiodata,
+        });
+      } else {
+        res.status(200).json({
+          value: true,
+          message: "user data is completed",
         });
       }
     } catch (error) {
@@ -62,7 +65,7 @@ class UserController {
     }
   }
 
-  static async completeData(req, res, next) {
+  static async update(req, res, next) {
     try {
       if (req.file) {
         req.body.avatar = `http://127.0.0.1:3000/avatar/${req.file.filename}`;
@@ -70,7 +73,7 @@ class UserController {
       const user = req.user;
 
       if (user) {
-        await completeDataUser(
+        await updateUser(
           req.body.nama,
           req.body.kota,
           req.body.alamat,
@@ -79,7 +82,7 @@ class UserController {
           user.id
         );
         res.status(200).json({
-          message: "Success complete data user",
+          message: "Success Update data user",
         });
       } else {
         throw {
