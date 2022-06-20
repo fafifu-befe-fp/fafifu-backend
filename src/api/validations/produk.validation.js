@@ -1,6 +1,6 @@
 const { body } = require("express-validator");
 
-const addProdukValidation = () => {
+const addProdukValidationRules = () => {
   return [
     body("nama").notEmpty().withMessage("nama is required"),
     body("deskripsi").notEmpty().withMessage("Deskripsi is required"),
@@ -13,5 +13,5 @@ const addProdukValidation = () => {
 };
 
 module.exports = {
-  addProdukValidation,
+  addProdukValidationRules,
 };
