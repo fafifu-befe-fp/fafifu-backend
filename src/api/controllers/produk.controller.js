@@ -1,9 +1,12 @@
-// const { sequelize, Produk, ProdukKategori, Kategori } = require("../models");
-const getProdukList = require("../services/getProdukList");
-const getUserByPublicId = require("../services/getUserByPublicId");
-const getProdukListByUserId = require("../services/getProdukListByUserId");
-const getProduk = require("../services/getProduk");
+const {
+  getProduk,
+  getProdukList,
+  getUserByPublicId,
+  getProdukListByUserId,
+} = require("../services");
+const { generateUUID } = require("../helpers");
 
+const { sequelize, Produk } = require("../models");
 class ProdukController {
   static async get(req, res, next) {
     try {
@@ -29,6 +32,38 @@ class ProdukController {
         data: await getProdukList(),
       });
     } catch (error) {
+      next(error);
+    }
+  }
+
+  static async add(req, res, next) {
+    const addProdukTransaction = await sequelize.transaction();
+    try {
+      const produk = await Produk.create(
+        {
+          publicId: await generateUUID(),
+          nama: req.body.nama,
+          deskripsi: req.body.deskripsi,
+          harga: req.body.harga,
+          userId: req.user.id,
+        },
+        { transaction: addProdukTransaction }
+      );
+
+      // await UserBiodata.create(
+      //   {
+      //     userId: user.id,
+      //     nama: req.body.nama,
+      //   },
+      //   { transaction: addProdukTransaction }
+      // );
+
+      await addProdukTransaction.commit();
+      res.status(200).json({
+        message: "Success register product",
+      });
+    } catch (error) {
+      await addProdukTransaction.rollback();
       next(error);
     }
   }
