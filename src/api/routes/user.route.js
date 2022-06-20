@@ -1,7 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const UserController = require("../controllers/user.controller");
-const { authorization } = require("../middlewares");
+const { authorization, validation } = require("../middlewares");
+
+const {
+  registerUserValidationRules,
+} = require("../validations/user.validation");
 
 const multer = require("multer");
 const { storage } = require("../helpers");
@@ -19,7 +23,12 @@ const upload = multer({
   },
 });
 
-router.post("/", UserController.register);
+router.post(
+  "/",
+  registerUserValidationRules(),
+  validation,
+  UserController.register
+);
 router.post(
   "/is-data-completed",
   authorization,

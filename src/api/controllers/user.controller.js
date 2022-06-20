@@ -1,4 +1,4 @@
-const { User, UserBiodata } = require("../models");
+const { sequelize, User, UserBiodata } = require("../models");
 const { hashPassword, generateUUID } = require("../helpers");
 const {
   getUserByPublicId,
@@ -9,16 +9,31 @@ const {
 class UserController {
   static async register(req, res, next) {
     try {
-      const user = await User.create({
-        email: req.body.email,
-        password: await hashPassword(req.body.password),
-        publicId: await generateUUID(),
-      });
+      const registerUserTransaction = await sequelize.transaction();
 
+      const user = await User.create(
+        {
+          email: req.body.email,
+          password: await hashPassword(req.body.password),
+          publicId: await generateUUID(),
+        },
+        { transaction: registerUserTransaction }
+      );
+
+      await UserBiodata.create(
+        {
+          userId: user.id,
+          nama: req.body.nama,
+        },
+        { transaction: registerUserTransaction }
+      );
+
+      await registerUserTransaction.commit();
       res.status(200).json({
         message: "Success register user",
       });
     } catch (error) {
+      await registerUserTransaction.rollback();
       next(error);
     }
   }
