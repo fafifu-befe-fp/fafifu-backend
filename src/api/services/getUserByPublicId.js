@@ -12,7 +12,5 @@ module.exports = async (publicIdParam) => {
     return null;
   }
 
-  return {
-    user,
-  };
+  return user;
 };

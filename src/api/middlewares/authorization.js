@@ -14,12 +14,12 @@ module.exports = async (req, res, next) => {
         req.headers.authorization,
         config.JWT_SECRET_KEY
       );
-      const id = decoded.id;
+      const publicId = decoded.publicId;
       const email = decoded.email;
       const selectedUser = await User.findOne({
         attributes: ["id", "email"],
         where: {
-          id,
+          publicId,
           email,
         },
       });
