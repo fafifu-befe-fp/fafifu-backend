@@ -3,7 +3,11 @@ const {
   getProdukList,
   getUserByPublicId,
   getProdukListByUserId,
+<<<<<<< Updated upstream
   getUpdateProduk,
+=======
+  getUserId,
+>>>>>>> Stashed changes
 } = require("../services");
 const { generateUUID } = require("../helpers");
 
@@ -30,9 +34,9 @@ class ProdukController {
 
   static async list(req, res, next) {
     try {
-      res.status(200).json({
-        data: await getProdukList(),
-      });
+      // res.status(200).json({
+      //   data: await getProdukList(),
+      // });
     } catch (error) {
       next(error);
     }

@@ -4,7 +4,12 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const errorHandler = require("./api/middlewares/errorHandler");
 
-const { userRouter, produkRouter, loginRouter } = require("./api/routes");
+const {
+  userRouter,
+  produkRouter,
+  loginRouter,
+  penawaranRouter,
+} = require("./api/routes");
 
 const app = express();
 
@@ -17,5 +22,6 @@ app.use(express.static(path.join(__dirname, "../src/public")));
 app.use("/user", userRouter);
 app.use("/login", loginRouter);
 app.use("/produk", produkRouter);
+app.use("/penawaran", penawaranRouter);
 app.use(errorHandler);
 module.exports = app;
