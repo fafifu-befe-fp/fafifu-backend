@@ -11,13 +11,13 @@ module.exports = {
       penawarId: {
         type: Sequelize.INTEGER,
       },
+      produkId: {
+        type: Sequelize.INTEGER,
+      },
       harga: {
         type: Sequelize.INTEGER,
       },
       statusPenawaranId: {
-        type: Sequelize.INTEGER,
-      },
-      statusNotifikasiId: {
         type: Sequelize.INTEGER,
       },
       createdAt: {

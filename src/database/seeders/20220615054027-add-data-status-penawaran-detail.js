@@ -17,7 +17,7 @@ module.exports = {
       },
       {
         id: 2,
-        deskripsi: "Selesai",
+        deskripsi: "Terjual",
         createdAt: new Date(),
         updatedAt: new Date(),
       },
