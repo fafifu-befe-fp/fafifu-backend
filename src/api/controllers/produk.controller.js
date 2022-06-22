@@ -3,10 +3,12 @@ const {
   getProdukList,
   getUserByPublicId,
   getProdukListByUserId,
+  getUpdateProduk,
 } = require("../services");
 const { generateUUID } = require("../helpers");
 
 const { sequelize, Produk } = require("../models");
+const { update } = require("./user.controller");
 class ProdukController {
   static async get(req, res, next) {
     try {
@@ -86,6 +88,52 @@ class ProdukController {
       next(error);
     }
   }
+  static async getUpdateProduk(req, res, next) {
+    const user = await getUpdateProduk(req.params.id);
+    try {
+      if (req.file) {
+        req.body.produk = `localhost/produk/${req.file.filename}`;
+      }
+      const produk = req.produk;
+
+      if (produk) {
+        await updateProduk(
+          req.body.publicId,
+          req.body.nama,
+          req.body.deskripsi,
+          req.body.harga,
+          req.body.kategoriId,
+          req.user.id
+        );
+        res.status(200).json({
+          message: "Success Update data produk",
+        });
+      } else {
+        throw {
+          status: 404,
+          message: "Gagal update data produk",
+        };
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+  /* static async getUpdateProduk(req, res, next){
+    const UpdateProdukTransaction = await sequelize.transaction();
+    try {
+      const produk = await Produk.update(
+        {
+          publicId: await generateUUID(),
+          nama: req.body.nama,
+          deskripsi: req.body.deskripsi,
+          harga: req.body.harga,
+          userId: req.user.id,
+        },
+        { transaction: addProdukTransaction }
+      );
+    }
+  } */
 }
+
 
 module.exports = ProdukController;
