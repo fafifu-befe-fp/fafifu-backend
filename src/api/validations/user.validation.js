@@ -22,6 +22,10 @@ const registerUserValidationRules = () => {
   ];
 };
 
+const updateUserValidationRules = () => {
+  return [body("nama").notEmpty().withMessage("nama is required")];
+};
 module.exports = {
   registerUserValidationRules,
+  updateUserValidationRules,
 };

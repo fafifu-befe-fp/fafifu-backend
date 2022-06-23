@@ -1,18 +1,15 @@
 const {
   getProduk,
-  getProdukList,
   getUserByPublicId,
   getProdukListByUserId,
-<<<<<<< Updated upstream
   getUpdateProduk,
-=======
-  getUserId,
->>>>>>> Stashed changes
+  getProdukList,
 } = require("../services");
 const { generateUUID } = require("../helpers");
 
-const { sequelize, Produk } = require("../models");
+const { sequelize, Produk, PotoProduk } = require("../models");
 const { update } = require("./user.controller");
+
 class ProdukController {
   static async get(req, res, next) {
     try {
@@ -45,6 +42,10 @@ class ProdukController {
   static async add(req, res, next) {
     const addProdukTransaction = await sequelize.transaction();
     try {
+      const files = [];
+
+      console.log("files", files);
+
       const produk = await Produk.create(
         {
           publicId: await generateUUID(),
@@ -56,13 +57,20 @@ class ProdukController {
         { transaction: addProdukTransaction }
       );
 
-      // await UserBiodata.create(
-      //   {
-      //     userId: user.id,
-      //     nama: req.body.nama,
-      //   },
-      //   { transaction: addProdukTransaction }
-      // );
+      let fotoProdukList = [];
+
+      if (req.files) {
+        for (let index = 0; index < req.files.length; index++) {
+          fotoProdukList.push({
+            produkId: produk.id,
+            urlFotoProduk: `http://127.0.0.1:3000/foto-produk/${req.files[index].filename}`,
+          });
+        }
+      }
+
+      const fotoProduk = await PotoProduk.bulkCreate(fotoProdukList, {
+        transaction: addProdukTransaction,
+      });
 
       await addProdukTransaction.commit();
       res.status(200).json({
@@ -122,21 +130,6 @@ class ProdukController {
       next(error);
     }
   }
-  /* static async getUpdateProduk(req, res, next){
-    const UpdateProdukTransaction = await sequelize.transaction();
-    try {
-      const produk = await Produk.update(
-        {
-          publicId: await generateUUID(),
-          nama: req.body.nama,
-          deskripsi: req.body.deskripsi,
-          harga: req.body.harga,
-          userId: req.user.id,
-        },
-        { transaction: addProdukTransaction }
-      );
-    }
-  } */
 }
 
 
