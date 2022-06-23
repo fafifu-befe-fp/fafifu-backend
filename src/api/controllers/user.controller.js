@@ -2,7 +2,7 @@ const { sequelize, User, UserBiodata } = require("../models");
 const { hashPassword, generateUUID } = require("../helpers");
 const { updateUser } = require("../services");
 
- class UserController {
+class UserController {
   static async register(req, res, next) {
     try {
       const registerUserTransaction = await sequelize.transaction();
