@@ -34,5 +34,6 @@ router.post(
   validation,
   ProdukController.add
 );
+router.put("/", authorization, ProdukController.update);
 
 module.exports = router;

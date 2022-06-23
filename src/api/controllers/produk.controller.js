@@ -4,12 +4,12 @@ const {
   getProdukListByUserId,
   getUpdateProduk,
   getProdukList,
+  updateProduk,
+  getProdukId,
 } = require("../services");
 const { generateUUID } = require("../helpers");
 
 const { sequelize, Produk, PotoProduk } = require("../models");
-const { update } = require("./user.controller");
-
 class ProdukController {
   static async get(req, res, next) {
     try {
@@ -31,9 +31,9 @@ class ProdukController {
 
   static async list(req, res, next) {
     try {
-      // res.status(200).json({
-      //   data: await getProdukList(),
-      // });
+      res.status(200).json({
+        data: await getProdukList(),
+      });
     } catch (error) {
       next(error);
     }
@@ -42,10 +42,6 @@ class ProdukController {
   static async add(req, res, next) {
     const addProdukTransaction = await sequelize.transaction();
     try {
-      const files = [];
-
-      console.log("files", files);
-
       const produk = await Produk.create(
         {
           publicId: await generateUUID(),
@@ -100,37 +96,26 @@ class ProdukController {
       next(error);
     }
   }
-  static async getUpdateProduk(req, res, next) {
-    const user = await getUpdateProduk(req.params.id);
-    try {
-      if (req.file) {
-        req.body.produk = `localhost/produk/${req.file.filename}`;
-      }
-      const produk = req.produk;
 
-      if (produk) {
-        await updateProduk(
-          req.body.publicId,
-          req.body.nama,
-          req.body.deskripsi,
-          req.body.harga,
-          req.body.kategoriId,
-          req.user.id
-        );
-        res.status(200).json({
-          message: "Success Update data produk",
-        });
-      } else {
-        throw {
-          status: 404,
-          message: "Gagal update data produk",
-        };
-      }
+  static async update(req, res, next) {
+    try {
+      console.log("req.body", req.body);
+      console.log("req.user.id", req.user.id);
+      await updateProduk(
+        req.body.nama,
+        req.body.deskripsi,
+        req.body.harga,
+        req.user.id,
+        await getProdukId(req.body.publicId)
+      );
+
+      res.status(200).json({
+        message: "Success update product",
+      });
     } catch (error) {
       next(error);
     }
   }
 }
-
 
 module.exports = ProdukController;

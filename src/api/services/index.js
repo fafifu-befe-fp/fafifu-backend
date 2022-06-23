@@ -6,6 +6,7 @@ const isEmailExists = require("./isEmailExists");
 const getUserByPublicId = require("./getUserByPublicId");
 const updateUser = require("./updateUser");
 const getProdukId = require("./getProdukId");
+const updateProduk = require("./updateProduk");
 
 module.exports = {
   getProduk,
@@ -16,4 +17,5 @@ module.exports = {
   getUserByPublicId,
   updateUser,
   getProdukId,
+  updateProduk,
 };
