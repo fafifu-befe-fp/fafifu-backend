@@ -8,6 +8,8 @@ const {
 const { generateUUID } = require("../helpers");
 
 const { sequelize, Produk, PotoProduk } = require("../models");
+const { update } = require("./user.controller");
+
 class ProdukController {
   static async get(req, res, next) {
     try {
@@ -29,9 +31,9 @@ class ProdukController {
 
   static async list(req, res, next) {
     try {
-      res.status(200).json({
-        data: await getProdukList(),
-      });
+      // res.status(200).json({
+      //   data: await getProdukList(),
+      // });
     } catch (error) {
       next(error);
     }
@@ -129,5 +131,6 @@ class ProdukController {
     }
   }
 }
+
 
 module.exports = ProdukController;
