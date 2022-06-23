@@ -5,6 +5,7 @@ const { authorization, validation } = require("../middlewares");
 
 const {
   registerUserValidationRules,
+  updateUserValidationRules,
 } = require("../validations/user.validation");
 
 const multer = require("multer");
@@ -34,6 +35,13 @@ router.post(
   authorization,
   UserController.isDataCompleted
 );
-router.put("/", authorization, upload.single("avatar"), UserController.update);
+router.put(
+  "/",
+  authorization,
+  upload.single("avatar"),
+  updateUserValidationRules(),
+  validation,
+  UserController.update
+);
 
 module.exports = router;
