@@ -3,17 +3,24 @@ const {
   getUserByPublicId,
   updateProduk,
   getProdukId,
-  getProductList,
   getProductListByUserId,
 } = require("../services");
 const { generateUUID } = require("../helpers");
+const { Op } = require("sequelize");
 
-const { sequelize, Product, ProductImage } = require("../models");
+const {
+  sequelize,
+  Product,
+  ProductImage,
+  ProductCategory,
+  Category,
+} = require("../models");
 class ProductController {
   static async get(req, res, next) {
     try {
       const produk = await getProduct(req.params.id);
-      if (produk) {
+
+      if (produk.length != 0) {
         res.status(200).json({
           data: produk,
         });
@@ -30,8 +37,49 @@ class ProductController {
 
   static async list(req, res, next) {
     try {
+      const option = {
+        attributes: ["publicId", "name", "description", "price"],
+        include: [
+          {
+            model: ProductCategory,
+            include: [
+              {
+                model: Category,
+                attributes: ["id", "name"],
+              },
+            ],
+            where: {},
+          },
+          {
+            model: ProductImage,
+            attributes: ["imageUrl"],
+          },
+        ],
+      };
+
+      if (req.query.categoryId) {
+        option.include[0].where.categoryId = Number(req.query.categoryId);
+      }
+
+      if (req.query.limit) {
+        option.limit = Number(req.query.limit);
+      }
+      if (req.query.page) {
+        option.offset = Number(req.query.page - 1);
+      }
+
+      // if (req.user.id) {
+      //   option.where = {
+      //     userId: {
+      //       [Op.not]: req.user.id,
+      //     },
+      //   };
+      // }
+
+      const product = await Product.findAll(option);
+
       res.status(200).json({
-        data: await getProductList(),
+        data: product,
       });
     } catch (error) {
       next(error);

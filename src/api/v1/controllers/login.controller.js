@@ -16,13 +16,13 @@ class LoginController {
         } else {
           throw {
             status: 401,
-            message: "Invalid username or password",
+            message: "Invalid email or password",
           };
         }
       } else {
         throw {
           status: 401,
-          message: "Invalid username or password",
+          message: "Invalid email or password",
         };
       }
     } catch (error) {
