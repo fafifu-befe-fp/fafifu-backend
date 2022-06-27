@@ -29,7 +29,6 @@ module.exports = async (publicIdParam) => {
   });
 
   const result = data.map((item) => {
-    console.log("data", data);
     return {
       publicId: item.publicId,
       name: item.name,
