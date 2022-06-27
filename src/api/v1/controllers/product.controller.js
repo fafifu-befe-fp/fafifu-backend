@@ -7,13 +7,13 @@ const {
 } = require("../services");
 const { generateUUID } = require("../helpers");
 const { Op } = require("sequelize");
-
 const {
   sequelize,
   Product,
   ProductImage,
   ProductCategory,
   Category,
+  Wishlist,
 } = require("../models");
 class ProductController {
   static async get(req, res, next) {
@@ -78,8 +78,28 @@ class ProductController {
 
       const product = await Product.findAll(option);
 
+      const result = product.map((item) => {
+        return {
+          publicId: item.publicId,
+          name: item.name,
+          description: item.description,
+          price: item.price,
+          category: item.ProductCategories.map((item) => {
+            return {
+              categoryId: item.Category.id,
+              name: item.Category.name,
+            };
+          }),
+          imageUrl: item.ProductImages.map((item) => {
+            return {
+              imageUrl: item.imageUrl,
+            };
+          }),
+        };
+      });
+
       res.status(200).json({
-        data: product,
+        data: result,
       });
     } catch (error) {
       next(error);
@@ -138,6 +158,69 @@ class ProductController {
           status: 404,
           message: "Seller not found",
         };
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async wishlist(req, res, next) {
+    try {
+      const wishlist = await Wishlist.findAll({
+        include: {
+          model: Product,
+          attributes: ["publicId", "name", "description", "price"],
+          include: [
+            {
+              model: ProductCategory,
+              include: [
+                {
+                  model: Category,
+                  attributes: ["id", "name"],
+                },
+              ],
+              where: {},
+            },
+            {
+              model: ProductImage,
+              attributes: ["imageUrl"],
+            },
+          ],
+        },
+        where: {
+          userId: req.user.id,
+        },
+      });
+
+      if (wishlist.length != 0) {
+        console.log("wishlist", wishlist);
+        const result = wishlist.map((item) => {
+          return {
+            publicId: item.Product.publicId,
+            name: item.Product.name,
+            description: item.Product.description,
+            price: item.Product.price,
+            category: item.Product.ProductCategories.map((item) => {
+              return {
+                categoryId: item.Category.id,
+                name: item.Category.name,
+              };
+            }),
+            imageUrl: item.Product.ProductImages.map((item) => {
+              return {
+                imageUrl: item.imageUrl,
+              };
+            }),
+          };
+        });
+
+        res.status(200).json({
+          data: result,
+        });
+      } else {
+        res.status(200).json({
+          message: "Wishlist still empty",
+        });
       }
     } catch (error) {
       next(error);
