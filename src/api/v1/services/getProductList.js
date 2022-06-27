@@ -35,7 +35,7 @@ module.exports = async () => {
       userId: item.userId,
       category: item.ProductCategories.map((item) => {
         return {
-          // categoryId: item.Category.id,
+          categoryId: item.Category.id,
           name: item.Category.name,
         };
       }),
