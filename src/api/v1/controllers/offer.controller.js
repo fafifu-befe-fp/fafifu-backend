@@ -1,4 +1,11 @@
-const { Offer } = require("../models");
+const {
+  Offer,
+  Product,
+  UserBiodata,
+  ProductCategory,
+  Category,
+  ProductImage,
+} = require("../models");
 const { getUserId, getProductId } = require("../services");
 const getOfferList = require("../services/getOfferList");
 const isOfferExists = require("../services/isOfferExists");
@@ -6,8 +13,55 @@ const isOfferExists = require("../services/isOfferExists");
 class OfferController {
   static async list(req, res, next) {
     try {
+      const data = await Offer.findAll({
+        include: [
+          {
+            model: Product,
+            include: [
+              {
+                model: ProductCategory,
+                include: {
+                  model: Category,
+                },
+              },
+              {
+                model: ProductImage,
+              },
+            ],
+          },
+          {
+            model: UserBiodata,
+          },
+        ],
+      });
+
+      const result = data.map((item) => {
+        return {
+          publicId: item.publicId,
+          name: item.Product.name,
+          description: item.Product.description,
+          price: item.Product.price,
+          offerPrice: item.price,
+          statusOfferId: item.statusOfferId,
+          category: item.Product.ProductCategories.map((item) => {
+            return {
+              categoryId: item.Category.id,
+              name: item.Category.name,
+            };
+          }),
+          imageUrl: item.Product.ProductImages.map((item) => {
+            return {
+              imageUrl: item.imageUrl,
+            };
+          }),
+          name: item.UserBiodatum.name,
+          city: item.UserBiodatum.city,
+          address: item.UserBiodatum.address,
+        };
+      });
+
       res.status(200).json({
-        data: await getOfferList(req.user.id),
+        data: result,
       });
     } catch (error) {
       next(error);
