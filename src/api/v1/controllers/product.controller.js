@@ -4,6 +4,7 @@ const {
   updateProduk,
   getProdukId,
   getProductListByUserId,
+  getProductId,
 } = require("../services");
 const { generateUUID } = require("../helpers");
 const { Op } = require("sequelize");
@@ -131,9 +132,32 @@ class ProductController {
         }
       }
 
-      const productImage = await ProductImage.bulkCreate(productImageList, {
+      await ProductImage.bulkCreate(productImageList, {
         transaction: addProductTransaction,
       });
+
+      if (req.body.categoryId.length != 1) {
+        const productCategoryList = req.body.categoryId.map((item) => {
+          return {
+            productId: product.id,
+            categoryId: item,
+          };
+        });
+
+        await ProductCategory.bulkCreate(productCategoryList, {
+          transaction: addProductTransaction,
+        });
+      } else {
+        await ProductCategory.create(
+          {
+            productId: product.id,
+            categoryId: req.body.categoryId,
+          },
+          {
+            transaction: addProductTransaction,
+          }
+        );
+      }
 
       await addProductTransaction.commit();
       res.status(200).json({
@@ -228,21 +252,96 @@ class ProductController {
   }
 
   static async update(req, res, next) {
+    const updateProductTransaction = await sequelize.transaction();
+
     try {
-      console.log("req.body", req.body);
-      console.log("req.user.id", req.user.id);
-      await updateProduk(
-        req.body.nama,
-        req.body.deskripsi,
-        req.body.harga,
-        req.user.id,
-        await getProdukId(req.body.publicId)
+      await Product.update(
+        {
+          name: req.body.name,
+          description: req.body.description,
+          price: req.body.price,
+        },
+        {
+          where: {
+            userId: req.user.id,
+            publicId: req.params.publicId,
+          },
+        },
+        {
+          transaction: updateProductTransaction,
+        }
       );
+
+      const productId = await getProductId(req.params.publicId);
+
+      await ProductCategory.destroy(
+        {
+          where: {
+            productId,
+          },
+        },
+        {
+          transaction: updateProductTransaction,
+        }
+      );
+
+      if (req.body.categoryId.length != 1) {
+        const productCategoryList = req.body.categoryId.map((item) => {
+          return {
+            productId,
+            categoryId: item,
+          };
+        });
+
+        await ProductCategory.bulkCreate(productCategoryList, {
+          transaction: updateProductTransaction,
+        });
+      } else {
+        await ProductCategory.create(
+          {
+            productId,
+            categoryId: req.body.categoryId,
+          },
+          {
+            transaction: updateProductTransaction,
+          }
+        );
+      }
+
+      await ProductImage.destroy(
+        {
+          where: {
+            productId,
+          },
+        },
+        {
+          transaction: updateProductTransaction,
+        }
+      );
+
+      let productImageList = [];
+
+      if (req.files) {
+        for (let index = 0; index < req.files.length; index++) {
+          productImageList.push({
+            productId,
+            imageUrl: `http://127.0.0.1:3000/foto-produk/${req.files[index].filename}`,
+          });
+        }
+      }
+
+      await ProductImage.bulkCreate(productImageList, {
+        transaction: updateProductTransaction,
+      });
+
+      await updateProductTransaction.commit();
 
       res.status(200).json({
         message: "Success update product",
       });
     } catch (error) {
+      await updateProductTransaction.rollback();
+
       next(error);
     }
   }
