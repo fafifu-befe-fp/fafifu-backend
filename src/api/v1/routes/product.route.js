@@ -5,6 +5,7 @@ const ProductController = require("../controllers/product.controller");
 const { validation, authorization } = require("../middlewares");
 const {
   addProdukValidationRules,
+  updateProdukValidationRules,
 } = require("../validations/produk.validation");
 
 const multer = require("multer");
@@ -35,6 +36,13 @@ router.post(
   validation,
   ProductController.add
 );
-router.put("/", authorization, ProductController.update);
+router.put(
+  "/:publicId",
+  authorization,
+  upload.array("image", 5),
+  updateProdukValidationRules(),
+  validation,
+  ProductController.update
+);
 
 module.exports = router;
