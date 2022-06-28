@@ -25,6 +25,8 @@ const upload = multer({
 
 router.get("/", ProductController.list);
 router.get("/wishlist", authorization, ProductController.wishlist);
+router.post("/wishlist", authorization, ProductController.addWishlist);
+router.delete("/wishlist", authorization, ProductController.deleteWishlist);
 router.get("/:id", ProductController.get);
 router.get("/shop/:id", ProductController.getProductListByUserId);
 router.post(

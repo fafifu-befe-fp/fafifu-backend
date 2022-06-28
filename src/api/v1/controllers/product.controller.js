@@ -246,6 +246,63 @@ class ProductController {
       next(error);
     }
   }
+
+  static async addWishlist(req, res, next) {
+    try {
+      if (
+        await Wishlist.findOne({
+          where: {
+            userId: req.user.id,
+            productId: await getProductId(req.body.productId),
+          },
+        })
+      ) {
+        res.status(422).json({
+          message: "Wishlist already exists",
+        });
+      } else {
+        Wishlist.create({
+          userId: req.user.id,
+          productId: await getProductId(req.body.productId),
+        });
+      }
+
+      res.status(200).json({
+        message: "Success add wishlist",
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async deleteWishlist(req, res, next) {
+    try {
+      if (
+        await Wishlist.findOne({
+          where: {
+            userId: req.user.id,
+            productId: await getProductId(req.body.productId),
+          },
+        })
+      ) {
+        Wishlist.destroy({
+          where: {
+            userId: req.user.id,
+            productId: await getProductId(req.body.productId),
+          },
+        });
+        res.status(200).json({
+          message: "Success delete wishlist",
+        });
+      } else {
+        res.status(404).json({
+          message: "Wishlist not found",
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = ProductController;
