@@ -352,7 +352,7 @@ class ProductController {
         await Wishlist.findOne({
           where: {
             userId: req.user.id,
-            productId: await getProductId(req.body.productId),
+            productId: await getProductId(req.params.id),
           },
         })
       ) {
@@ -362,7 +362,7 @@ class ProductController {
       } else {
         Wishlist.create({
           userId: req.user.id,
-          productId: await getProductId(req.body.productId),
+          productId: await getProductId(req.params.id),
         });
       }
 
@@ -380,14 +380,14 @@ class ProductController {
         await Wishlist.findOne({
           where: {
             userId: req.user.id,
-            productId: await getProductId(req.body.productId),
+            productId: await getProductId(req.params.id),
           },
         })
       ) {
         Wishlist.destroy({
           where: {
             userId: req.user.id,
-            productId: await getProductId(req.body.productId),
+            productId: await getProductId(req.params.id),
           },
         });
         res.status(200).json({
