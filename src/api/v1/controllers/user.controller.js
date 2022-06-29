@@ -1,8 +1,28 @@
 const { sequelize, User, UserBiodata } = require("../models");
 const { hashPassword, generateUUID } = require("../helpers");
-const { updateUser } = require("../services");
+const { updateUser, getUserId, getUserByPublicId } = require("../services");
+const getUserProfile = require("../services/getUserProfile");
 
 class UserController {
+  static async get(req, res, next) {
+    try {
+      const user = await getUserProfile(req.user.id);
+
+      if (user) {
+        res.status(200).json({
+          data: user,
+        });
+      } else {
+        throw {
+          status: 404,
+          message: "User not found",
+        };
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async register(req, res, next) {
     try {
       const registerUserTransaction = await sequelize.transaction();
@@ -25,7 +45,7 @@ class UserController {
       );
 
       await registerUserTransaction.commit();
-      res.status(200).json({
+      res.status(201).json({
         message: "Success register user",
       });
     } catch (error) {

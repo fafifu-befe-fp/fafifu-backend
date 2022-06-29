@@ -5,6 +5,7 @@ const ProductController = require("../controllers/product.controller");
 const { validation, authorization } = require("../middlewares");
 const {
   addProdukValidationRules,
+  updateProdukValidationRules,
 } = require("../validations/produk.validation");
 
 const multer = require("multer");
@@ -24,6 +25,9 @@ const upload = multer({
 });
 
 router.get("/", ProductController.list);
+router.get("/wishlist", authorization, ProductController.wishlist);
+router.post("/:id/wishlist", authorization, ProductController.addWishlist);
+router.delete("/:id/wishlist", authorization, ProductController.deleteWishlist);
 router.get("/:id", ProductController.get);
 router.get("/shop/:id", ProductController.getProductListByUserId);
 router.post(
@@ -34,6 +38,13 @@ router.post(
   validation,
   ProductController.add
 );
-router.put("/", authorization, ProductController.update);
+router.put(
+  "/:publicId",
+  authorization,
+  upload.array("image", 5),
+  updateProdukValidationRules(),
+  validation,
+  ProductController.update
+);
 
 module.exports = router;

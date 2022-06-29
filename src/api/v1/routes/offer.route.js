@@ -8,6 +8,7 @@ const {
 } = require("../validations/produk.validation");
 
 router.get("/", authorization, OfferController.list);
+
 router.post(
   "/",
   authorization,

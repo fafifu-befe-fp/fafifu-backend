@@ -29,7 +29,6 @@ module.exports = async (publicIdParam) => {
   });
 
   const result = data.map((item) => {
-    console.log("data", data);
     return {
       publicId: item.publicId,
       name: item.name,
@@ -38,7 +37,7 @@ module.exports = async (publicIdParam) => {
       userId: item.userId,
       category: item.ProductCategories.map((item) => {
         return {
-          // categoryId: item.Category.id,
+          categoryId: item.Category.id,
           name: item.Category.name,
         };
       }),

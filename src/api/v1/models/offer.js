@@ -6,6 +6,10 @@ module.exports = (sequelize, DataTypes) => {
       Offer.belongsTo(models.Product, {
         foreignKey: "productId",
       });
+
+      Offer.belongsTo(models.UserBiodata, {
+        foreignKey: "buyerId",
+      });
     }
   }
   Offer.init(
