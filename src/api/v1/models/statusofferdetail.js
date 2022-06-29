@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   StatusOfferDetail.init(
     {
-      description: DataTypes.STRING,
+      description: { type: DataTypes.STRING, allowNull: false, unique: true },
     },
     {
       sequelize,

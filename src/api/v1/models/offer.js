@@ -14,9 +14,10 @@ module.exports = (sequelize, DataTypes) => {
   }
   Offer.init(
     {
-      buyerId: DataTypes.INTEGER,
-      productId: DataTypes.INTEGER,
-      price: DataTypes.INTEGER,
+      buyerId: { type: DataTypes.INTEGER, allowNull: false },
+      publicId: { type: DataTypes.STRING, allowNull: false },
+      productId: { type: DataTypes.INTEGER, allowNull: false },
+      price: { type: DataTypes.INTEGER, allowNull: false },
       statusOfferId: DataTypes.INTEGER,
     },
     {
