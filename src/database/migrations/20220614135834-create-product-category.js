@@ -9,10 +9,20 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       productId: {
+        allowNull: false,
         type: Sequelize.INTEGER,
+        references: {
+          model: "Products",
+          key: "id",
+        },
       },
       categoryId: {
+        allowNull: false,
         type: Sequelize.INTEGER,
+        references: {
+          model: "Categories",
+          key: "id",
+        },
       },
       createdAt: {
         allowNull: false,

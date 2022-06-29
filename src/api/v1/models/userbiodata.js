@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   UserBiodata.init(
     {
-      userId: { type: DataTypes.INTEGER, primaryKey: true },
-      name: DataTypes.STRING,
+      userId: { type: DataTypes.INTEGER, primaryKey: true, unique: true },
+      name: { type: DataTypes.STRING, allowNull: false },
       city: DataTypes.STRING,
       address: DataTypes.TEXT,
       handphone: DataTypes.STRING,

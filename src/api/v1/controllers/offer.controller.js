@@ -7,6 +7,7 @@ const {
   ProductImage,
 } = require("../models");
 const { getUserId, getProductId } = require("../services");
+const { generateUUID } = require("../helpers");
 const getOfferList = require("../services/getOfferList");
 const isOfferExists = require("../services/isOfferExists");
 
@@ -82,6 +83,7 @@ class OfferController {
       } else {
         const offer = await Offer.create({
           buyerId: req.user.id,
+          publicId: await generateUUID(),
           productId: await getProductId(req.body.productId),
           price: req.body.price,
         });
