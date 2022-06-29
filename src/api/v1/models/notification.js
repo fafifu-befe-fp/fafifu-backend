@@ -1,23 +1,19 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Wishlist extends Model {
-    static associate(models) {
-      Wishlist.belongsTo(models.Product, {
-        foreignKey: "productId",
-      });
-    }
+  class Notification extends Model {
+    static associate(models) {}
   }
-  Wishlist.init(
+  Notification.init(
     {
       userId: { type: DataTypes.INTEGER, allowNull: false },
       productId: { type: DataTypes.INTEGER, allowNull: false },
+      statusNotificationId: { type: DataTypes.INTEGER, allowNull: false },
     },
     {
       sequelize,
-      modelName: "Wishlist",
-      tableName: "Wishlists",
+      modelName: "Notification",
     }
   );
-  return Wishlist;
+  return Notification;
 };

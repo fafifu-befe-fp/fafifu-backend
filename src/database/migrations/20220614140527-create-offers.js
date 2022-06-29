@@ -8,17 +8,36 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      publicId: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       buyerId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Users",
+          key: "id",
+        },
       },
       productId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Products",
+          key: "id",
+        },
       },
       price: {
         type: Sequelize.INTEGER,
+        allowNull: false,
       },
       statusOfferId: {
         type: Sequelize.INTEGER,
+        references: {
+          model: "StatusOfferDetails",
+          key: "id",
+        },
       },
       createdAt: {
         allowNull: false,

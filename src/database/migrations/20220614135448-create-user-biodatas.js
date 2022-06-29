@@ -10,8 +10,10 @@ module.exports = {
           model: "Users",
           key: "id",
         },
+        unique: true,
       },
       name: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       city: {

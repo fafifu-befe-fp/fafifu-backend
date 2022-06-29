@@ -9,19 +9,28 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       publicId: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       name: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       description: {
+        allowNull: false,
         type: Sequelize.TEXT,
       },
       price: {
+        allowNull: false,
         type: Sequelize.DOUBLE,
       },
       userId: {
+        allowNull: false,
         type: Sequelize.INTEGER,
+        references: {
+          model: "Users",
+          key: "id",
+        },
       },
       createdAt: {
         allowNull: false,

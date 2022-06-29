@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   StatusNotificationDetail.init(
     {
-      description: DataTypes.STRING,
+      description: { type: DataTypes.STRING, allowNull: false, unique: true },
     },
     {
       sequelize,
