@@ -8,10 +8,15 @@ module.exports = (sequelize, DataTypes) => {
     {
       userId: { type: DataTypes.INTEGER, allowNull: false },
       productId: { type: DataTypes.INTEGER, allowNull: false },
-      statusNotificationId: { type: DataTypes.INTEGER, allowNull: false },
+      statusNotificationId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
     },
     {
       sequelize,
+      paranoid: true,
       modelName: "Notification",
     }
   );
