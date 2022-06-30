@@ -14,10 +14,13 @@ const {
   ProductImage,
   ProductCategory,
   Category,
+  Notification,
+  Offer,
   Wishlist,
 } = require("../models");
 const cloudinary = require("../helpers/cloudinary");
 const fs = require("fs");
+const authorization = require("../middlewares/authorization");
 class ProductController {
   static async get(req, res, next) {
     try {
@@ -71,13 +74,13 @@ class ProductController {
         option.offset = Number(req.query.page - 1);
       }
 
-      // if (req.user.id) {
-      //   option.where = {
-      //     userId: {
-      //       [Op.not]: req.user.id,
-      //     },
-      //   };
-      // }
+      if (req.headers.authorization) {
+        option.where = {
+          userId: {
+            [Op.not]: req.user.id,
+          },
+        };
+      }
 
       const product = await Product.findAll(option);
 
@@ -399,6 +402,49 @@ class ProductController {
       } else {
         res.status(404).json({
           message: "Wishlist not found",
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async delete(req, res, next) {
+    try {
+      const product = await Product.findOne({
+        where: {
+          publicId: req.params.id,
+          userId: req.user.id,
+        },
+      });
+
+      if (product) {
+        await Product.destroy({
+          where: {
+            publicId: req.params.id,
+            userId: req.user.id,
+          },
+        });
+        res.status(200).json({
+          message: "Success delete product",
+        });
+
+        await Offer.destroy({
+          where: {
+            productId: product.id,
+          },
+        });
+
+        await Notification.destroy({
+          where: { productId: product.id },
+        });
+
+        await Wishlist.destroy({
+          where: { productId: product.id },
+        });
+      } else {
+        res.status(404).json({
+          message: "Product not found",
         });
       }
     } catch (error) {

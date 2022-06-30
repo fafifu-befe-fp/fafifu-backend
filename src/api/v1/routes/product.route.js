@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const ProductController = require("../controllers/product.controller");
-const { validation, authorization } = require("../middlewares");
+const { validation, authorization, isLogin } = require("../middlewares");
 const {
   addProdukValidationRules,
   updateProdukValidationRules,
@@ -24,7 +24,8 @@ const upload = multer({
   },
 });
 
-router.get("/", ProductController.list);
+router.get("/", isLogin, ProductController.list);
+router.delete("/:id", authorization, ProductController.delete);
 router.get("/wishlist", authorization, ProductController.wishlist);
 router.post("/:id/wishlist", authorization, ProductController.addWishlist);
 router.delete("/:id/wishlist", authorization, ProductController.deleteWishlist);
