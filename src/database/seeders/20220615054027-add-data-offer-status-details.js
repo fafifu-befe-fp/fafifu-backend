@@ -5,19 +5,19 @@ module.exports = {
     const statusPenawaranData = [
       {
         id: 0,
-        description: "Tolak",
+        description: "Pending",
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         id: 1,
-        description: "Terima",
+        description: "Accepted",
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         id: 2,
-        description: "Terjual",
+        description: "Rejected",
         createdAt: new Date(),
         updatedAt: new Date(),
       },

@@ -102,43 +102,40 @@ class OfferController {
     }
   }
 
-  static async accept(req, res, next) {
+  static async update(req, res, next) {
     try {
-      const offer = Offer.update(
-        {
-          // 0 : Tolak, 1:Terima, 2 :Selesai
-          statusOfferId: 1,
-        },
-        {
+      const offer = await Offer.findOne({
+        include: {
+          model: Product,
           where: {
-            id: req.body.id,
+            userId: req.user.id,
           },
-        }
-      );
-      res.status(200).json({
-        message: "Success accept offer",
+        },
+        where: {
+          publicId: req.params.id,
+        },
       });
-    } catch (error) {
-      next(error);
-    }
-  }
 
-  static async decline(req, res, next) {
-    try {
-      const offer = Offer.update(
-        {
-          // 0 : Tolak, 1:Terima, 2 :Selesai
-          statusOfferId: 0,
-        },
-        {
-          where: {
-            id: req.body.id,
+      if (offer) {
+        await Offer.update(
+          {
+            //  1:Accepted, 2 :Rejected
+            statusOfferId: req.body.statusOfferId,
           },
-        }
-      );
-      res.status(200).json({
-        message: "Success decline offer",
-      });
+          {
+            where: {
+              publicId: req.params.id,
+            },
+          }
+        );
+        res.status(200).json({
+          message: "Success update status offer",
+        });
+      } else {
+        res.status(404).json({
+          message: "Offer not found",
+        });
+      }
     } catch (error) {
       next(error);
     }

@@ -18,7 +18,11 @@ module.exports = (sequelize, DataTypes) => {
       publicId: { type: DataTypes.STRING, allowNull: false },
       productId: { type: DataTypes.INTEGER, allowNull: false },
       price: { type: DataTypes.INTEGER, allowNull: false },
-      statusOfferId: DataTypes.INTEGER,
+      statusOfferId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
     },
     {
       sequelize,

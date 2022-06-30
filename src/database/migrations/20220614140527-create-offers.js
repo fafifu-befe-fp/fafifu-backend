@@ -38,6 +38,7 @@ module.exports = {
           model: "StatusOfferDetails",
           key: "id",
         },
+        defaultValue: 0,
       },
       createdAt: {
         allowNull: false,

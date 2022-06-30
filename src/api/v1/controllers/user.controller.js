@@ -56,37 +56,6 @@ class UserController {
     }
   }
 
-  static async isDataCompleted(req, res, next) {
-    try {
-      const userBiodata = await UserBiodata.findOne({
-        attributes: ["name", "city", "address", "handphone", "imageUrl"],
-        where: {
-          userId: req.user.id,
-        },
-      });
-
-      if (
-        userBiodata.city === null ||
-        userBiodata.address === null ||
-        userBiodata.handphone === null ||
-        userBiodata.imageUrl === null
-      ) {
-        res.status(400).json({
-          value: false,
-          message: "user data is not completed, please complete the data.",
-          data: userBiodata,
-        });
-      } else {
-        res.status(200).json({
-          value: true,
-          message: "user data is completed",
-        });
-      }
-    } catch (error) {
-      next(error);
-    }
-  }
-
   static async update(req, res, next) {
     try {
       const image = await cloudinary.uploader.upload(req.file.path);
