@@ -16,7 +16,6 @@ router.post(
   //   validation,
   OfferController.add
 );
-router.post("/accept-offer", authorization, OfferController.accept);
-router.post("/decline-offer", authorization, OfferController.decline);
+router.put("/:id", authorization, OfferController.update);
 
 module.exports = router;

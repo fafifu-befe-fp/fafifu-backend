@@ -5,13 +5,13 @@ module.exports = {
     const statusNotifikasiData = [
       {
         id: 0,
-        description: "Belum dibuka",
+        description: "Not Seen Yet",
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         id: 1,
-        description: "Telah dibuka",
+        description: "Seen",
         createdAt: new Date(),
         updatedAt: new Date(),
       },
