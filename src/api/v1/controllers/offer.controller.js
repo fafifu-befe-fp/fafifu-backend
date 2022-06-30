@@ -77,11 +77,6 @@ class OfferController {
         await getProductId(req.body.productId)
       );
 
-      const notification = await Notification.create({
-        userId: req.user.id,
-        productId: await getProductId(req.body.productId),
-      });
-
       if (offer) {
         res.status(400).json({
           message: "Offer already exists",
@@ -95,6 +90,12 @@ class OfferController {
         });
         res.status(200).json({
           message: "Success add offer",
+        });
+
+        const notification = await Notification.create({
+          userId: req.user.id,
+          offerId: offer.id,
+          publicId: await generateUUID(),
         });
       }
     } catch (error) {
