@@ -15,6 +15,8 @@ module.exports = {
           model: "Products",
           key: "id",
         },
+        onUpdate: "restrict",
+        onDelete: "restrict",
       },
       imageUrl: {
         allowNull: false,

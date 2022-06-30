@@ -5,6 +5,7 @@ const {
   ProductCategory,
   Category,
   ProductImage,
+  Notification,
 } = require("../models");
 const { getUserId, getProductId } = require("../services");
 const { generateUUID } = require("../helpers");
@@ -75,6 +76,11 @@ class OfferController {
         req.user.id,
         await getProductId(req.body.productId)
       );
+
+      const notification = await Notification.create({
+        userId: req.user.id,
+        productId: await getProductId(req.body.productId),
+      });
 
       if (offer) {
         res.status(400).json({
