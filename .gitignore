@@ -103,6 +103,8 @@ dist
 # TernJS port file
 .tern-port
 
-src/public/images/avatar/
+public/images/avatar/
 
-src/public/videos/
+public/videos/
+
+public/images/

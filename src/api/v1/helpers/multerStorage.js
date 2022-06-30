@@ -3,11 +3,11 @@ const fs = require("fs");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    if (fs.existsSync("/src/public/images/avatar")) {
-      cb(null, "src/public/images/avatar");
+    if (fs.existsSync("public/images")) {
+      cb(null, "public/images");
     } else {
-      fs.mkdirSync("src/public/images/avatar", { recursive: true });
-      cb(null, "src/public/images/avatar");
+      fs.mkdirSync("public/images", { recursive: true });
+      cb(null, "public/images");
     }
   },
   filename: function (req, file, cb) {

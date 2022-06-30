@@ -16,6 +16,8 @@ const {
   Category,
   Wishlist,
 } = require("../models");
+const cloudinary = require("../helpers/cloudinary");
+const fs = require("fs");
 class ProductController {
   static async get(req, res, next) {
     try {
@@ -109,6 +111,7 @@ class ProductController {
 
   static async add(req, res, next) {
     const addProductTransaction = await sequelize.transaction();
+
     try {
       const product = await Product.create(
         {
@@ -123,13 +126,13 @@ class ProductController {
 
       let productImageList = [];
 
-      if (req.files) {
-        for (let index = 0; index < req.files.length; index++) {
-          productImageList.push({
-            productId: product.id,
-            imageUrl: `http://127.0.0.1:3000/foto-produk/${req.files[index].filename}`,
-          });
-        }
+      for (let index = 0; index < req.files.length; index++) {
+        const image = await cloudinary.uploader.upload(req.files[index].path);
+        productImageList.push({
+          productId: product.id,
+          imageUrl: image.secure_url,
+        });
+        fs.unlinkSync(req.files[index].path);
       }
 
       await ProductImage.bulkCreate(productImageList, {
