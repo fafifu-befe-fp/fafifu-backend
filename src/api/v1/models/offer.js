@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
       Offer.belongsTo(models.UserBiodata, {
         foreignKey: "buyerId",
       });
+
+      Offer.hasMany(models.Notification, {
+        foreignKey: "offerId",
+      });
     }
   }
   Offer.init(
