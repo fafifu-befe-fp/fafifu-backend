@@ -8,7 +8,7 @@ module.exports = async (publicIdParam) => {
     },
   });
 
-  if (result) {
+  if (result.id) {
     return result.id;
   } else {
     return null;
