@@ -2,6 +2,8 @@ const { sequelize, User, UserBiodata } = require("../models");
 const { hashPassword, generateUUID } = require("../helpers");
 const { updateUser, getUserId, getUserByPublicId } = require("../services");
 const getUserProfile = require("../services/getUserProfile");
+const cloudinary = require("../helpers/cloudinary");
+const fs = require("fs");
 
 class UserController {
   static async get(req, res, next) {
@@ -87,9 +89,8 @@ class UserController {
 
   static async update(req, res, next) {
     try {
-      if (req.file) {
-        req.body.avatar = `http://127.0.0.1:3000/avatar/${req.file.filename}`;
-      }
+      const image = await cloudinary.uploader.upload(req.file.path);
+      fs.unlinkSync(req.file.path);
       const user = req.user;
 
       if (user) {
@@ -98,7 +99,7 @@ class UserController {
           req.body.city,
           req.body.address,
           req.body.handphone,
-          req.body.avatar,
+          image.secure_url,
           user.id
         );
         res.status(200).json({
