@@ -59,6 +59,7 @@ class ProductController {
           {
             model: ProductImage,
             attributes: ["imageUrl"],
+                        sort: ["id", "ascending"],
           },
         ],
       };
