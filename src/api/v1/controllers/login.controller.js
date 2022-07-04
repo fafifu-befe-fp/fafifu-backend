@@ -1,6 +1,5 @@
 const { isEmailExists } = require("../services");
 const { comparePassword, generateJWT } = require("../helpers");
-const { User, UserBiodata } = require("../models");
 
 class LoginController {
   static async login(req, res, next) {
@@ -39,12 +38,6 @@ class LoginController {
             },
           });
         } else {
-          throw {
-            status: 401,
-            message: "Invalid email or password",
-          };
-        }
-      } else {
         throw {
           status: 401,
           message: "Invalid email or password",
