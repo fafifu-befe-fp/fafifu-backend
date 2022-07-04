@@ -61,6 +61,8 @@ class ProductController {
             attributes: ["imageUrl"],
                         sort: ["id", "ascending"],
           },
+                  order: [[ProductImage, "id", "ASC"]],
+
         ],
       };
 
