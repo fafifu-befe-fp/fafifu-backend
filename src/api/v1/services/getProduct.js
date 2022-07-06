@@ -3,8 +3,6 @@ const {
   ProductCategory,
   Category,
   ProductImage,
-  User,
-  UserBiodata,
 } = require("../models");
 
 module.exports = async (publicIdParam) => {
@@ -23,16 +21,6 @@ module.exports = async (publicIdParam) => {
       {
         model: ProductImage,
         attributes: ["imageUrl"],
-      },
-      {
-        model: User,
-        attributes: ["publicId"],
-        include: [
-          {
-            model: UserBiodata,
-            attributes: ["name", "city", "address", "handphone", "imageUrl"],
-          },
-        ],
       },
     ],
     where: {
@@ -58,14 +46,6 @@ module.exports = async (publicIdParam) => {
           imageUrl: item.imageUrl,
         };
       }),
-      seller: {
-        publicId: item.User.publicId,
-        name: item.User.UserBiodatum.name,
-        city: item.User.UserBiodatum.city,
-        address: item.User.UserBiodatum.address,
-        handphone: item.User.UserBiodatum.handphone,
-        imageUrl: item.User.UserBiodatum.imageUrl,
-      },
     };
   });
 
