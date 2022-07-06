@@ -58,10 +58,11 @@ class ProductController {
           },
           {
             model: ProductImage,
-            attributes: ["imageUrl", "id"],
+            attributes: ["imageUrl"],
+                        sort: ["id", "ascending"],
           },
         ],
-        order: [[ProductImage, "id", "ASC"]],
+                  order: [[ProductImage, "id", "ASC"]],
       };
 
       if (req.query.categoryId) {
@@ -99,7 +100,6 @@ class ProductController {
           }),
           imageUrl: item.ProductImages.map((item) => {
             return {
-              id: item.id,
               imageUrl: item.imageUrl,
             };
           }),
@@ -107,7 +107,7 @@ class ProductController {
       });
 
       res.status(200).json({
-        data: product,
+        data: result,
       });
     } catch (error) {
       next(error);
