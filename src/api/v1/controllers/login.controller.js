@@ -6,7 +6,6 @@ class LoginController {
   static async login(req, res, next) {
     try {
       const user = await isEmailExists(req.body.email);
-
       if (user) {
         if (await comparePassword(req.body.password, user.password)) {
           const dataUser = await User.findOne({
