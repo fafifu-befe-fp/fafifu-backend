@@ -107,7 +107,7 @@ class ProductController {
       });
 
       res.status(200).json({
-        data: product,
+        data: result,
       });
     } catch (error) {
       next(error);
