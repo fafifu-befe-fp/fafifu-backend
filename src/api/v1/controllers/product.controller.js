@@ -4,7 +4,7 @@ const {
   getProductListByUserId,
   getProductId,
 } = require("../services");
-const { generateUUID } = require("../helpers");
+const { generateUUID, cloudinary } = require("../helpers");
 const { Op } = require("sequelize");
 const {
   sequelize,
@@ -16,7 +16,6 @@ const {
   Offer,
   Wishlist,
 } = require("../models");
-const cloudinary = require("../helpers/cloudinary");
 const fs = require("fs");
 class ProductController {
   static async get(req, res, next) {

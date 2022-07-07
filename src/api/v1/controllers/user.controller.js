@@ -1,8 +1,7 @@
 const { sequelize, User, UserBiodata } = require("../models");
-const { hashPassword, generateUUID } = require("../helpers");
-const { updateUser, getUserId, getUserByPublicId } = require("../services");
+const { hashPassword, generateUUID, cloudinary } = require("../helpers");
+const { updateUser } = require("../services");
 const getUserProfile = require("../services/getUserProfile");
-const cloudinary = require("../helpers/cloudinary");
 const fs = require("fs");
 
 class UserController {
