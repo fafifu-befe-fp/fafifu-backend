@@ -1,8 +1,6 @@
 const {
   getProduct,
   getUserByPublicId,
-  updateProduk,
-  getProdukId,
   getProductListByUserId,
   getProductId,
 } = require("../services");
@@ -20,7 +18,6 @@ const {
 } = require("../models");
 const cloudinary = require("../helpers/cloudinary");
 const fs = require("fs");
-const authorization = require("../middlewares/authorization");
 class ProductController {
   static async get(req, res, next) {
     try {
