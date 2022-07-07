@@ -24,6 +24,7 @@ module.exports = async (publicIdParam) => {
         attributes: ["imageUrl"],
       },
     ],
+    order: [[ProductImage, "id", "ASC"]],
     where: {
       userId: await getUserId(publicIdParam),
     },
