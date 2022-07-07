@@ -7,9 +7,8 @@ const {
   ProductImage,
   Notification,
 } = require("../models");
-const { getUserId, getProductId } = require("../services");
+const { getProductId } = require("../services");
 const { generateUUID } = require("../helpers");
-const getOfferList = require("../services/getOfferList");
 const isOfferExists = require("../services/isOfferExists");
 
 class OfferController {

@@ -3,6 +3,7 @@ const generateUUID = require("./generateUUID");
 const generateJWT = require("./generateJWT");
 const comparePassword = require("./comparePassword");
 const { storage } = require("./multerStorage");
+const cloudinary = require("./cloudinary");
 
 module.exports = {
   hashPassword,
@@ -10,4 +11,5 @@ module.exports = {
   generateJWT,
   comparePassword,
   storage,
+  cloudinary,
 };
