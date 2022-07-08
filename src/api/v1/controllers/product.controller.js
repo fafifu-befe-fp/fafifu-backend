@@ -1,5 +1,4 @@
 const {
-  getProduct,
   getUserByPublicId,
   getProductListByUserId,
   getProductId,
@@ -8,6 +7,8 @@ const { generateUUID, cloudinary } = require("../helpers");
 const { Op } = require("sequelize");
 const {
   sequelize,
+  User,
+  UserBiodata,
   Product,
   ProductImage,
   ProductCategory,
@@ -20,11 +21,88 @@ const fs = require("fs");
 class ProductController {
   static async get(req, res, next) {
     try {
-      const produk = await getProduct(req.params.id);
+      let option = {
+        attributes: ["publicId", "name", "description", "price"],
+        include: [
+          {
+            model: ProductCategory,
+            include: [
+              {
+                model: Category,
+                attributes: ["id", "name"],
+              },
+            ],
+          },
+          {
+            model: ProductImage,
+            attributes: ["imageUrl"],
+          },
+          {
+            model: User,
+            attributes: ["publicId"],
+            include: [
+              {
+                model: UserBiodata,
+                attributes: [
+                  "name",
+                  "city",
+                  "address",
+                  "handphone",
+                  "imageUrl",
+                ],
+              },
+            ],
+          },
+        ],
+        where: {
+          publicId: req.params.id,
+        },
+      };
 
-      if (produk.length != 0) {
+      if (req.headers.authorization) {
+        option.include.push({
+          model: Wishlist,
+          attributes: ["id"],
+          where: {
+            userId: req.user.id,
+          },
+          required: false,
+        });
+      }
+
+      const data = (await Product.findAll(option)).map((item) => {
+        return {
+          publicId: item.publicId,
+          name: item.name,
+          description: item.description,
+          price: item.price,
+          userId: item.userId,
+          category: item.ProductCategories.map((item) => {
+            return {
+              categoryId: item.Category.id,
+              name: item.Category.name,
+            };
+          }),
+          imageUrl: item.ProductImages.map((item) => {
+            return {
+              imageUrl: item.imageUrl,
+            };
+          }),
+          seller: {
+            publicId: item.User.publicId,
+            name: item.User.UserBiodatum.name,
+            city: item.User.UserBiodatum.city,
+            address: item.User.UserBiodatum.address,
+            handphone: item.User.UserBiodatum.handphone,
+            imageUrl: item.User.UserBiodatum.imageUrl,
+          },
+          status: { Wishlists: item.Wishlists ? true : false },
+        };
+      });
+
+      if (data.length != 0) {
         res.status(200).json({
-          data: produk,
+          data,
         });
       } else {
         throw {
