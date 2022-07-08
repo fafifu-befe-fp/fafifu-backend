@@ -96,7 +96,7 @@ class ProductController {
             handphone: item.User.UserBiodatum.handphone,
             imageUrl: item.User.UserBiodatum.imageUrl,
           },
-          status: { Wishlists: item.Wishlists ? true : false },
+          status: { Wishlists: item.Wishlists.length != 0 ? true : false },
         };
       });
 
