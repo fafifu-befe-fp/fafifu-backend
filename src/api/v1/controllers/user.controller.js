@@ -1,17 +1,33 @@
 const { sequelize, User, UserBiodata } = require("../models");
 const { hashPassword, generateUUID, cloudinary } = require("../helpers");
-const { updateUser } = require("../services");
-const getUserProfile = require("../services/getUserProfile");
 const fs = require("fs");
 
 class UserController {
   static async get(req, res, next) {
     try {
-      const user = await getUserProfile(req.user.id);
+      const user = await User.findOne({
+        attributes: ["email", "publicId"],
+        include: {
+          model: UserBiodata,
+        },
+        where: {
+          id: req.user.id,
+        },
+      });
 
-      if (user) {
+      const result = {
+        publicId: user.publicId,
+        email: user.email,
+        name: user.UserBiodatum.name,
+        city: user.UserBiodatum.city,
+        address: user.UserBiodatum.address,
+        handphone: user.UserBiodatum.handphone,
+        imageUrl: user.UserBiodatum.imageUrl,
+      };
+
+      if (result) {
         res.status(200).json({
-          data: user,
+          data: result,
         });
       } else {
         throw {
@@ -62,14 +78,21 @@ class UserController {
       const user = req.user;
 
       if (user) {
-        await updateUser(
-          req.body.name,
-          req.body.city,
-          req.body.address,
-          req.body.handphone,
-          image.secure_url,
-          user.id
+        await UserBiodata.update(
+          {
+            name: req.body.name,
+            city: req.body.city,
+            address: req.body.address,
+            handphone: req.body.handphone,
+            imageUrl: image.secure_url,
+          },
+          {
+            where: {
+              userId: user.id,
+            },
+          }
         );
+
         res.status(200).json({
           message: "Success Update data user",
         });

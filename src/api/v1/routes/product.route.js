@@ -40,7 +40,7 @@ router.post(
   ProductController.add
 );
 router.put(
-  "/:publicId",
+  "/:id",
   authorization,
   upload.array("image", 5),
   updateProdukValidationRules(),
