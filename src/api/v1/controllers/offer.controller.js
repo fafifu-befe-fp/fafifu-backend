@@ -1,3 +1,4 @@
+"use strict";
 const {
   Offer,
   Product,
@@ -7,9 +8,8 @@ const {
   ProductImage,
   Notification,
 } = require("../models");
-const { getUserId, getProductId } = require("../services");
+const { getProductId } = require("../services");
 const { generateUUID } = require("../helpers");
-const getOfferList = require("../services/getOfferList");
 const isOfferExists = require("../services/isOfferExists");
 
 class OfferController {
@@ -77,11 +77,6 @@ class OfferController {
         await getProductId(req.body.productId)
       );
 
-      const notification = await Notification.create({
-        userId: req.user.id,
-        productId: await getProductId(req.body.productId),
-      });
-
       if (offer) {
         res.status(400).json({
           message: "Offer already exists",
@@ -95,6 +90,12 @@ class OfferController {
         });
         res.status(200).json({
           message: "Success add offer",
+        });
+
+        const notification = await Notification.create({
+          userId: req.user.id,
+          offerId: offer.id,
+          publicId: await generateUUID(),
         });
       }
     } catch (error) {

@@ -1,3 +1,4 @@
+"use strict";
 const express = require("express");
 const router = express.Router();
 
@@ -29,7 +30,7 @@ router.delete("/:id", authorization, ProductController.delete);
 router.get("/wishlist", authorization, ProductController.wishlist);
 router.post("/:id/wishlist", authorization, ProductController.addWishlist);
 router.delete("/:id/wishlist", authorization, ProductController.deleteWishlist);
-router.get("/:id", ProductController.get);
+router.get("/:id", isLogin, ProductController.get);
 router.get("/shop/:id", ProductController.getProductListByUserId);
 router.post(
   "/",
@@ -40,7 +41,7 @@ router.post(
   ProductController.add
 );
 router.put(
-  "/:publicId",
+  "/:id",
   authorization,
   upload.array("image", 5),
   updateProdukValidationRules(),
