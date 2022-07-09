@@ -1,3 +1,4 @@
+"use strict";
 const { comparePassword, generateJWT } = require("../helpers");
 const { User, UserBiodata } = require("../models");
 

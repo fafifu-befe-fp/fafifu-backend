@@ -1,3 +1,4 @@
+"use strict";
 const { generateUUID, cloudinary } = require("../helpers");
 const { Op } = require("sequelize");
 const {

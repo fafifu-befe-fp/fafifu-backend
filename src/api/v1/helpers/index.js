@@ -1,9 +1,10 @@
-const hashPassword = require("./hashPassword");
-const generateUUID = require("./generateUUID");
-const generateJWT = require("./generateJWT");
-const comparePassword = require("./comparePassword");
-const { storage } = require("./multerStorage");
-const cloudinary = require("./cloudinary");
+"use strict";
+const hashPassword = require("./hashPassword.helper");
+const generateUUID = require("./generateUUID.helper");
+const generateJWT = require("./generateJWT.helper");
+const comparePassword = require("./comparePassword.helper");
+const { storage } = require("./multerStorage.helper");
+const cloudinary = require("./cloudinary.helper");
 
 module.exports = {
   hashPassword,

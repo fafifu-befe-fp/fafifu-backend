@@ -1,3 +1,4 @@
+"use strict";
 const authRouter = require("./auth.route");
 const productRouter = require("./product.route");
 const userRouter = require("./user.route");

@@ -1,8 +1,9 @@
+"use strict";
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-const errorHandler = require("./api/v1/middlewares/errorHandler");
+const { errorHandler } = require("./api/v1/middlewares");
 const cors = require("cors");
 
 const {

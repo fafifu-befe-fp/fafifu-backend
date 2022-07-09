@@ -1,8 +1,8 @@
+"use strict";
 const express = require("express");
 const router = express.Router();
 const UserController = require("../controllers/user.controller");
 const { authorization, validation } = require("../middlewares");
-const fs = require("fs");
 
 const { updateUserValidationRules } = require("../validations/user.validation");
 

@@ -1,3 +1,4 @@
+"use strict";
 const { sequelize, User, UserBiodata } = require("../models");
 const { hashPassword, generateUUID, cloudinary } = require("../helpers");
 const fs = require("fs");
