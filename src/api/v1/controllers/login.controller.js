@@ -1,16 +1,15 @@
+"use strict";
 const { comparePassword, generateJWT } = require("../helpers");
 const { User, UserBiodata } = require("../models");
 
 class LoginController {
   static async login(req, res, next) {
     try {
-
       const user = await User.findOne({
         where: {
           email: req.body.email,
         },
       });
-
 
       if (user) {
         if (await comparePassword(req.body.password, user.password)) {

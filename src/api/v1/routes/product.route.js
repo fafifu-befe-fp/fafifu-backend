@@ -1,3 +1,4 @@
+"use strict";
 const express = require("express");
 const router = express.Router();
 
@@ -40,7 +41,7 @@ router.post(
   ProductController.add
 );
 router.put(
-  "/:publicId",
+  "/:id",
   authorization,
   upload.array("image", 5),
   updateProdukValidationRules(),

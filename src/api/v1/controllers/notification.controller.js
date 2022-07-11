@@ -1,3 +1,4 @@
+"use strict";
 const { Notification, Offer, Product } = require("../models");
 class NotificationController {
   static async get(req, res, next) {

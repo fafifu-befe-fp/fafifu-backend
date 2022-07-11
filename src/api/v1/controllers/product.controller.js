@@ -1,8 +1,4 @@
-const {
-  getUserByPublicId,
-  getProductListByUserId,
-  getProductId,
-} = require("../services");
+"use strict";
 const { generateUUID, cloudinary } = require("../helpers");
 const { Op } = require("sequelize");
 const {
@@ -253,11 +249,77 @@ class ProductController {
 
   static async getProductListByUserId(req, res, next) {
     try {
-      const user = await getUserByPublicId(req.params.id);
+      const product = (
+        await Product.findAll({
+          attributes: ["publicId", "name", "description", "price"],
+          include: [
+            {
+              model: ProductCategory,
+              include: [
+                {
+                  model: Category,
+                  attributes: ["id", "name"],
+                },
+              ],
+            },
+            {
+              model: ProductImage,
+              attributes: ["imageUrl"],
+            },
+            {
+              model: User,
+              attributes: ["publicId"],
+              include: [
+                {
+                  model: UserBiodata,
+                  attributes: [
+                    "name",
+                    "city",
+                    "address",
+                    "handphone",
+                    "imageUrl",
+                  ],
+                },
+              ],
+              where: {
+                publicId: req.params.id,
+              },
+            },
+          ],
+          order: [[ProductImage, "id", "ASC"]],
+        })
+      ).map((item) => {
+        return {
+          publicId: item.publicId,
+          name: item.name,
+          description: item.description,
+          price: item.price,
+          userId: item.userId,
+          category: item.ProductCategories.map((item) => {
+            return {
+              categoryId: item.Category.id,
+              name: item.Category.name,
+            };
+          }),
+          imageUrl: item.ProductImages.map((item) => {
+            return {
+              imageUrl: item.imageUrl,
+            };
+          }),
+          seller: {
+            publicId: item.User.publicId,
+            name: item.User.UserBiodatum.name,
+            city: item.User.UserBiodatum.city,
+            address: item.User.UserBiodatum.address,
+            handphone: item.User.UserBiodatum.handphone,
+            imageUrl: item.User.UserBiodatum.imageUrl,
+          },
+        };
+      });
 
-      if (user) {
+      if (product) {
         res.status(200).json({
-          data: await getProductListByUserId(req.params.id),
+          data: product,
         });
       } else {
         throw {
@@ -285,7 +347,6 @@ class ProductController {
                   attributes: ["id", "name"],
                 },
               ],
-              where: {},
             },
             {
               model: ProductImage,
@@ -299,7 +360,6 @@ class ProductController {
       });
 
       if (wishlist.length != 0) {
-        console.log("wishlist", wishlist);
         const result = wishlist.map((item) => {
           return {
             publicId: item.Product.publicId,
@@ -337,90 +397,105 @@ class ProductController {
     const updateProductTransaction = await sequelize.transaction();
 
     try {
-      await Product.update(
+      const product = await Product.findOne(
         {
-          name: req.body.name,
-          description: req.body.description,
-          price: req.body.price,
-        },
-        {
+          attributes: ["id"],
           where: {
-            userId: req.user.id,
-            publicId: req.params.publicId,
+            publicId: req.params.id,
           },
         },
-        {
-          transaction: updateProductTransaction,
-        }
+        { transaction: updateProductTransaction }
       );
 
-      const productId = await getProductId(req.params.publicId);
-
-      await ProductCategory.destroy(
-        {
-          where: {
-            productId,
-          },
-        },
-        {
-          transaction: updateProductTransaction,
-        }
-      );
-
-      if (req.body.categoryId.length != 1) {
-        const productCategoryList = req.body.categoryId.map((item) => {
-          return {
-            productId,
-            categoryId: item,
-          };
-        });
-
-        await ProductCategory.bulkCreate(productCategoryList, {
-          transaction: updateProductTransaction,
-        });
-      } else {
-        await ProductCategory.create(
+      if (product) {
+        await Product.update(
           {
-            productId,
-            categoryId: req.body.categoryId,
+            name: req.body.name,
+            description: req.body.description,
+            price: req.body.price,
+          },
+          {
+            where: {
+              userId: req.user.id,
+              publicId: req.params.id,
+            },
           },
           {
             transaction: updateProductTransaction,
           }
         );
-      }
 
-      await ProductImage.destroy(
-        {
-          where: {
-            productId,
+        await ProductCategory.destroy(
+          {
+            where: {
+              productId: product.id,
+            },
           },
-        },
-        {
-          transaction: updateProductTransaction,
-        }
-      );
+          {
+            transaction: updateProductTransaction,
+          }
+        );
 
-      let productImageList = [];
-
-      if (req.files) {
-        for (let index = 0; index < req.files.length; index++) {
-          productImageList.push({
-            productId,
-            imageUrl: `http://127.0.0.1:3000/foto-produk/${req.files[index].filename}`,
+        if (req.body.categoryId.length != 1) {
+          const productCategoryList = req.body.categoryId.map((item) => {
+            return {
+              productId: product.id,
+              categoryId: item,
+            };
           });
+
+          await ProductCategory.bulkCreate(productCategoryList, {
+            transaction: updateProductTransaction,
+          });
+        } else {
+          await ProductCategory.create(
+            {
+              productId: product.id,
+              categoryId: req.body.categoryId,
+            },
+            {
+              transaction: updateProductTransaction,
+            }
+          );
         }
+
+        await ProductImage.destroy(
+          {
+            where: {
+              productId: product.id,
+            },
+          },
+          {
+            transaction: updateProductTransaction,
+          }
+        );
+
+        let productImageList = [];
+
+        if (req.files) {
+          for (let index = 0; index < req.files.length; index++) {
+            productImageList.push({
+              productId: product.id,
+              imageUrl: `http://127.0.0.1:3000/foto-produk/${req.files[index].filename}`,
+            });
+          }
+        }
+
+        await ProductImage.bulkCreate(productImageList, {
+          transaction: updateProductTransaction,
+        });
+
+        await updateProductTransaction.commit();
+
+        res.status(200).json({
+          message: "Success update product",
+        });
+      } else {
+        throw {
+          status: 404,
+          message: "Product not found",
+        };
       }
-
-      await ProductImage.bulkCreate(productImageList, {
-        transaction: updateProductTransaction,
-      });
-
-      await updateProductTransaction.commit();
-
-      res.status(200).json({
-        message: "Success update product",
-      });
     } catch (error) {
       await updateProductTransaction.rollback();
 
@@ -430,22 +505,41 @@ class ProductController {
 
   static async addWishlist(req, res, next) {
     try {
-      if (
-        await Wishlist.findOne({
-          where: {
-            userId: req.user.id,
-            productId: await getProductId(req.params.id),
-          },
-        })
-      ) {
-        res.status(422).json({
-          message: "Wishlist already exists",
-        });
-      } else {
-        Wishlist.create({
+      const wishlist = await Wishlist.findOne({
+        where: {
           userId: req.user.id,
-          productId: await getProductId(req.params.id),
+        },
+        include: {
+          model: Product,
+          where: {
+            publicId: req.params.id,
+          },
+        },
+      });
+
+      if (wishlist) {
+        throw {
+          status: 400,
+          message: "Wishlist already in wishlist",
+        };
+      } else {
+        const product = await Product.findOne({
+          where: {
+            publicId: req.params.id,
+          },
         });
+
+        if (product) {
+          Wishlist.create({
+            userId: req.user.id,
+            productId: product.id,
+          });
+        } else {
+          throw {
+            status: 404,
+            message: "Product not found",
+          };
+        }
       }
 
       res.status(200).json({
@@ -462,23 +556,34 @@ class ProductController {
         await Wishlist.findOne({
           where: {
             userId: req.user.id,
-            productId: await getProductId(req.params.id),
+          },
+          include: {
+            model: Product,
+            where: {
+              publicId: req.params.id,
+            },
           },
         })
       ) {
         Wishlist.destroy({
           where: {
             userId: req.user.id,
-            productId: await getProductId(req.params.id),
+          },
+          include: {
+            model: Product,
+            where: {
+              publicId: req.params.id,
+            },
           },
         });
         res.status(200).json({
           message: "Success delete wishlist",
         });
       } else {
-        res.status(404).json({
+        throw {
+          status: 404,
           message: "Wishlist not found",
-        });
+        };
       }
     } catch (error) {
       next(error);
@@ -519,9 +624,10 @@ class ProductController {
           where: { productId: product.id },
         });
       } else {
-        res.status(404).json({
+        throw {
+          status: 404,
           message: "Product not found",
-        });
+        };
       }
     } catch (error) {
       next(error);
