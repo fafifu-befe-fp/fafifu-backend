@@ -1,0 +1,1606 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Fafifu-Backend REST API",
+    "description": "buyer / Seller Rest Api Information"
+  },
+  "host": "127.0.0.1:3000",
+  "basePath": "/",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "tags":
+  [
+    {
+      "name": "Auth",
+      "description": "Login / Register operation"
+    },
+    {
+      "name": "Profile",
+      "description": "Profile Information"
+    },
+    {
+      "name": "Product",
+      "description": "Product Information"
+    },
+    {
+      "name": "Offer",
+      "description": "Offer Information"
+    },
+    {
+      "name": "Notification",
+      "description": "notification Information"
+    }
+  ],
+  "paths": {
+    "/register/": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Get token",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "admin"
+                },
+                "password": {
+                  "example": "admin"
+                },
+                "name": {
+                  "example": "admin"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                      "example": {
+                        "message": "Success register user"
+                    }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "errors": {
+                  "example": {
+                    "email":"Email is required",
+                    "password":"Password is required",
+                    "name":"Name is required"
+                  }
+                }
+              }
+            }
+          },
+          "422-b": {
+            "description": "Unprocessable Entity",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "errors": {
+                  "example": {
+                    "email":"Email already in use"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    "/Login/": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Get user list",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "admin"
+                },
+                "password": {
+                  "example": "admin"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                      "example": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6ImExYmUyNTVlLTdmNjAtNDQyOC04MTM5LTE3YTgzMzJhZDZhNyIsImVtYWlsIjoiYWRpa3Vybmlhd2FuQG1haWwuY29tIiwiaWF0IjoxNjU2MzM2NTUxfQ.7GYQDQxkr-kpqV2WJiZD3v3P2DnShEFMxOcoNzHc3Zw"
+                    }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "example": "Invalid email or password"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "errors": {
+                  "example": {
+                    "email":"Email is not Valid",
+                    "password":"Password must between 8 - 21 characters"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Get Details/": {
+      "get": {
+        "tags": [
+          "Profile"
+        ],
+        "summary": "Get Details",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Authorization": {
+                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6ImExYmUyNTVlLTdmNjAtNDQyOC04MTM5LTE3YTgzMzJhZDZhNyIsImVtYWlsIjoiYWRpa3Vybmlhd2FuQG1haWwuY29tIiwiaWF0IjoxNjU2MzM3NjU2fQ._KJiFFVKGs3wV9vsAX0UgPhrU_6IEhPhSs3M8JFazD0"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                      "example": {
+                        "publicId": "a1be255e-7f60-4428-8139-17a8332ad6a7",
+                        "email":"adikurniawan@mail.com",
+                        "name":"Adi Kurniawan ID",
+                        "city":"Numerus Sette",
+                        "address":"Pahlawan Bangsa",
+                        "handphone":"080908090909",
+                        "imageUrl":"http://127.0.0.1:3000/avatar/image-1656337995391-the-great-wave.png"
+                    }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "example": "Unauthorized User"
+                }
+              }
+            }
+          }
+        },
+                
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/Update Profile/": {
+      "put": {
+        "tags": [
+          "Profile"
+        ],
+        "summary": "Update Profile",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "address": {
+                  "example": "Pahlawan Bangsa"
+                },
+                "handphone": {
+                  "example": "080908090909"
+                },
+                "image": {
+                  "example": "/home/akdev/Pictures/Screenshot_2"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                      "example": {
+                        "message": "Success update data user"
+                    }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "example": "Unauthorized User"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "errors": {
+                  "example": {
+                    "city": "city is required",
+                    "address": "address is required",
+                    "handphone": "handphone must be numbers"
+                  }   
+                }
+              }
+            }
+          }
+        },
+                
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/Get Product/": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Get Product",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "example": "0225dec5-33a1-467f-8567-592628c2ec5f"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                      "example": {
+                        "publicId": "0225dec5-33a1-467f-8567-592628c2ec5f",
+                        "name": "Chicken",
+                        "description": "New range of formal shirts are designed keeping you in mind. With fits and styling that will make you stand apart",
+                        "price": 286,
+                        "category": [{
+                          "categoryId": 1,
+                          "name": "Hobi"
+                        },
+                        {
+                          "categoryId": 4,
+                          "name": "Elektronik"
+                        },
+                        {
+                          "categoryId": 2,
+                          "name": "Kendaraan"
+                        }
+                      ],
+                      "imageUrl": [{
+                        "imageUrl": "https://needy-veteran.net"
+                      },
+                      {
+                        "imageUrl": "https://downright-member.biz"
+                      },
+                      {
+                        "imageUrl": "http://fearless-arcade.net"
+                      },
+                      {
+                        "imageUrl": "https://unruly-sarong.org"
+                      },
+                      {
+                        "imageUrl": "http://idealistic-walker.info"
+                      }
+                    ]
+                    }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "example": "Product not found"
+                }
+              }
+            }
+          }
+        },
+                
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/Product List/": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Product List",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "categoryId": {
+                  "example": 3
+                },
+                "page": {
+                  "example": 2
+                },
+                "limit": {
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                      "example": {
+                        "publicId": "c9ca54af-4cf8-4bd7-98a1-3b451460bde1",
+                        "name": "Table",
+                        "description": "New ABC 13 9370, 13.3, 5th Gen CoreA5-8250U, 8GB RAM, 256GB SSD, power UHD Graphics, OS 10 Home, OS Office A & J 2016",
+                        "price": 258,
+                        "category": [{
+                          "categoryId": 1,
+                          "name": "Hobi"
+                        }        
+                      ],
+                      "imageUrl": []
+                  }
+                }
+              }
+            }
+          },
+          "200-b": {
+            "description": "Success with Param",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                      "example": {
+                        "publicId": "886a6491-3aa7-40cc-b2a6-8582e805cc07",
+                        "name": "Table",
+                        "description": "The automobile layout consists of a front-engine design, with transaxle-type transmissions mounted at the rear of the engine and four wheel drive",
+                        "price": 125,
+                        "category": [
+                        {
+                        "categoryId": 3,
+                        "name": "Baju"
+                      }
+                    ],
+                      "imageUrl": []
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Product List by User Id/": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Product List by User Id",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Id": {
+                  "example": "9e50ab39-8f99-4333-b2b4-8b6344bd23b6"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                      "example": {
+                          "publicId": "9305ec97-ce9d-4cd7-8489-573beae783f5",
+                          "name": "Pizza",
+                          "description": "The slim & simple Maple Gaming Keyboard from Dev Byte comes with a sleek body and 7- Color RGB LED Back-lighting for smart functionality",
+                          "price": 650,
+                          "category": [
+                       {
+                         "name": "Kesehatan"
+                       },
+                       {
+                        "name": "Hobi"
+                       }
+                       ],
+                          "imageUrl": []
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Seller not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Add Product/": {
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Add Product",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "ciki"
+                },
+                "description": {
+                  "example": "rasa taro"
+                },
+                "price": {
+                  "example": 2000
+                },
+                "image1": {
+                  "example": "/home/akdev/Pictures/Screenshot_2"
+                },
+                "image2": {
+                  "example": "/home/akdev/Pictures/Screenshot_2"
+                },
+                "image3": {
+                  "example": "/home/akdev/Pictures/Screenshot_2"
+                },
+                "image4": {
+                  "example": "/home/akdev/Pictures/Screenshot_2"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Success register product"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example":"Unauthorized User"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "errors": {
+                  "type": "object",
+                      "example":[
+                        {
+                          "name": "name is required"
+                        },
+                        {
+                          "description": "description is required"
+                        },
+                        {
+                          "price": "price must be numeric"
+                        }
+                      ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Update Product/": {
+      "put": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Update Product",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "ciki"
+                },
+                "description": {
+                  "example": "rasa taro"
+                },
+                "price": {
+                  "example": 20001
+                },
+                "categoryId": {
+                  "example": 1
+                },
+                "categoryId-2": {
+                  "example": 2
+                },
+                "image": {
+                  "example": "/home/akdev/Pictures/Screenshot_2"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Success update product"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Unauthorized User"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "errors": {
+                  "type": "object",
+                      "example":[
+                        {
+                          "name": "name is required"
+                        },
+                        {
+                          "description": "description is required"
+                        },
+                        {
+                          "price": "price must be numeric"
+                        }
+                      ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Delete Product/": {
+      "delete": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Delete Product",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "example": "6b31f241-8e65-48f3-981e-b337fd46b14a"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Success deleted product"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Unauthorized User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Product not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Wishlist/": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Wishlist",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Authorization": {
+                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6ImExYmUyNTVlLTdmNjAtNDQyOC04MTM5LTE3YTgzMzJhZDZhNyIsImVtYWlsIjoiYWRpa3Vybmlhd2FuQG1haWwuY29tIiwiaWF0IjoxNjU2MzM2NTUxfQ.7GYQDQxkr-kpqV2WJiZD3v3P2DnShEFMxOcoNzHc3Zw"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                      "example": [
+                        {
+                          "publicId": "0225dec5-33a1-467f-8567-592628c2ec5f",
+                          "name": "Chicken",
+                          "description": "New range of formal shirts are designed keeping you in mind. With fits and styling that will make you stand apart",
+                          "price": 286,
+                          "category":[
+                            {
+                              "categoryId": 4,
+                              "name": "Elektronik"
+                            },
+                            {
+                              "categoryId": 4,
+                              "name": "Elektronik"
+                            },
+                            {
+                              "categoryId": 1,
+                              "name": "Hobi"
+                            }
+                          ],
+                          "imageurl":[
+                            {
+                              "imageUrl": "http://idealistic-walker.info"
+                            },
+                            {
+                              "imageUrl": "https://unruly-sarong.org"
+                            },
+                            {
+                              "imageUrl": "http://fearless-arcade.net"
+                            },
+                            {
+                              "imageUrl": "https://downright-member.biz"
+                            },
+                            {
+                              "imageUrl": "https://needy-veteran.net"
+                            }
+                          ]
+                        }
+                      ]
+                }
+              }
+            }
+          },
+          "200-b": {
+            "description": "Ok",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Wishlist still empty"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Unauthorized User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Add Wishlist/": {
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Add Wishlist",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "example": "3c263f37-b5a9-4929-8cb4-c5640caa83b7"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Success add wishlist"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Unauthorized User"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Wishlist already exists"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Delete Wishlist/": {
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Delete Wishlist",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "example": "3c263f37-b5a9-4929-8cb4-c5640caa83b7"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Success delete wishlist"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Unauthorized User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unprocessable Entity",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example":  "Wishlist not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Add Offer/": {
+      "post": {
+        "tags": [
+          "Offer"
+        ],
+        "summary": "Buyer Add Offer",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "productId": {
+                  "example": "80c399a8-f8c6-401d-8b61-a3dcc0b94f79"
+                },
+                "price": {
+                  "example": 2000000
+                }
+              }
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Success add offer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Offer already exists"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Unauthorized User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Offer List/": {
+      "get": {
+        "tags": [
+          "Offer"
+        ],
+        "summary": "Seller Offer list",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Authorization": {
+                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6ImM3ODQwYjAwLTY4OTItNDRlOS04ZjFkLTgyNTM3MzFiNmY2YyIsImVtYWlsIjoiYWRpa3Vybmlhd2FuQG1haWwuY29tIiwiaWF0IjoxNjU2NDI1ODQ3fQ.whjfAqHUYL9UGCccBKaUmnjUFZ0ELPlnM-1LoCv5-g0"
+                }
+              }
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                      "example": [
+                        {
+                          "name": "Adi Kurniawan ID"
+                        },
+                        {
+                          "description": "New ABC 13 9370, 13.3, 5th Gen CoreA5-8250U, 8GB RAM, 256GB SSD, power UHD Graphics, OS 10 Home, OS Office A & J 2016"
+                        },
+                        {
+                          "price": 779
+                        },
+                        {
+                          "offerPrice": 2000000
+                        },
+                        {
+                          "statusOfferId": null
+                        },
+                        {
+                          "category": [
+                            {
+                              "categoryId": 4,
+                              "name": "Elektronik"
+                            }
+                          ],
+                          "imageUrl": [],
+                          "city": "Numerus Sette",
+                          "address": "Pahlawan Bangsa"
+                        },
+                        {
+                          "name": "Adi Kurniawan ID",
+                          "description": "The Football Is Good For Training And Recreational Purposes",
+                          "price": 205,
+                          "offerPrice": 2000000,
+                          "statusOfferId": null,
+                          "category": [
+                              {
+                                  "categoryId": 3,
+                                  "name": "Baju"
+                              },
+                              {
+                                  "categoryId": 4,
+                                  "name": "Elektronik"
+                              }
+                          ],
+                          "imageUrl": [],
+                          "city": "Numerus Sette",
+                          "address": "Pahlawan Bangsa"
+                      },
+                      {
+                          "name": "Adi Kurniawan ID",
+                          "description": "Boston's most advanced compression wear technology increases muscle oxygenation, stabilizes active muscles",
+                          "price": 737,
+                          "offerPrice": 2000000,
+                          "statusOfferId": null,
+                          "category": [],
+                          "imageUrl": [
+                              {
+                                  "imageUrl": "http://oblong-step-uncle.net"
+                              },
+                              {
+                                  "imageUrl": "http://astonishing-diversity.net"
+                              },
+                              {
+                                  "imageUrl": "http://gigantic-driver.net"
+                              },
+                              {
+                                  "imageUrl": "https://lined-pyramid.info"
+                              },
+                              {
+                                  "imageUrl": "http://bogus-ginseng.net"
+                              }
+                            ],
+                              "city": "Numerus Sette",
+                              "address": "Pahlawan Bangsa"
+                      }
+                    ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Unauthorized User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Update Offer Status/": {
+      "put": {
+        "tags": [
+          "Offer"
+        ],
+        "summary": "Update Offer Status",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "example": "3d9835ae-1153-4242-8047-263eda596b09"
+                }
+              }
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Success update status offer"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Unauthorized User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Offer not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Get unsent Notification/": {
+      "get": {
+        "tags": [
+          "Notification"
+        ],
+        "summary": "Get unsent Notification",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "example": "3d9835ae-1153-4242-8047-263eda596b09"
+                }
+              }
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Success update status offer"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Unauthorized User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Offer not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Get all Notification/": {
+      "get": {
+        "tags": [
+          "Notification"
+        ],
+        "summary": "Get all Notification",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "example": "3d9835ae-1153-4242-8047-263eda596b09"
+                }
+              }
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Success update status offer"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Unauthorized User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Offer not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/set seen Notification/": {
+      "post": {
+        "tags": [
+          "Notification"
+        ],
+        "summary": "set seen Notification",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "example": "3d9835ae-1153-4242-8047-263eda596b09"
+                }
+              }
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Success update status offer"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Unauthorized User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Offer not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Set seen all Notification/": {
+      "post": {
+        "tags": [
+          "Notification"
+        ],
+        "summary": "Set seen all Notification",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "example": "3d9835ae-1153-4242-8047-263eda596b09"
+                }
+              }
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Success update status offer"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Unauthorized User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Offer not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Remove notification/": {
+      "delete": {
+        "tags": [
+          "Notification"
+        ],
+        "summary": "Remove notification",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "example": "3d9835ae-1153-4242-8047-263eda596b09"
+                }
+              }
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Success update status offer"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Unauthorized User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Offer not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Remove notification Copy/": {
+      "get": {
+        "tags": [
+          "Notification"
+        ],
+        "summary": "Remove notification Copy",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "example": "3d9835ae-1153-4242-8047-263eda596b09"
+                }
+              }
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Success update status offer"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Unauthorized User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                      "example": "Offer not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
