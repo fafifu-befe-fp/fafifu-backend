@@ -66,6 +66,7 @@ class ProductController {
         });
       }
 
+
       const data = (await Product.findAll(option)).map((item) => {
         return {
           publicId: item.publicId,
