@@ -66,35 +66,36 @@ class ProductController {
         });
       }
 
-      const data = (await Product.findAll(option)).map((item) => {
-        return {
-          publicId: item.publicId,
-          name: item.name,
-          description: item.description,
-          price: item.price,
-          userId: item.userId,
-          category: item.ProductCategories.map((item) => {
-            return {
-              categoryId: item.Category.id,
-              name: item.Category.name,
-            };
-          }),
-          imageUrl: item.ProductImages.map((item) => {
-            return {
-              imageUrl: item.imageUrl,
-            };
-          }),
-          seller: {
-            publicId: item.User.publicId,
-            name: item.User.UserBiodatum.name,
-            city: item.User.UserBiodatum.city,
-            address: item.User.UserBiodatum.address,
-            handphone: item.User.UserBiodatum.handphone,
-            imageUrl: item.User.UserBiodatum.imageUrl,
-          },
-          status: { Wishlists: item.Wishlists.length != 0 ? true : false },
-        };
-      });
+      const data = (await Product.findAll(option))
+//       .map((item) => {
+//         return {
+//           publicId: item.publicId,
+//           name: item.name,
+//           description: item.description,
+//           price: item.price,
+//           userId: item.userId,
+//           category: item.ProductCategories.map((item) => {
+//             return {
+//               categoryId: item.Category.id,
+//               name: item.Category.name,
+//             };
+//           }),
+//           imageUrl: item.ProductImages.map((item) => {
+//             return {
+//               imageUrl: item.imageUrl,
+//             };
+//           }),
+//           seller: {
+//             publicId: item.User.publicId,
+//             name: item.User.UserBiodatum.name,
+//             city: item.User.UserBiodatum.city,
+//             address: item.User.UserBiodatum.address,
+//             handphone: item.User.UserBiodatum.handphone,
+//             imageUrl: item.User.UserBiodatum.imageUrl,
+//           },
+//           status: { Wishlists: item.Wishlists.length != 0 ? true : false },
+//         };
+//       });
 
       if (data) {
         res.status(200).json({
