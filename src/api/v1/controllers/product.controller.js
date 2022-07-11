@@ -100,7 +100,7 @@ class ProductController {
         };
       });
 
-      if (data.length != 0) {
+      if (data.length) {
         res.status(200).json({
           data,
         });
