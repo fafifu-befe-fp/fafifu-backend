@@ -222,6 +222,56 @@ class ProductService {
       transaction: transactionParam,
     });
   }
+
+  static async addProductCategory(productCategoryListParam, transactionParam) {
+    return await ProductCategory.bulkCreate(productCategoryListParam, {
+      transaction: transactionParam,
+    });
+  }
+
+  static async updateProduct(
+    nameParam,
+    descriptionParam,
+    priceParam,
+    userIdParam,
+    publicIdParam,
+    transactionParam
+  ) {
+    return await Product.update(
+      {
+        name: nameParam,
+        description: descriptionParam,
+        price: priceParam,
+      },
+      {
+        where: {
+          publicId: publicIdParam,
+          userId: userIdParam,
+        },
+      },
+      { transaction: transactionParam }
+    );
+  }
+
+  static async deleteProductCategory(publicIdParam, transactionParam) {
+    return await ProductCategory.destroy({
+      where: {
+        productId: publicIdParam,
+      },
+      transaction: transactionParam,
+    });
+  }
+
+  static async deleteProductImage(publicIdParam, transactionParam) {
+    return await ProductImage.destroy(
+      {
+        where: {
+          productId: publicIdParam,
+        },
+      },
+      { transaction: transactionParam }
+    );
+  }
 }
 
 module.exports = ProductService;

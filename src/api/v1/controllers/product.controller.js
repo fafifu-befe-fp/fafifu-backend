@@ -2,12 +2,7 @@
 const { cloudinary } = require("../helpers");
 const {
   sequelize,
-  User,
-  UserBiodata,
   Product,
-  ProductImage,
-  ProductCategory,
-  Category,
   Notification,
   Offer,
   Wishlist,
@@ -124,28 +119,28 @@ class ProductController {
         addProductTransaction
       );
 
+      let productCategoryList;
+
       if (req.body.categoryId.length != 1) {
-        const productCategoryList = req.body.categoryId.map((item) => {
+        productCategoryList = req.body.categoryId.map((item) => {
           return {
             productId: product.id,
             categoryId: item,
           };
         });
-
-        await ProductCategory.bulkCreate(productCategoryList, {
-          transaction: addProductTransaction,
-        });
       } else {
-        await ProductCategory.create(
+        productCategoryList = [
           {
             productId: product.id,
             categoryId: req.body.categoryId,
           },
-          {
-            transaction: addProductTransaction,
-          }
-        );
+        ];
       }
+
+      await ProductService.addProductCategory(
+        productCategoryList,
+        addProductTransaction
+      );
 
       await addProductTransaction.commit();
       res.status(200).json({
@@ -164,82 +159,62 @@ class ProductController {
       const product = await ProductService.isProductExists(req.params.id);
 
       if (product) {
-        await Product.update(
-          {
-            name: req.body.name,
-            description: req.body.description,
-            price: req.body.price,
-          },
-          {
-            where: {
-              userId: req.user.id,
-              publicId: req.params.id,
-            },
-          },
-          {
-            transaction: updateProductTransaction,
-          }
+        await ProductService.updateProduct(
+          req.body.name,
+          req.body.description,
+          req.body.price,
+          req.user.id,
+          req.params.id,
+          updateProductTransaction
         );
 
-        await ProductCategory.destroy(
-          {
-            where: {
-              productId: product.id,
-            },
-          },
-          {
-            transaction: updateProductTransaction,
-          }
+        await ProductService.deleteProductCategory(
+          product.id,
+          updateProductTransaction
         );
 
+        let productCategoryList;
         if (req.body.categoryId.length != 1) {
-          const productCategoryList = req.body.categoryId.map((item) => {
+          productCategoryList = req.body.categoryId.map((item) => {
             return {
               productId: product.id,
               categoryId: item,
             };
           });
-
-          await ProductCategory.bulkCreate(productCategoryList, {
-            transaction: updateProductTransaction,
-          });
         } else {
-          await ProductCategory.create(
+          productCategoryList = [
             {
               productId: product.id,
               categoryId: req.body.categoryId,
             },
-            {
-              transaction: updateProductTransaction,
-            }
-          );
+          ];
         }
 
-        await ProductImage.destroy(
-          {
-            where: {
-              productId: product.id,
-            },
-          },
-          {
-            transaction: updateProductTransaction,
-          }
+        await ProductService.addProductCategory(
+          productCategoryList,
+          updateProductTransaction
+        );
+
+        await ProductService.deleteProductImage(
+          product.id,
+          updateProductTransaction
         );
 
         let productImageList = [];
 
-        if (req.files) {
-          for (let index = 0; index < req.files.length; index++) {
-            productImageList.push({
-              productId: product.id,
-              imageUrl: `http://127.0.0.1:3000/foto-produk/${req.files[index].filename}`,
-            });
-          }
+        for (let index = 0; index < req.files.length; index++) {
+          const image = await cloudinary.uploader.upload(req.files[index].path);
+          productImageList.push({
+            productId: product.id,
+            imageUrl: image.secure_url,
+          });
+          fs.unlinkSync(req.files[index].path);
         }
 
-        await ProductImage.bulkCreate(productImageList, {
-          transaction: updateProductTransaction,
-        });
+        await ProductService.addProductImage(
+          productImageList,
+          updateProductTransaction
+        );
 
         await updateProductTransaction.commit();
 
