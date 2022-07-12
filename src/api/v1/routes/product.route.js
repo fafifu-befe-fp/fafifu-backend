@@ -6,9 +6,9 @@ const ProductController = require("../controllers/product.controller");
 const WishlistController = require("../controllers/wishlist.controller");
 const { validation, authorization, isLogin } = require("../middlewares");
 const {
-  addProdukValidationRules,
-  updateProdukValidationRules,
-} = require("../validations/produk.validation");
+  addProductValidationRules,
+  updateProductValidationRules,
+} = require("../validations/product.validation");
 
 const multer = require("multer");
 const { storage } = require("../helpers");
@@ -37,7 +37,7 @@ router.post(
   "/",
   authorization,
   upload.array("image", 5),
-  addProdukValidationRules(),
+  addProductValidationRules(),
   validation,
   ProductController.add
 );
@@ -45,7 +45,7 @@ router.put(
   "/:id",
   authorization,
   upload.array("image", 5),
-  updateProdukValidationRules(),
+  updateProductValidationRules(),
   validation,
   ProductController.update
 );

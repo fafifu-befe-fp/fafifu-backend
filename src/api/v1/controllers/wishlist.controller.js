@@ -1,5 +1,4 @@
 "use strict";
-const { Product, Wishlist } = require("../models");
 const { WishlistService, ProductService } = require("../services");
 
 class WishlistController {

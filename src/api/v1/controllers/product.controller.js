@@ -1,5 +1,5 @@
 "use strict";
-const { generateUUID, cloudinary } = require("../helpers");
+const { cloudinary } = require("../helpers");
 const {
   sequelize,
   User,
