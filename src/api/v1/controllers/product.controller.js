@@ -57,7 +57,7 @@ class ProductController {
         });
       } else {
         throw {
-          status: 200,
+          status: 404,
           message: "Product list not found",
         };
       }
@@ -82,7 +82,7 @@ class ProductController {
         });
       } else {
         throw {
-          status: 200,
+          status: 404,
           message: "Product list not found",
         };
       }
