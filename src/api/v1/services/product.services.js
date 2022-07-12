@@ -110,7 +110,8 @@ class ProductService {
     categoryIdParam,
     limitParam,
     pageParam,
-    authorizationParam
+    authorizationFilterParam,
+    userIdParam
   ) {
     const option = {
       attributes: ["publicId", "name", "price"],
@@ -128,6 +129,10 @@ class ProductService {
         {
           model: ProductImage,
           attributes: ["imageUrl"],
+        },
+        {
+          model: User,
+          attributes: ["publicId"],
         },
       ],
       order: [
@@ -148,11 +153,17 @@ class ProductService {
       option.offset = Number(pageParam - 1);
     }
 
-    if (authorizationParam) {
+    if (authorizationFilterParam) {
       option.where = {
         userId: {
-          [Op.not]: authorizationParam,
+          [Op.not]: authorizationFilterParam,
         },
+      };
+    }
+
+    if (userIdParam) {
+      option.include[2].where = {
+        publicId: userIdParam,
       };
     }
 

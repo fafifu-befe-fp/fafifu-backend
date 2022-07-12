@@ -52,7 +52,8 @@ class ProductController {
         req.query.categoryId,
         req.query.limit,
         req.query.page,
-        userId
+        userId,
+        false
       );
 
       if (data) {
@@ -72,81 +73,22 @@ class ProductController {
 
   static async listByUserId(req, res, next) {
     try {
-      const product = (
-        await Product.findAll({
-          attributes: ["publicId", "name", "price"],
-          include: [
-            {
-              model: ProductCategory,
-              include: [
-                {
-                  model: Category,
-                  attributes: ["id", "name"],
-                },
-              ],
-            },
-            {
-              model: ProductImage,
-              attributes: ["imageUrl"],
-            },
-            {
-              model: User,
-              attributes: ["publicId"],
-              include: [
-                {
-                  model: UserBiodata,
-                  attributes: [
-                    "name",
-                    "city",
-                    "address",
-                    "handphone",
-                    "imageUrl",
-                  ],
-                },
-              ],
-              where: {
-                publicId: req.params.id,
-              },
-            },
-          ],
-          order: [[ProductImage, "id", "ASC"]],
-        })
-      ).map((item) => {
-        return {
-          publicId: item.publicId,
-          name: item.name,
-          price: item.price,
-          userId: item.userId,
-          category: item.ProductCategories.map((item) => {
-            return {
-              categoryId: item.Category.id,
-              name: item.Category.name,
-            };
-          }),
-          imageUrl: item.ProductImages.map((item) => {
-            return {
-              imageUrl: item.imageUrl,
-            };
-          }),
-          seller: {
-            publicId: item.User.publicId,
-            name: item.User.UserBiodatum.name,
-            city: item.User.UserBiodatum.city,
-            address: item.User.UserBiodatum.address,
-            handphone: item.User.UserBiodatum.handphone,
-            imageUrl: item.User.UserBiodatum.imageUrl,
-          },
-        };
-      });
+      const data = await ProductService.getProductList(
+        req.query.categoryId,
+        req.query.limit,
+        req.query.page,
+        false,
+        req.params.id
+      );
 
-      if (product) {
+      if (data) {
         res.status(200).json({
-          data: product,
+          data,
         });
       } else {
         throw {
           status: 404,
-          message: "Seller not found",
+          message: "Product list not found",
         };
       }
     } catch (error) {
@@ -219,15 +161,7 @@ class ProductController {
     const updateProductTransaction = await sequelize.transaction();
 
     try {
-      const product = await Product.findOne(
-        {
-          attributes: ["id"],
-          where: {
-            publicId: req.params.id,
-          },
-        },
-        { transaction: updateProductTransaction }
-      );
+      const product = await ProductService.isProductExists(req.params.id);
 
       if (product) {
         await Product.update(
@@ -320,7 +254,6 @@ class ProductController {
       }
     } catch (error) {
       await updateProductTransaction.rollback();
-
       next(error);
     }
   }
