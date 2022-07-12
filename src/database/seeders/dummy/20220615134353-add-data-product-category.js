@@ -3,10 +3,10 @@ const { faker } = require("@faker-js/faker");
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    const dummyProdukKategoriData = [];
+    const dummyProductKategoriData = [];
 
     for (let index = 1; index < 21; index++) {
-      dummyProdukKategoriData.push({
+      dummyProductKategoriData.push({
         productId: faker.datatype.number({ min: 1, max: 20 }),
         categoryId: faker.datatype.number({ min: 1, max: 5 }),
         createdAt: new Date(),
@@ -16,7 +16,7 @@ module.exports = {
 
     await queryInterface.bulkInsert(
       "ProductCategory",
-      dummyProdukKategoriData,
+      dummyProductKategoriData,
       {}
     );
   },

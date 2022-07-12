@@ -1,7 +1,7 @@
 "use strict";
 const { body } = require("express-validator");
 
-const addProdukValidationRules = () => {
+const addProductValidationRules = () => {
   return [
     body("name").notEmpty().withMessage("name is required"),
     body("description").notEmpty().withMessage("description is required"),
@@ -15,7 +15,7 @@ const addProdukValidationRules = () => {
   ];
 };
 
-const updateProdukValidationRules = () => {
+const updateProductValidationRules = () => {
   return [
     body("name").optional().notEmpty().withMessage("name is required"),
     body("description")
@@ -37,6 +37,6 @@ const updateProdukValidationRules = () => {
 };
 
 module.exports = {
-  addProdukValidationRules,
-  updateProdukValidationRules,
+  addProductValidationRules,
+  updateProductValidationRules,
 };

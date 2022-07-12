@@ -121,4 +121,4 @@ class NotificationController {
   }
 }
 
-https: module.exports = NotificationController;
+module.exports = NotificationController;

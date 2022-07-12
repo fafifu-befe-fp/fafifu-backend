@@ -3,10 +3,10 @@ const { faker } = require("@faker-js/faker");
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    const dummyPotoProdukData = [];
+    const dummyPotoProductData = [];
 
     for (let index = 1; index < 6; index++) {
-      dummyPotoProdukData.push({
+      dummyPotoProductData.push({
         productId: 1,
         imageUrl: faker.internet.url(),
         createdAt: new Date(),
@@ -14,7 +14,7 @@ module.exports = {
       });
     }
 
-    await queryInterface.bulkInsert("ProductImages", dummyPotoProdukData, {});
+    await queryInterface.bulkInsert("ProductImages", dummyPotoProductData, {});
   },
 
   async down(queryInterface, Sequelize) {

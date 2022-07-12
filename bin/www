@@ -4,8 +4,8 @@
  * Module dependencies.
  */
 
-var app = require("../app");
-var debug = require("debug")("challenge-04:server");
+var app = require("../src/app");
+var debug = require("debug")("fafifu-backend:server");
 var http = require("http");
 
 /**
