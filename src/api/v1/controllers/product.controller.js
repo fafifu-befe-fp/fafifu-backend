@@ -74,7 +74,7 @@ class ProductController {
     try {
       const product = (
         await Product.findAll({
-          attributes: ["publicId", "name", "description", "price"],
+          attributes: ["publicId", "name", "price"],
           include: [
             {
               model: ProductCategory,
@@ -115,7 +115,6 @@ class ProductController {
         return {
           publicId: item.publicId,
           name: item.name,
-          description: item.description,
           price: item.price,
           userId: item.userId,
           category: item.ProductCategories.map((item) => {
@@ -212,67 +211,6 @@ class ProductController {
       });
     } catch (error) {
       await addProductTransaction.rollback();
-      next(error);
-    }
-  }
-
-  static async wishlist(req, res, next) {
-    try {
-      const wishlist = await Wishlist.findAll({
-        include: {
-          model: Product,
-          attributes: ["publicId", "name", "description", "price"],
-          include: [
-            {
-              model: ProductCategory,
-              include: [
-                {
-                  model: Category,
-                  attributes: ["id", "name"],
-                },
-              ],
-            },
-            {
-              model: ProductImage,
-              attributes: ["imageUrl"],
-            },
-          ],
-        },
-        where: {
-          userId: req.user.id,
-        },
-      });
-
-      if (wishlist.length != 0) {
-        const result = wishlist.map((item) => {
-          return {
-            publicId: item.Product.publicId,
-            name: item.Product.name,
-            description: item.Product.description,
-            price: item.Product.price,
-            category: item.Product.ProductCategories.map((item) => {
-              return {
-                categoryId: item.Category.id,
-                name: item.Category.name,
-              };
-            }),
-            imageUrl: item.Product.ProductImages.map((item) => {
-              return {
-                imageUrl: item.imageUrl,
-              };
-            }),
-          };
-        });
-
-        res.status(200).json({
-          data: result,
-        });
-      } else {
-        res.status(200).json({
-          message: "Wishlist still empty",
-        });
-      }
-    } catch (error) {
       next(error);
     }
   }
@@ -383,93 +321,6 @@ class ProductController {
     } catch (error) {
       await updateProductTransaction.rollback();
 
-      next(error);
-    }
-  }
-
-  static async addWishlist(req, res, next) {
-    try {
-      const wishlist = await Wishlist.findOne({
-        where: {
-          userId: req.user.id,
-        },
-        include: {
-          model: Product,
-          where: {
-            publicId: req.params.id,
-          },
-        },
-      });
-
-      if (wishlist) {
-        throw {
-          status: 400,
-          message: "Wishlist already in wishlist",
-        };
-      } else {
-        const product = await Product.findOne({
-          where: {
-            publicId: req.params.id,
-          },
-        });
-
-        if (product) {
-          Wishlist.create({
-            userId: req.user.id,
-            productId: product.id,
-          });
-        } else {
-          throw {
-            status: 404,
-            message: "Product not found",
-          };
-        }
-      }
-
-      res.status(200).json({
-        message: "Success add wishlist",
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  static async deleteWishlist(req, res, next) {
-    try {
-      if (
-        await Wishlist.findOne({
-          where: {
-            userId: req.user.id,
-          },
-          include: {
-            model: Product,
-            where: {
-              publicId: req.params.id,
-            },
-          },
-        })
-      ) {
-        Wishlist.destroy({
-          where: {
-            userId: req.user.id,
-          },
-          include: {
-            model: Product,
-            where: {
-              publicId: req.params.id,
-            },
-          },
-        });
-        res.status(200).json({
-          message: "Success delete wishlist",
-        });
-      } else {
-        throw {
-          status: 404,
-          message: "Wishlist not found",
-        };
-      }
-    } catch (error) {
       next(error);
     }
   }

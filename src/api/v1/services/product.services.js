@@ -113,7 +113,7 @@ class ProductService {
     authorizationParam
   ) {
     const option = {
-      attributes: ["publicId", "name", "description", "price"],
+      attributes: ["publicId", "name", "price"],
       include: [
         {
           model: ProductCategory,
@@ -163,7 +163,6 @@ class ProductService {
         return {
           publicId: item.publicId,
           name: item.name,
-          description: item.description,
           price: item.price,
           imageUrl: item.ProductImages[0].imageUrl,
           category: item.ProductCategories.map((item) => {
@@ -181,6 +180,7 @@ class ProductService {
 
   static async isProductExists(publicIdParam) {
     return await Product.findOne({
+      attributes: ["id", "publicId"],
       where: {
         publicId: publicIdParam,
       },
