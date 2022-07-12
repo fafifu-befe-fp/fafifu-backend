@@ -1,47 +1,22 @@
 "use strict";
 const { comparePassword, generateJWT } = require("../helpers");
-const { User, UserBiodata } = require("../models");
+const { UserService } = require("../services");
 
 class LoginController {
   static async login(req, res, next) {
     try {
-      const user = await User.findOne({
-        where: {
-          email: req.body.email,
-        },
-      });
+      const user = await UserService.isEmailExists(req.body.email);
 
       if (user) {
-        if (await comparePassword(req.body.password, user.password)) {
-          const dataUser = await User.findOne({
-            attributes: ["id", "publicId", "email"],
-            where: { id: user.id },
-            include: [
-              {
-                model: UserBiodata,
-                attributes: [
-                  "name",
-                  "imageUrl",
-                  "city",
-                  "address",
-                  "handphone",
-                ],
-              },
-            ],
-          });
+        const isPasswordValid = await comparePassword(
+          req.body.password,
+          user.password
+        );
+        if (isPasswordValid) {
           res.status(200).json({
             data: {
               token: await generateJWT(user.publicId, user.email),
-              user: {
-                id: dataUser.id,
-                publicId: dataUser.publicId,
-                name: dataUser.UserBiodatum.name,
-                email: dataUser.email,
-                imageUrl: dataUser.UserBiodatum.imageUrl,
-                city: dataUser.UserBiodatum.city,
-                address: dataUser.UserBiodatum.address,
-                handphone: dataUser.UserBiodatum.handphone,
-              },
+              user: await UserService.getProfile(user.id),
             },
           });
         } else {
@@ -62,4 +37,4 @@ class LoginController {
   }
 }
 
-https: module.exports = LoginController;
+module.exports = LoginController;

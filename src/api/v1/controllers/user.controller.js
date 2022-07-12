@@ -1,34 +1,17 @@
 "use strict";
-const { sequelize, User, UserBiodata } = require("../models");
-const { hashPassword, generateUUID, cloudinary } = require("../helpers");
+const { sequelize } = require("../models");
+const { cloudinary } = require("../helpers");
+const { UserService } = require("../services");
 const fs = require("fs");
 
 class UserController {
   static async get(req, res, next) {
     try {
-      const user = await User.findOne({
-        attributes: ["email", "publicId"],
-        include: {
-          model: UserBiodata,
-        },
-        where: {
-          id: req.user.id,
-        },
-      });
+      const user = await UserService.getProfile(req.user.id);
 
-      const result = {
-        publicId: user.publicId,
-        email: user.email,
-        name: user.UserBiodatum.name,
-        city: user.UserBiodatum.city,
-        address: user.UserBiodatum.address,
-        handphone: user.UserBiodatum.handphone,
-        imageUrl: user.UserBiodatum.imageUrl,
-      };
-
-      if (result) {
+      if (user) {
         res.status(200).json({
-          data: result,
+          data: user,
         });
       } else {
         throw {
@@ -42,24 +25,18 @@ class UserController {
   }
 
   static async register(req, res, next) {
+    const registerUserTransaction = await sequelize.transaction();
     try {
-      const registerUserTransaction = await sequelize.transaction();
-
-      const user = await User.create(
-        {
-          email: req.body.email,
-          password: await hashPassword(req.body.password),
-          publicId: await generateUUID(),
-        },
-        { transaction: registerUserTransaction }
+      const user = await UserService.createUser(
+        req.body.email,
+        req.body.password,
+        registerUserTransaction
       );
 
-      await UserBiodata.create(
-        {
-          userId: user.id,
-          name: req.body.name,
-        },
-        { transaction: registerUserTransaction }
+      await UserService.createUserBiodata(
+        user.id,
+        req.body.name,
+        registerUserTransaction
       );
 
       await registerUserTransaction.commit();
@@ -76,26 +53,19 @@ class UserController {
     try {
       const image = await cloudinary.uploader.upload(req.file.path);
       fs.unlinkSync(req.file.path);
-      const user = req.user;
 
-      if (user) {
-        await UserBiodata.update(
-          {
-            name: req.body.name,
-            city: req.body.city,
-            address: req.body.address,
-            handphone: req.body.handphone,
-            imageUrl: image.secure_url,
-          },
-          {
-            where: {
-              userId: user.id,
-            },
-          }
+      if (req.user) {
+        await UserService.updateUserBiodata(
+          req.body.name,
+          req.body.city,
+          req.body.address,
+          req.body.handphone,
+          image.secure_url,
+          req.user.id
         );
 
         res.status(200).json({
-          message: "Success Update data user",
+          message: "Success update data user",
         });
       } else {
         throw {

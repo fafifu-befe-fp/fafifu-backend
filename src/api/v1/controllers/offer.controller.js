@@ -8,9 +8,7 @@ const {
   ProductImage,
   Notification,
 } = require("../models");
-const { getProductId } = require("../services");
 const { generateUUID } = require("../helpers");
-const isOfferExists = require("../services/isOfferExists");
 
 class OfferController {
   static async list(req, res, next) {
@@ -72,10 +70,18 @@ class OfferController {
 
   static async add(req, res, next) {
     try {
-      const offer = await isOfferExists(
-        req.user.id,
-        await getProductId(req.body.productId)
-      );
+      const offer = await Offer.findOne({
+        where: {
+          buyerId: req.user.id,
+          productId: await Product.findOne({
+            attributes: ["id"],
+            where: {
+              publicId: req.body.productId,
+            },
+          }),
+          statusOfferId: null,
+        },
+      });
 
       if (offer) {
         res.status(400).json({
@@ -85,7 +91,12 @@ class OfferController {
         const offer = await Offer.create({
           buyerId: req.user.id,
           publicId: await generateUUID(),
-          productId: await getProductId(req.body.productId),
+          productId: await Product.findOne({
+            attributes: ["id"],
+            where: {
+              publicId: req.body.productId,
+            },
+          }),
           price: req.body.price,
         });
         res.status(200).json({
