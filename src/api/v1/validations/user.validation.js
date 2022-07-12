@@ -1,6 +1,6 @@
 "use strict";
 const { body } = require("express-validator");
-const { isEmailExists } = require("../services");
+const { UserService } = require("../services");
 
 const registerUserValidationRules = () => {
   return [
@@ -11,7 +11,7 @@ const registerUserValidationRules = () => {
       .isEmail()
       .withMessage("Email is not valid")
       .custom(async (value) => {
-        if (await isEmailExists(value)) {
+        if (await UserService.isEmailExists(value)) {
           return Promise.reject("Email already in use");
         }
       }),

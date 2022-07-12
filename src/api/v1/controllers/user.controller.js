@@ -2,33 +2,16 @@
 const { sequelize, User, UserBiodata } = require("../models");
 const { hashPassword, generateUUID, cloudinary } = require("../helpers");
 const fs = require("fs");
+const { UserService } = require("../services");
 
 class UserController {
   static async get(req, res, next) {
     try {
-      const user = await User.findOne({
-        attributes: ["email", "publicId"],
-        include: {
-          model: UserBiodata,
-        },
-        where: {
-          id: req.user.id,
-        },
-      });
+      const user = await UserService.getProfile(req.user.id);
 
-      const result = {
-        publicId: user.publicId,
-        email: user.email,
-        name: user.UserBiodatum.name,
-        city: user.UserBiodatum.city,
-        address: user.UserBiodatum.address,
-        handphone: user.UserBiodatum.handphone,
-        imageUrl: user.UserBiodatum.imageUrl,
-      };
-
-      if (result) {
+      if (user) {
         res.status(200).json({
-          data: result,
+          data: user,
         });
       } else {
         throw {

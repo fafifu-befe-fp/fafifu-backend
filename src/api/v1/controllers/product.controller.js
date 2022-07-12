@@ -1,6 +1,5 @@
 "use strict";
 const { generateUUID, cloudinary } = require("../helpers");
-const { Op } = require("sequelize");
 const {
   sequelize,
   User,
@@ -14,88 +13,17 @@ const {
   Wishlist,
 } = require("../models");
 const fs = require("fs");
+const ProductService = require("../services/product.services");
 class ProductController {
   static async get(req, res, next) {
     try {
-      let option = {
-        attributes: ["publicId", "name", "description", "price"],
-        include: [
-          {
-            model: ProductCategory,
-            include: [
-              {
-                model: Category,
-                attributes: ["id", "name"],
-              },
-            ],
-          },
-          {
-            model: ProductImage,
-            attributes: ["imageUrl"],
-          },
-          {
-            model: User,
-            attributes: ["publicId"],
-            include: [
-              {
-                model: UserBiodata,
-                attributes: [
-                  "name",
-                  "city",
-                  "address",
-                  "handphone",
-                  "imageUrl",
-                ],
-              },
-            ],
-          },
-        ],
-        where: {
-          publicId: req.params.id,
-        },
-      };
+      let userId = false;
 
       if (req.headers.authorization) {
-        option.include.push({
-          model: Wishlist,
-          attributes: ["id"],
-          where: {
-            userId: req.user.id,
-          },
-          required: false,
-        });
+        userId = req.user.id;
       }
 
-
-      const data = (await Product.findAll(option)).map((item) => {
-        return {
-          publicId: item.publicId,
-          name: item.name,
-          description: item.description,
-          price: item.price,
-          userId: item.userId,
-          category: item.ProductCategories.map((item) => {
-            return {
-              categoryId: item.Category.id,
-              name: item.Category.name,
-            };
-          }),
-          imageUrl: item.ProductImages.map((item) => {
-            return {
-              imageUrl: item.imageUrl,
-            };
-          }),
-          seller: {
-            publicId: item.User.publicId,
-            name: item.User.UserBiodatum.name,
-            city: item.User.UserBiodatum.city,
-            address: item.User.UserBiodatum.address,
-            handphone: item.User.UserBiodatum.handphone,
-            imageUrl: item.User.UserBiodatum.imageUrl,
-          },
-          status: { Wishlists: item.Wishlists },
-        };
-      });
+      const data = await ProductService.getProductDetail(req.params.id, userId);
 
       if (data) {
         res.status(200).json({
@@ -114,136 +42,30 @@ class ProductController {
 
   static async list(req, res, next) {
     try {
-      const option = {
-        attributes: ["publicId", "name", "description", "price"],
-        include: [
-          {
-            model: ProductCategory,
-            include: [
-              {
-                model: Category,
-                attributes: ["id", "name"],
-              },
-            ],
-            where: {},
-          },
-          {
-            model: ProductImage,
-            attributes: ["imageUrl", "id"],
-          },
-        ],
-        order: [[ProductImage, "id", "ASC"]],
-      };
-
-      if (req.query.categoryId) {
-        option.include[0].where.categoryId = Number(req.query.categoryId);
-      }
-
-      if (req.query.limit) {
-        option.limit = Number(req.query.limit);
-      }
-      if (req.query.page) {
-        option.offset = Number(req.query.page - 1);
-      }
+      let userId = false;
 
       if (req.headers.authorization) {
-        option.where = {
-          userId: {
-            [Op.not]: req.user.id,
-          },
-        };
+        userId = req.user.id;
       }
 
-      const product = await Product.findAll(option);
-
-      const result = product.map((item) => {
-        return {
-          publicId: item.publicId,
-          name: item.name,
-          description: item.description,
-          price: item.price,
-          category: item.ProductCategories.map((item) => {
-            return {
-              categoryId: item.Category.id,
-              name: item.Category.name,
-            };
-          }),
-          imageUrl: item.ProductImages.map((item) => {
-            return {
-              id: item.id,
-              imageUrl: item.imageUrl,
-            };
-          }),
-        };
-      });
-
-      res.status(200).json({
-        data: result,
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  static async add(req, res, next) {
-    const addProductTransaction = await sequelize.transaction();
-
-    try {
-      const product = await Product.create(
-        {
-          publicId: await generateUUID(),
-          name: req.body.name,
-          description: req.body.description,
-          price: req.body.price,
-          userId: req.user.id,
-        },
-        { transaction: addProductTransaction }
+      const data = await ProductService.getProductList(
+        req.query.categoryId,
+        req.query.limit,
+        req.query.page,
+        userId
       );
 
-      let productImageList = [];
-
-      for (let index = 0; index < req.files.length; index++) {
-        const image = await cloudinary.uploader.upload(req.files[index].path);
-        productImageList.push({
-          productId: product.id,
-          imageUrl: image.secure_url,
-        });
-        fs.unlinkSync(req.files[index].path);
-      }
-
-      await ProductImage.bulkCreate(productImageList, {
-        transaction: addProductTransaction,
-      });
-
-      if (req.body.categoryId.length != 1) {
-        const productCategoryList = req.body.categoryId.map((item) => {
-          return {
-            productId: product.id,
-            categoryId: item,
-          };
-        });
-
-        await ProductCategory.bulkCreate(productCategoryList, {
-          transaction: addProductTransaction,
+      if (data) {
+        res.status(200).json({
+          data,
         });
       } else {
-        await ProductCategory.create(
-          {
-            productId: product.id,
-            categoryId: req.body.categoryId,
-          },
-          {
-            transaction: addProductTransaction,
-          }
-        );
+        throw {
+          status: 404,
+          message: "Product list not found",
+        };
       }
-
-      await addProductTransaction.commit();
-      res.status(200).json({
-        message: "Success register product",
-      });
     } catch (error) {
-      await addProductTransaction.rollback();
       next(error);
     }
   }
@@ -329,6 +151,69 @@ class ProductController {
         };
       }
     } catch (error) {
+      next(error);
+    }
+  }
+
+  static async add(req, res, next) {
+    const addProductTransaction = await sequelize.transaction();
+
+    try {
+      const product = await Product.create(
+        {
+          publicId: await generateUUID(),
+          name: req.body.name,
+          description: req.body.description,
+          price: req.body.price,
+          userId: req.user.id,
+        },
+        { transaction: addProductTransaction }
+      );
+
+      let productImageList = [];
+
+      for (let index = 0; index < req.files.length; index++) {
+        const image = await cloudinary.uploader.upload(req.files[index].path);
+        productImageList.push({
+          productId: product.id,
+          imageUrl: image.secure_url,
+        });
+        fs.unlinkSync(req.files[index].path);
+      }
+
+      await ProductImage.bulkCreate(productImageList, {
+        transaction: addProductTransaction,
+      });
+
+      if (req.body.categoryId.length != 1) {
+        const productCategoryList = req.body.categoryId.map((item) => {
+          return {
+            productId: product.id,
+            categoryId: item,
+          };
+        });
+
+        await ProductCategory.bulkCreate(productCategoryList, {
+          transaction: addProductTransaction,
+        });
+      } else {
+        await ProductCategory.create(
+          {
+            productId: product.id,
+            categoryId: req.body.categoryId,
+          },
+          {
+            transaction: addProductTransaction,
+          }
+        );
+      }
+
+      await addProductTransaction.commit();
+      res.status(200).json({
+        message: "Success register product",
+      });
+    } catch (error) {
+      await addProductTransaction.rollback();
       next(error);
     }
   }
@@ -593,12 +478,7 @@ class ProductController {
 
   static async delete(req, res, next) {
     try {
-      const product = await Product.findOne({
-        where: {
-          publicId: req.params.id,
-          userId: req.user.id,
-        },
-      });
+      const product = await ProductService.isProductExist(req.params.id);
 
       if (product) {
         await Product.destroy({
