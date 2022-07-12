@@ -26,7 +26,7 @@ class ProductController {
         });
       } else {
         throw {
-          status: 404,
+          status: 400,
           message: "Product not found",
         };
       }
@@ -57,7 +57,7 @@ class ProductController {
         });
       } else {
         throw {
-          status: 404,
+          status: 400,
           message: "Product list not found",
         };
       }
