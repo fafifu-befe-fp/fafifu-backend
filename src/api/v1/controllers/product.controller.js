@@ -159,15 +159,12 @@ class ProductController {
     const addProductTransaction = await sequelize.transaction();
 
     try {
-      const product = await Product.create(
-        {
-          publicId: await generateUUID(),
-          name: req.body.name,
-          description: req.body.description,
-          price: req.body.price,
-          userId: req.user.id,
-        },
-        { transaction: addProductTransaction }
+      const product = await ProductService.createProduct(
+        req.body.name,
+        req.body.description,
+        req.body.price,
+        req.user.id,
+        addProductTransaction
       );
 
       let productImageList = [];

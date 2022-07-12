@@ -9,6 +9,7 @@ const {
   Offer,
 } = require("../models");
 const { Op } = require("sequelize");
+const { generateUUID } = require("../helpers");
 
 class ProductService {
   static async getProductDetail(publicIdParam, authorizationParam) {
@@ -184,6 +185,25 @@ class ProductService {
         publicId: publicIdParam,
       },
     });
+  }
+
+  static async createProduct(
+    nameParam,
+    descriptionParam,
+    priceParam,
+    userIdParam,
+    transactionParam
+  ) {
+    return await Product.create(
+      {
+        publicId: await generateUUID(),
+        name: nameParam,
+        description: descriptionParam,
+        price: priceParam,
+        userId: userIdParam,
+      },
+      { transaction: transactionParam }
+    );
   }
 }
 
