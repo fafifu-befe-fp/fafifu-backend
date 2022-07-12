@@ -205,6 +205,12 @@ class ProductService {
       { transaction: transactionParam }
     );
   }
+
+  static async addProductImage(productImageListParam, transactionParam) {
+    return await ProductImage.bulkCreate(productImageListParam, {
+      transaction: transactionParam,
+    });
+  }
 }
 
 module.exports = ProductService;

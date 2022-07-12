@@ -178,9 +178,10 @@ class ProductController {
         fs.unlinkSync(req.files[index].path);
       }
 
-      await ProductImage.bulkCreate(productImageList, {
-        transaction: addProductTransaction,
-      });
+      await ProductService.addProductImage(
+        productImageList,
+        addProductTransaction
+      );
 
       if (req.body.categoryId.length != 1) {
         const productCategoryList = req.body.categoryId.map((item) => {
