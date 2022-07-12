@@ -70,7 +70,7 @@ class ProductController {
     }
   }
 
-  static async getProductListByUserId(req, res, next) {
+  static async listByUserId(req, res, next) {
     try {
       const product = (
         await Product.findAll({

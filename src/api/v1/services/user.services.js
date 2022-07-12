@@ -1,3 +1,4 @@
+const { hashPassword, generateUUID } = require("../helpers");
 const { User, UserBiodata } = require("../models");
 
 class UserService {
@@ -30,6 +31,27 @@ class UserService {
       handphone: user.UserBiodatum.handphone,
       imageUrl: user.UserBiodatum.imageUrl,
     };
+  }
+
+  static async createUser(emailParam, passwordParam, transactionParam) {
+    return await User.create(
+      {
+        email: emailParam,
+        password: await hashPassword(passwordParam),
+        publicId: await generateUUID(),
+      },
+      { transaction: transactionParam }
+    );
+  }
+
+  static async createUserBiodata(userIdParam, nameParam, transactionParam) {
+    return await UserBiodata.create(
+      {
+        userId: userIdParam,
+        name: nameParam,
+      },
+      { transaction: transactionParam }
+    );
   }
 }
 

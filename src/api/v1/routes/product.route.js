@@ -31,7 +31,7 @@ router.get("/wishlist", authorization, ProductController.wishlist);
 router.post("/:id/wishlist", authorization, ProductController.addWishlist);
 router.delete("/:id/wishlist", authorization, ProductController.deleteWishlist);
 router.get("/:id", isLogin, ProductController.get);
-router.get("/shop/:id", ProductController.getProductListByUserId);
+router.get("/shop/:id", ProductController.listByUserId);
 router.post(
   "/",
   authorization,

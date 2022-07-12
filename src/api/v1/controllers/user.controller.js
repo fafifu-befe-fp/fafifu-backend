@@ -25,24 +25,18 @@ class UserController {
   }
 
   static async register(req, res, next) {
+    const registerUserTransaction = await sequelize.transaction();
     try {
-      const registerUserTransaction = await sequelize.transaction();
-
-      const user = await User.create(
-        {
-          email: req.body.email,
-          password: await hashPassword(req.body.password),
-          publicId: await generateUUID(),
-        },
-        { transaction: registerUserTransaction }
+      const user = await UserService.createUser(
+        req.body.email,
+        req.body.password,
+        registerUserTransaction
       );
 
-      await UserBiodata.create(
-        {
-          userId: user.id,
-          name: req.body.name,
-        },
-        { transaction: registerUserTransaction }
+      await UserService.createUserBiodata(
+        user.id,
+        req.body.name,
+        registerUserTransaction
       );
 
       await registerUserTransaction.commit();
