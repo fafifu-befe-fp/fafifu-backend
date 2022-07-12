@@ -53,6 +53,30 @@ class UserService {
       { transaction: transactionParam }
     );
   }
+
+  static async updateUserBiodata(
+    nameParam,
+    cityParam,
+    addressParam,
+    handphoneParam,
+    imageUrlParam,
+    userIdParam
+  ) {
+    return await UserBiodata.update(
+      {
+        name: nameParam,
+        city: cityParam,
+        address: addressParam,
+        handphone: handphoneParam,
+        imageUrl: imageUrlParam,
+      },
+      {
+        where: {
+          userId: userIdParam,
+        },
+      }
+    );
+  }
 }
 
 module.exports = UserService;

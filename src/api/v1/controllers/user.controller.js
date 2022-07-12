@@ -1,8 +1,8 @@
 "use strict";
-const { sequelize, User, UserBiodata } = require("../models");
-const { hashPassword, generateUUID, cloudinary } = require("../helpers");
-const fs = require("fs");
+const { sequelize } = require("../models");
+const { cloudinary } = require("../helpers");
 const { UserService } = require("../services");
+const fs = require("fs");
 
 class UserController {
   static async get(req, res, next) {
@@ -53,26 +53,19 @@ class UserController {
     try {
       const image = await cloudinary.uploader.upload(req.file.path);
       fs.unlinkSync(req.file.path);
-      const user = req.user;
 
-      if (user) {
-        await UserBiodata.update(
-          {
-            name: req.body.name,
-            city: req.body.city,
-            address: req.body.address,
-            handphone: req.body.handphone,
-            imageUrl: image.secure_url,
-          },
-          {
-            where: {
-              userId: user.id,
-            },
-          }
+      if (req.user) {
+        await UserService.updateUserBiodata(
+          req.body.name,
+          req.body.city,
+          req.body.address,
+          req.body.handphone,
+          image.secure_url,
+          req.user.id
         );
 
         res.status(200).json({
-          message: "Success Update data user",
+          message: "Success update data user",
         });
       } else {
         throw {
