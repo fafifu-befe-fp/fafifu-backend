@@ -97,8 +97,8 @@ class ProductService {
           imageUrl: product.User.UserBiodatum.imageUrl,
         },
         status: {
-          wishlist: product.Wishlists.length > 0 ? true : false,
-          offer: product.Offers.length > 0 ? true : false,
+          wishlist: product.Wishlists,
+          offer: product.Offers,
         },
       };
     } else {
