@@ -1,3 +1,4 @@
+"use strict";
 const {
   Product,
   ProductImage,
@@ -72,7 +73,20 @@ class ProductService {
 
     const product = await Product.findOne(option);
 
+    let wishlistStatus = false;
+    let offerStatus = false;
     if (product) {
+      if (Array.isArray(product.Wishlists)) {
+        if (product.Wishlists.length > 0 && product.Wishlists[0].id) {
+          wishlistStatus = true;
+        }
+      }
+
+      if (Array.isArray(product.Offers)) {
+        if (product.Offers.length > 0 && product.Offers[0].publicId) {
+          offerStatus = true;
+        }
+      }
       return {
         publicId: product.publicId,
         name: product.name,
@@ -97,8 +111,8 @@ class ProductService {
           imageUrl: product.User.UserBiodatum.imageUrl,
         },
         status: {
-          wishlist: product.Wishlists,
-          offer: product.Offers,
+          wishlist: wishlistStatus,
+          offer: offerStatus,
         },
       };
     } else {
@@ -111,7 +125,9 @@ class ProductService {
     limitParam,
     pageParam,
     authorizationFilterParam,
-    userIdParam
+    userIdParam,
+    isPublishedParam,
+    isAvailableParam
   ) {
     const option = {
       attributes: ["publicId", "name", "price"],
@@ -135,6 +151,7 @@ class ProductService {
           attributes: ["publicId"],
         },
       ],
+      where: {},
       order: [
         [ProductImage, "id", "ASC"],
         [ProductCategory, "id", "ASC"],
@@ -165,6 +182,18 @@ class ProductService {
       option.include[2].where = {
         publicId: userIdParam,
       };
+    }
+
+    if (isPublishedParam) {
+      option.where.isPublished = true;
+    } else if (isPublishedParam === false) {
+      option.where.isPublished = false;
+    }
+
+    if (isAvailableParam) {
+      option.where.isAvailable = true;
+    } else if (isAvailableParam === false) {
+      option.where.isAvailable = false;
     }
 
     const product = await Product.findAll(option);
@@ -251,6 +280,15 @@ class ProductService {
       },
       { transaction: transactionParam }
     );
+  }
+
+  static async deleteProduct(publicIdParam, userIdParam) {
+    return await Product.destroy({
+      where: {
+        publicId: publicIdParam,
+        userId: userIdParam,
+      },
+    });
   }
 
   static async deleteProductCategory(publicIdParam, transactionParam) {

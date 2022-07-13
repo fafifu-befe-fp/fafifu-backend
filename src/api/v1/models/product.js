@@ -31,6 +31,16 @@ module.exports = (sequelize, DataTypes) => {
       price: { type: DataTypes.DOUBLE, allowNull: false },
       userId: { type: DataTypes.INTEGER, allowNull: false },
       publicId: { type: DataTypes.STRING, allowNull: false },
+      isPublished: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+      isAvailable: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
     },
     {
       sequelize,

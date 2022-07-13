@@ -1,14 +1,9 @@
 "use strict";
 const { cloudinary } = require("../helpers");
-const {
-  sequelize,
-  Product,
-  Notification,
-  Offer,
-  Wishlist,
-} = require("../models");
+const { sequelize, Notification, Offer } = require("../models");
 const fs = require("fs");
 const ProductService = require("../services/product.services");
+const WishlistService = require("../services/wishlist.services");
 class ProductController {
   static async get(req, res, next) {
     try {
@@ -48,7 +43,9 @@ class ProductController {
         req.query.limit,
         req.query.page,
         userId,
-        false
+        false,
+        true,
+        true
       );
 
       if (data) {
@@ -73,7 +70,36 @@ class ProductController {
         req.query.limit,
         req.query.page,
         false,
-        req.params.id
+        req.params.id,
+        null,
+        null
+      );
+
+      if (data) {
+        res.status(200).json({
+          data,
+        });
+      } else {
+        throw {
+          status: 404,
+          message: "Product list not found",
+        };
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async soldlistByUserId(req, res, next) {
+    try {
+      const data = await ProductService.getProductList(
+        req.query.categoryId,
+        req.query.limit,
+        req.query.page,
+        false,
+        req.params.id,
+        false,
+        false
       );
 
       if (data) {
@@ -143,7 +169,7 @@ class ProductController {
       );
 
       await addProductTransaction.commit();
-      res.status(200).json({
+      res.status(201).json({
         message: "Success register product",
       });
     } catch (error) {
@@ -235,31 +261,25 @@ class ProductController {
 
   static async delete(req, res, next) {
     try {
-      const product = await ProductService.isProductExist(req.params.id);
+      const product = await ProductService.isProductExists(req.params.id);
 
       if (product) {
-        await Product.destroy({
-          where: {
-            publicId: req.params.id,
-            userId: req.user.id,
-          },
-        });
+        await ProductService.deleteProduct(req.params.id, req.user.id);
+
+        // await Offer.destroy({
+        //   where: {
+        //     productId: product.id,
+        //   },
+        // });
+
+        // await Notification.destroy({
+        //   where: { productId: product.id },
+        // });
+
+        // await WishlistService.deleteWishlist(req.params.id, req.user.id);
+
         res.status(200).json({
           message: "Success delete product",
-        });
-
-        await Offer.destroy({
-          where: {
-            productId: product.id,
-          },
-        });
-
-        await Notification.destroy({
-          where: { productId: product.id },
-        });
-
-        await Wishlist.destroy({
-          where: { productId: product.id },
         });
       } else {
         throw {

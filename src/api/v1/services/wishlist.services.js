@@ -1,3 +1,4 @@
+"use strict";
 const {
   Wishlist,
   Product,
@@ -13,6 +14,10 @@ class WishlistService {
       include: {
         model: Product,
         attributes: ["publicId", "name", "price"],
+        where: {
+          isAvailable: true,
+          isPublished: true,
+        },
         include: [
           {
             model: ProductCategory,
