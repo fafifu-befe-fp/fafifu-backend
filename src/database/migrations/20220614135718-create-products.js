@@ -32,6 +32,16 @@ module.exports = {
           key: "id",
         },
       },
+      isPublished: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
+      isAvailable: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: true,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

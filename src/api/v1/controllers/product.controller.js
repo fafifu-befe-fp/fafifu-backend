@@ -1,14 +1,9 @@
 "use strict";
 const { cloudinary } = require("../helpers");
-const {
-  sequelize,
-  Product,
-  Notification,
-  Offer,
-  Wishlist,
-} = require("../models");
+const { sequelize, Notification, Offer } = require("../models");
 const fs = require("fs");
 const ProductService = require("../services/product.services");
+const WishlistService = require("../services/wishlist.services");
 class ProductController {
   static async get(req, res, next) {
     try {
@@ -143,7 +138,7 @@ class ProductController {
       );
 
       await addProductTransaction.commit();
-      res.status(200).json({
+      res.status(201).json({
         message: "Success register product",
       });
     } catch (error) {
@@ -238,15 +233,7 @@ class ProductController {
       const product = await ProductService.isProductExist(req.params.id);
 
       if (product) {
-        await Product.destroy({
-          where: {
-            publicId: req.params.id,
-            userId: req.user.id,
-          },
-        });
-        res.status(200).json({
-          message: "Success delete product",
-        });
+        await ProductService.deleteProduct(req.params.id, req.user.id);
 
         await Offer.destroy({
           where: {
@@ -258,8 +245,10 @@ class ProductController {
           where: { productId: product.id },
         });
 
-        await Wishlist.destroy({
-          where: { productId: product.id },
+        await WishlistService.deleteWishlist(req.params.id, req.user.id);
+
+        res.status(200).json({
+          message: "Success delete product",
         });
       } else {
         throw {

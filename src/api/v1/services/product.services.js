@@ -1,3 +1,4 @@
+"use strict";
 const {
   Product,
   ProductImage,
@@ -72,6 +73,23 @@ class ProductService {
 
     const product = await Product.findOne(option);
 
+    let wishlistStatus = false;
+    let offerStatus = false;
+
+    if (Array.isArray(product.Wishlists)) {
+      console.log("product.Wishlists", product.Wishlists);
+      if (product.Wishlists.length > 0 && product.Wishlists[0].id) {
+        wishlistStatus = true;
+      }
+    }
+
+    if (Array.isArray(product.Offers)) {
+      console.log("product.Offers", product.Offers);
+      if (product.Offers.length > 0 && product.Offers[0].publicId) {
+        offerStatus = true;
+      }
+    }
+
     if (product) {
       return {
         publicId: product.publicId,
@@ -97,8 +115,8 @@ class ProductService {
           imageUrl: product.User.UserBiodatum.imageUrl,
         },
         status: {
-          wishlist: product.Wishlists.length > 0 ? true : false,
-          offer: product.Offers.length > 0 ? true : false,
+          wishlist: wishlistStatus,
+          offer: offerStatus,
         },
       };
     } else {
@@ -251,6 +269,15 @@ class ProductService {
       },
       { transaction: transactionParam }
     );
+  }
+
+  static async deleteProduct(publicIdParam, userIdParam) {
+    return await Product.destroy({
+      where: {
+        publicId: publicIdParam,
+        userId: userIdParam,
+      },
+    });
   }
 
   static async deleteProductCategory(publicIdParam, transactionParam) {
