@@ -15,49 +15,52 @@ class OfferController {
   static async list(req, res, next) {
     try {
       const data = await Offer.findAll({
+        attributes: ["publicId", "price"],
         include: [
           {
             model: Product,
+            attributes: ["publicId", "name", "price"],
             include: [
               {
                 model: ProductCategory,
+                attributes: ["id"],
                 include: {
                   model: Category,
+                  attributes: ["name"],
                 },
               },
               {
                 model: ProductImage,
+                attributes: ["imageUrl"],
               },
             ],
+            where: {
+              userId: req.user.id,
+            },
           },
           {
             model: UserBiodata,
+            attributes: ["name"],
           },
         ],
       });
 
       const result = data.map((item) => {
         return {
-          publicId: item.publicId,
+          offerPublicId: item.publicId,
+          productPublicId: item.Product.publicId,
           name: item.Product.name,
           description: item.Product.description,
-          price: item.Product.price,
+          productPrice: item.Product.price,
           offerPrice: item.price,
-          statusOfferId: item.statusOfferId,
           category: item.Product.ProductCategories.map((item) => {
             return {
-              categoryId: item.Category.id,
+              id: item.id,
               name: item.Category.name,
             };
           }),
-          imageUrl: item.Product.ProductImages.map((item) => {
-            return {
-              imageUrl: item.imageUrl,
-            };
-          }),
-          name: item.UserBiodatum.name,
-          city: item.UserBiodatum.city,
-          address: item.UserBiodatum.address,
+          imageUrl: item.Product.ProductImages[0].imageUrl,
+          buyerName: item.UserBiodatum.name,
         };
       });
 
