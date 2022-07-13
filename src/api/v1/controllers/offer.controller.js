@@ -9,6 +9,7 @@ const {
   Notification,
 } = require("../models");
 const { generateUUID } = require("../helpers");
+const { ProductService } = require("../services");
 
 class OfferController {
   static async list(req, res, next) {
@@ -70,44 +71,39 @@ class OfferController {
 
   static async add(req, res, next) {
     try {
-      const offer = await Offer.findOne({
-        where: {
-          buyerId: req.user.id,
-          productId: await Product.findOne({
-            attributes: ["id"],
-            where: {
-              publicId: req.body.productId,
-            },
-          }),
-          statusOfferId: null,
-        },
-      });
-
-      if (offer) {
-        res.status(400).json({
-          message: "Offer already exists",
+      const product = await ProductService.isProductExists(req.params.id);
+      if (product) {
+        const offer = await Offer.findOne({
+          where: {
+            buyerId: req.user.id,
+            productId: product.id,
+            statusOfferId: null,
+          },
         });
+
+        if (offer) {
+          res.status(400).json({
+            message: "Offer already exists",
+          });
+        } else {
+          console.log("product", product);
+
+          await Offer.create({
+            buyerId: req.user.id,
+            publicId: await generateUUID(),
+            productId: product.id,
+            price: req.body.price,
+          });
+
+          res.status(200).json({
+            message: "Success add offer",
+          });
+        }
       } else {
-        const offer = await Offer.create({
-          buyerId: req.user.id,
-          publicId: await generateUUID(),
-          productId: await Product.findOne({
-            attributes: ["id"],
-            where: {
-              publicId: req.body.productId,
-            },
-          }),
-          price: req.body.price,
-        });
-        res.status(200).json({
-          message: "Success add offer",
-        });
-
-        const notification = await Notification.create({
-          userId: req.user.id,
-          offerId: offer.id,
-          publicId: await generateUUID(),
-        });
+        throw {
+          status: 404,
+          message: "Product not found",
+        };
       }
     } catch (error) {
       next(error);
