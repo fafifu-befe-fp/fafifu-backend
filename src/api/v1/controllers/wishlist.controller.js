@@ -10,8 +10,8 @@ class WishlistController {
           data: wishlist,
         });
       } else {
-        res.status(200).json({
-          message: "Wishlist is empty",
+        res.status(404).json({
+          message: "Wishlist list not found",
         });
       }
     } catch (error) {
