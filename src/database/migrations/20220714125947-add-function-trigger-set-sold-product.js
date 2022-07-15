@@ -2,7 +2,7 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    queryInterface.sequelize.query(
+    await queryInterface.sequelize.query(
       `CREATE OR REPLACE FUNCTION set_sold_product()
 RETURNS TRIGGER
 LANGUAGE PLPGSQL
@@ -24,11 +24,23 @@ RETURN NEW;
 END;
 $$`
     );
+
+    await queryInterface.sequelize.query(
+      `CREATE TRIGGER set_sold_product_trigger
+    BEFORE UPDATE
+    OF "statusOfferId" ON "Offers"
+    FOR EACH ROW
+    EXECUTE PROCEDURE set_sold_product();
+    `
+    );
   },
 
   async down(queryInterface, Sequelize) {
     queryInterface.sequelize.query(
       'DROP TRIGGER IF EXISTS set_sold_product_trigger ON "Offers"'
+    );
+    queryInterface.sequelize.query(
+      "DROP FUNCTION IF EXISTS set_sold_product()"
     );
   },
 };

@@ -1,19 +1,50 @@
 "use strict";
-const { Notification, Offer, Product } = require("../models");
+const {
+  Notification,
+  Offer,
+  Product,
+  ProductImage,
+  StatusNotificationDetail,
+} = require("../models");
 class NotificationController {
   static async get(req, res, next) {
     try {
-      const notification = await Notification.findAll({
-        include: {
-          model: Offer,
-          include: {
-            model: Product,
+      const notification = (
+        await Notification.findAll({
+          attributes: ["publicId", "statusNotificationId"],
+          include: [
+            {
+              model: Product,
+              attributes: ["name", "price"],
+              include: {
+                model: ProductImage,
+                attributes: ["imageUrl"],
+              },
+            },
+            {
+              model: StatusNotificationDetail,
+              attributes: ["description"],
+            },
+          ],
+          order: [
+            ["createdAt", "DESC"],
+            [Product, ProductImage, "id", "ASC"],
+          ],
+          where: {
+            isRead: false,
+            userId: req.user.id,
           },
-        },
-        where: {
-          statusNotificationId: 0,
-          userId: req.user.id,
-        },
+        })
+      ).map((item) => {
+        if (item.statusNotificationId === 3) {
+          return {
+            publicId: item.publicId,
+            productName: item.Product.name,
+            productPrice: item.Product.price,
+            productImage: item.Product.ProductImages[0].imageUrl,
+            statusNotification: item.StatusNotificationDetail.description,
+          };
+        }
       });
 
       res.status(200).json({

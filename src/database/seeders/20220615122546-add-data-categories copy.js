@@ -2,7 +2,7 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    const kategoriData = [
+    const categoryData = [
       {
         id: 1,
         name: "Hobi",
@@ -35,7 +35,7 @@ module.exports = {
       },
     ];
 
-    await queryInterface.bulkInsert("Categories", kategoriData, {});
+    await queryInterface.bulkInsert("Categories", categoryData, {});
   },
 
   async down(queryInterface, Sequelize) {
