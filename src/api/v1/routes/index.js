@@ -4,6 +4,7 @@ const productRouter = require("./product.route");
 const userRouter = require("./user.route");
 const offerRouter = require("./offer.route");
 const notificationRouter = require("./notification.route");
+const categoryRouter = require("./category.route");
 
 module.exports = {
   authRouter,
@@ -11,4 +12,5 @@ module.exports = {
   userRouter,
   offerRouter,
   notificationRouter,
+  categoryRouter,
 };
