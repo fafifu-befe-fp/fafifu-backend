@@ -8,64 +8,22 @@ const {
   ProductImage,
 } = require("../models");
 const { generateUUID } = require("../helpers");
-const { ProductService } = require("../services");
+const { ProductService, OfferService } = require("../services");
 
 class OfferController {
   static async list(req, res, next) {
     try {
-      const data = await Offer.findAll({
-        attributes: ["publicId", "price"],
-        include: [
-          {
-            model: Product,
-            attributes: ["publicId", "name", "price"],
-            include: [
-              {
-                model: ProductCategory,
-                attributes: ["id"],
-                include: {
-                  model: Category,
-                  attributes: ["name"],
-                },
-              },
-              {
-                model: ProductImage,
-                attributes: ["imageUrl"],
-              },
-            ],
-            where: {
-              userId: req.user.id,
-            },
-          },
-          {
-            model: UserBiodata,
-            attributes: ["name"],
-          },
-        ],
-      });
-
-      const result = data.map((item) => {
-        return {
-          offerPublicId: item.publicId,
-          productPublicId: item.Product.publicId,
-          name: item.Product.name,
-          description: item.Product.description,
-          productPrice: item.Product.price,
-          offerPrice: item.price,
-          category: item.Product.ProductCategories.map((item) => {
-            return {
-              id: item.id,
-              name: item.Category.name,
-            };
-          }),
-          imageUrl: item.Product.ProductImages[0].imageUrl,
-          buyerName: item.UserBiodatum.name,
+      const data = await OfferService.getOfferList(req.user.id);
+      if (data) {
+        res.status(200).json({
+          data,
+        });
+      } else {
+        throw {
+          status: 404,
+          message: "Offer list not found",
         };
-      });
-
-      res.status(200).json({
-        data: result,
-      });
+      }
     } catch (error) {
       next(error);
     }
@@ -75,27 +33,18 @@ class OfferController {
     try {
       const product = await ProductService.isProductExists(req.params.id);
       if (product) {
-        const offer = await Offer.findOne({
-          where: {
-            buyerId: req.user.id,
-            productId: product.id,
-            statusOfferId: null,
-          },
-        });
+        const offer = await OfferService.isOfferExists(req.user.id, product.id);
 
         if (offer) {
           res.status(400).json({
             message: "Offer already exists",
           });
         } else {
-          console.log("product", product);
-
-          await Offer.create({
-            buyerId: req.user.id,
-            publicId: await generateUUID(),
-            productId: product.id,
-            price: req.body.price,
-          });
+          await OfferService.createOffer(
+            req.user.id,
+            product.id,
+            req.body.price
+          );
 
           res.status(200).json({
             message: "Success add offer",
