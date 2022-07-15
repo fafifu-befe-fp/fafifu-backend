@@ -290,6 +290,25 @@ class ProductController {
       next(error);
     }
   }
+
+  static async getProductCategoryList(req, res, next) {
+    try {
+      const data = await ProductService.getProductCategoryList();
+
+      if (data) {
+        res.status(200).json({
+          data,
+        });
+      } else {
+        throw {
+          status: 404,
+          message: "Product category list not found",
+        };
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = ProductController;
