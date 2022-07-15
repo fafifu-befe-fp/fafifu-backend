@@ -11,7 +11,7 @@ class NotificationController {
     try {
       const notification = (
         await Notification.findAll({
-          attributes: ["publicId", "statusNotificationId"],
+          attributes: ["publicId", "statusNotificationId", "isRead"],
           include: [
             {
               model: Product,
@@ -47,41 +47,47 @@ class NotificationController {
         }
       });
 
-      res.status(200).json({
-        data: notification,
-      });
+      if (notification.length !== 0) {
+        res.status(200).json({
+          data: notification,
+        });
+      } else {
+        throw {
+          status: 404,
+          message: "Notification not found",
+        };
+      }
     } catch (error) {
       next(error);
     }
   }
 
   static async getAll(req, res, next) {
-    try {
-      const notification = await Notification.findAll({
-        include: {
-          model: Offer,
-          include: {
-            model: Product,
-          },
-        },
-        where: {
-          userId: req.user.id,
-        },
-      });
-
-      res.status(200).json({
-        data: notification,
-      });
-    } catch (error) {
-      next(error);
-    }
+    // try {
+    //   const notification = await Notification.findAll({
+    //     include: {
+    //       model: Offer,
+    //       include: {
+    //         model: Product,
+    //       },
+    //     },
+    //     where: {
+    //       userId: req.user.id,
+    //     },
+    //   });
+    //   res.status(200).json({
+    //     data: notification,
+    //   });
+    // } catch (error) {
+    //   next(error);
+    // }
   }
 
   static async setRead(req, res, next) {
     try {
       await Notification.update(
         {
-          statusNotificationId: 1,
+          isRead: true,
         },
         {
           where: {
@@ -103,7 +109,7 @@ class NotificationController {
     try {
       await Notification.update(
         {
-          statusNotificationId: 1,
+          isRead: true,
         },
         {
           where: {

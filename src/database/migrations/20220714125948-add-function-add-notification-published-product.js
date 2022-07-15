@@ -11,7 +11,7 @@ $$
 BEGIN
 	IF NEW."isPublished" = TRUE THEN
 	    INSERT INTO "Notifications" ("publicId", "userId", "offerId", "productId", "statusNotificationId", "createdAt", "updatedAt", "deletedAt")
-	    VALUES (gen_random_uuid(), NEW."userId", null, OLD."id", 3, now(),now(), null );
+	    VALUES (gen_random_uuid(), NEW."userId", null, NEW."id", 3, now(),now(), null );
 	END IF;
 
 	RETURN NEW;
