@@ -1,4 +1,5 @@
 "use strict";
+const { generateUUID } = require("../helpers");
 const {
   Offer,
   Product,
@@ -72,6 +73,15 @@ class OfferService {
         productId: productIdParam,
         statusOfferId: 0,
       },
+    });
+  }
+
+  static async createOffer(buyerIdParam, productIdParam, priceParam) {
+    return await Offer.create({
+      buyerId: buyerIdParam,
+      publicId: await generateUUID(),
+      productId: productIdParam,
+      price: priceParam,
     });
   }
 }

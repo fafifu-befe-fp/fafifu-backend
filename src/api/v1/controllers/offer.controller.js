@@ -40,12 +40,11 @@ class OfferController {
             message: "Offer already exists",
           });
         } else {
-          await Offer.create({
-            buyerId: req.user.id,
-            publicId: await generateUUID(),
-            productId: product.id,
-            price: req.body.price,
-          });
+          await OfferService.createOffer(
+            req.user.id,
+            product.id,
+            req.body.price
+          );
 
           res.status(200).json({
             message: "Success add offer",
