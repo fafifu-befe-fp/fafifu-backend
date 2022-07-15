@@ -7,6 +7,5 @@ const { authorization } = require("../middlewares");
 
 router.get("/", authorization, OfferController.list);
 router.post("/", authorization, OfferController.add);
-router.put("/:id", authorization, OfferController.update);
 
 module.exports = router;
