@@ -21,6 +21,12 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
+      {
+        id: 3,
+        description: "Sold",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
     ];
 
     await queryInterface.bulkInsert(

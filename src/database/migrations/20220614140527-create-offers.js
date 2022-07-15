@@ -34,6 +34,7 @@ module.exports = {
       },
       statusOfferId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
           model: "StatusOfferDetails",
           key: "id",
