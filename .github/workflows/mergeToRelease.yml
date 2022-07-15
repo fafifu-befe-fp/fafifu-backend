@@ -32,14 +32,3 @@ jobs:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           pull-request-number: ${{ steps.open-pr.outputs.pr_number }}
           merge-method: merge
-
-      - id: automerge
-        name: automerge
-        uses: "pascalgn/automerge-action@v0.15.3"
-        env:
-          GITHUB_TOKEN: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
-
-      - name: feedback
-        if: steps.automerge.outputs.mergeResult == "merged"
-        run: |
-          echo "Pull request ${{ steps.automerge.outputs.pullRequestNumber }} merged!"
