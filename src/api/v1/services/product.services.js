@@ -310,6 +310,12 @@ class ProductService {
       { transaction: transactionParam }
     );
   }
+
+  static async getProductCategoryList() {
+    return await Category.findAll({
+      attributes: ["id", "name"],
+    });
+  }
 }
 
 module.exports = ProductService;

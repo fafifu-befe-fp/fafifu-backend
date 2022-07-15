@@ -1,9 +1,8 @@
 "use strict";
 const { cloudinary } = require("../helpers");
-const { sequelize, Notification, Offer } = require("../models");
+const { sequelize } = require("../models");
 const fs = require("fs");
 const ProductService = require("../services/product.services");
-const WishlistService = require("../services/wishlist.services");
 class ProductController {
   static async get(req, res, next) {
     try {

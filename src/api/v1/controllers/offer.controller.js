@@ -6,7 +6,6 @@ const {
   ProductCategory,
   Category,
   ProductImage,
-  Notification,
 } = require("../models");
 const { generateUUID } = require("../helpers");
 const { ProductService } = require("../services");
