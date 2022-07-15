@@ -33,10 +33,12 @@ jobs:
           pull-request-number: ${{ steps.open-pr.outputs.pr_number }}
           merge-method: merge
 
-      - name: Merge Pull Request
-        uses: juliangruber/merge-pull-request-action@v1
-        with:
-          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          number: 1
-          method: squash
-          repo: juliangruber/octokit-action
+      - id: automerge
+        name: automerge
+        uses: "pascalgn/automerge-action@v0.15.3"
+        env:
+          GITHUB_TOKEN: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
+
+      - name: feedback
+        run: |
+          echo "Pull request ${{ steps.automerge.outputs.pullRequestNumber }} merged!"
