@@ -33,11 +33,11 @@ class WishlistService {
             attributes: ["imageUrl"],
           },
         ],
-        order: [
-          [ProductImage, "id", "ASC"],
-          [ProductCategory, "id", "ASC"],
-        ],
       },
+      order: [
+        [Product, ProductImage, "id", "ASC"],
+        [Product, ProductCategory, "id", "ASC"],
+      ],
       where: {
         userId: userIdParam,
       },
