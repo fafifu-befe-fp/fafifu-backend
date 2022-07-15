@@ -1,12 +1,5 @@
 "use strict";
-const {
-  Offer,
-  Product,
-  UserBiodata,
-  ProductCategory,
-  Category,
-  ProductImage,
-} = require("../models");
+const { Offer, Product } = require("../models");
 const { generateUUID } = require("../helpers");
 const { ProductService, OfferService } = require("../services");
 
