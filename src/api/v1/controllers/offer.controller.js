@@ -33,21 +33,13 @@ class OfferController {
     try {
       const product = await ProductService.isProductExists(req.params.id);
       if (product) {
-        const offer = await Offer.findOne({
-          where: {
-            buyerId: req.user.id,
-            productId: product.id,
-            statusOfferId: null,
-          },
-        });
+        const offer = await OfferService.isOfferExists(req.user.id, product.id);
 
         if (offer) {
           res.status(400).json({
             message: "Offer already exists",
           });
         } else {
-          console.log("product", product);
-
           await Offer.create({
             buyerId: req.user.id,
             publicId: await generateUUID(),

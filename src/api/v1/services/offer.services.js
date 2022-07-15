@@ -64,6 +64,16 @@ class OfferService {
       };
     });
   }
+
+  static async isOfferExists(buyerIdParam, productIdParam) {
+    return await Offer.findOne({
+      where: {
+        buyerId: buyerIdParam,
+        productId: productIdParam,
+        statusOfferId: 0,
+      },
+    });
+  }
 }
 
 module.exports = OfferService;
