@@ -3,7 +3,7 @@ name: Merge master-dev Into release
 on:
   push:
     branches:
-      - "master-dev/*"
+      - master-dev
 
 jobs:
   main:
