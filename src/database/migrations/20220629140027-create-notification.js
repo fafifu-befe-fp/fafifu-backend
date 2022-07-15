@@ -21,10 +21,18 @@ module.exports = {
         },
       },
       offerId: {
-        allowNull: false,
+        // allowNull: false,
         type: Sequelize.INTEGER,
         references: {
           model: "Offers",
+          key: "id",
+        },
+      },
+      productId: {
+        // allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Products",
           key: "id",
         },
       },
@@ -36,6 +44,11 @@ module.exports = {
           key: "id",
         },
         defaultValue: 0,
+      },
+      isRead: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
       },
       createdAt: {
         allowNull: false,

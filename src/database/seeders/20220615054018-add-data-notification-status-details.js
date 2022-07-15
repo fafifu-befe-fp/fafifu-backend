@@ -2,16 +2,22 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    const statusNotifikasiData = [
+    const statusNotificationData = [
       {
-        id: 0,
-        description: "Not Seen Yet",
+        id: 1,
+        description: "Incoming Offer",
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        id: 1,
-        description: "Seen",
+        id: 2,
+        description: "Accepted Offer",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: 3,
+        description: "Published Product",
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -19,7 +25,7 @@ module.exports = {
 
     await queryInterface.bulkInsert(
       "StatusNotificationDetails",
-      statusNotifikasiData,
+      statusNotificationData,
       {}
     );
   },

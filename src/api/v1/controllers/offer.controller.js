@@ -1,6 +1,5 @@
 "use strict";
 const { Offer, Product } = require("../models");
-const { generateUUID } = require("../helpers");
 const { ProductService, OfferService } = require("../services");
 
 class OfferController {

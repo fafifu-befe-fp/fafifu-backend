@@ -2,7 +2,7 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    const statusPenawaranData = [
+    const statusOfferData = [
       {
         id: 0,
         description: "Pending",
@@ -29,11 +29,7 @@ module.exports = {
       },
     ];
 
-    await queryInterface.bulkInsert(
-      "StatusOfferDetails",
-      statusPenawaranData,
-      {}
-    );
+    await queryInterface.bulkInsert("StatusOfferDetails", statusOfferData, {});
   },
 
   async down(queryInterface, Sequelize) {

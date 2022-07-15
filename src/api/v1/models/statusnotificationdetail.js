@@ -2,7 +2,11 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class StatusNotificationDetail extends Model {
-    static associate(models) {}
+    static associate(models) {
+      StatusNotificationDetail.hasMany(models.Notification, {
+        foreignKey: "statusNotificationId",
+      });
+    }
   }
   StatusNotificationDetail.init(
     {
