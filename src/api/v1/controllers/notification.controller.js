@@ -1,88 +1,17 @@
 "use strict";
-const {
-  Notification,
-  Offer,
-  Product,
-  ProductImage,
-  StatusNotificationDetail,
-} = require("../models");
+const { Notification } = require("../models");
+const { Op } = require("sequelize");
+
+const { NotificationService } = require("../services");
 class NotificationController {
   static async get(req, res, next) {
     try {
-      const notification = (
-        await Notification.findAll({
-          attributes: ["publicId", "statusNotificationId", "isRead"],
-          include: [
-            {
-              model: Product,
-              attributes: ["name", "price"],
-              include: {
-                model: ProductImage,
-                attributes: ["imageUrl"],
-              },
-            },
-            {
-              model: Offer,
-              attributes: ["price"],
-              require: false,
-            },
-            {
-              model: StatusNotificationDetail,
-              attributes: ["description"],
-            },
-          ],
-          order: [
-            ["createdAt", "DESC"],
-            [Product, ProductImage, "id", "ASC"],
-          ],
-          where: {
-            isRead: false,
-            userId: req.user.id,
-          },
-        })
-      ).map((item) => {
-        if (item.statusNotificationId === 1) {
-          return {
-            statusNotification: item.StatusNotificationDetail.description,
-            publicId: item.publicId,
-            productName: item.Product.name,
-            productPrice: item.Product.price,
-            offerPrice: item.Offer.price,
-            productImage: item.Product.ProductImages[0].imageUrl,
-          };
-        }
-        if (item.statusNotificationId === 2) {
-          return {
-            statusNotification: item.StatusNotificationDetail.description,
-            publicId: item.publicId,
-            productName: item.Product.name,
-            productPrice: item.Product.price,
-            offerPrice: item.Offer.price,
-            productImage: item.Product.ProductImages[0].imageUrl,
-          };
-        }
-        if (item.statusNotificationId === 3) {
-          return {
-            statusNotification: item.StatusNotificationDetail.description,
-            publicId: item.publicId,
-            productName: item.Product.name,
-            productPrice: item.Product.price,
-            productImage: item.Product.ProductImages[0].imageUrl,
-          };
-        }
-        if (item.statusNotificationId === 4) {
-          return {
-            statusNotification: item.StatusNotificationDetail.description,
-            publicId: item.publicId,
-            productName: item.Product.name,
-            productPrice: item.Product.price,
-            offerPrice: item.Offer.price,
-            productImage: item.Product.ProductImages[0].imageUrl,
-          };
-        }
-      });
+      const notification = await NotificationService.getNotification(
+        req.user.id,
+        false
+      );
 
-      if (notification.length !== 0) {
+      if (notification.length > 0) {
         res.status(200).json({
           data: notification,
         });
@@ -98,43 +27,48 @@ class NotificationController {
   }
 
   static async getAll(req, res, next) {
-    // try {
-    //   const notification = await Notification.findAll({
-    //     include: {
-    //       model: Offer,
-    //       include: {
-    //         model: Product,
-    //       },
-    //     },
-    //     where: {
-    //       userId: req.user.id,
-    //     },
-    //   });
-    //   res.status(200).json({
-    //     data: notification,
-    //   });
-    // } catch (error) {
-    //   next(error);
-    // }
+    try {
+      const notification = await NotificationService.getNotification(
+        req.user.id,
+        { [Op.or]: [true, false] }
+      );
+
+      if (notification.length > 0) {
+        res.status(200).json({
+          data: notification,
+        });
+      } else {
+        throw {
+          status: 404,
+          message: "Notification list not found",
+        };
+      }
+    } catch (error) {
+      next(error);
+    }
   }
 
   static async setRead(req, res, next) {
     try {
-      await Notification.update(
-        {
-          isRead: true,
-        },
-        {
-          where: {
-            userId: req.user.id,
-            publicId: req.params.id,
-          },
-        }
+      const notification = await NotificationService.isNotificationExists(
+        req.params.id
       );
 
-      res.status(200).json({
-        message: "Success read notification",
-      });
+      if (notification) {
+        await NotificationService.setReadNotification(
+          req.user.id,
+          req.params.id
+        );
+
+        res.status(200).json({
+          message: "Success read notification",
+        });
+      } else {
+        throw {
+          status: 404,
+          message: "Notification not found",
+        };
+      }
     } catch (error) {
       next(error);
     }
@@ -142,20 +76,34 @@ class NotificationController {
 
   static async setAllRead(req, res, next) {
     try {
-      await Notification.update(
-        {
-          isRead: true,
+      const notification = await Notification.findAll({
+        where: {
+          userId: req.user.id,
+          isRead: false,
         },
-        {
-          where: {
-            userId: req.user.id,
-          },
-        }
-      );
-
-      res.status(200).json({
-        message: "Success read all notification",
       });
+
+      if (notification.length > 0) {
+        await Notification.update(
+          {
+            isRead: true,
+          },
+          {
+            where: {
+              userId: req.user.id,
+            },
+          }
+        );
+
+        res.status(200).json({
+          message: "Success read all notification",
+        });
+      } else {
+        throw {
+          status: 404,
+          message: "Notification list not found",
+        };
+      }
     } catch (error) {
       next(error);
     }
@@ -163,15 +111,25 @@ class NotificationController {
 
   static async remove(req, res, next) {
     try {
-      await Notification.destroy({
-        where: {
-          publicId: req.params.id,
-          userId: req.user.id,
-        },
-      });
-      res.status(200).json({
-        message: "Success remove notification",
-      });
+      const notification = await NotificationService.isNotificationExists(
+        req.params.id
+      );
+
+      if (notification) {
+        await NotificationService.removeNotification(
+          req.user.id,
+          req.params.id
+        );
+
+        res.status(200).json({
+          message: "Success remove notification",
+        });
+      } else {
+        throw {
+          status: 404,
+          message: "Notification not found",
+        };
+      }
     } catch (error) {
       next(error);
     }
@@ -179,14 +137,23 @@ class NotificationController {
 
   static async removeAll(req, res, next) {
     try {
-      await Notification.destroy({
+      const notification = await Notification.findAll({
         where: {
           userId: req.user.id,
         },
       });
-      res.status(200).json({
-        message: "Success remove all notification",
-      });
+
+      if (notification.length > 0) {
+        await NotificationService.removeAllNotification(req.user.id);
+        res.status(200).json({
+          message: "Success remove all notification",
+        });
+      } else {
+        throw {
+          status: 404,
+          message: "Notification list not found",
+        };
+      }
     } catch (error) {
       next(error);
     }
