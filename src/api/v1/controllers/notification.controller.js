@@ -22,6 +22,11 @@ class NotificationController {
               },
             },
             {
+              model: Offer,
+              attributes: ["price"],
+              require: false,
+            },
+            {
               model: StatusNotificationDetail,
               attributes: ["description"],
             },
@@ -36,13 +41,43 @@ class NotificationController {
           },
         })
       ).map((item) => {
+        if (item.statusNotificationId === 1) {
+          return {
+            statusNotification: item.StatusNotificationDetail.description,
+            publicId: item.publicId,
+            productName: item.Product.name,
+            productPrice: item.Product.price,
+            offerPrice: item.Offer.price,
+            productImage: item.Product.ProductImages[0].imageUrl,
+          };
+        }
+        if (item.statusNotificationId === 2) {
+          return {
+            statusNotification: item.StatusNotificationDetail.description,
+            publicId: item.publicId,
+            productName: item.Product.name,
+            productPrice: item.Product.price,
+            offerPrice: item.Offer.price,
+            productImage: item.Product.ProductImages[0].imageUrl,
+          };
+        }
         if (item.statusNotificationId === 3) {
           return {
+            statusNotification: item.StatusNotificationDetail.description,
             publicId: item.publicId,
             productName: item.Product.name,
             productPrice: item.Product.price,
             productImage: item.Product.ProductImages[0].imageUrl,
+          };
+        }
+        if (item.statusNotificationId === 4) {
+          return {
             statusNotification: item.StatusNotificationDetail.description,
+            publicId: item.publicId,
+            productName: item.Product.name,
+            productPrice: item.Product.price,
+            offerPrice: item.Offer.price,
+            productImage: item.Product.ProductImages[0].imageUrl,
           };
         }
       });
