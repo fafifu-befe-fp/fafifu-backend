@@ -7,7 +7,7 @@ on:
 
 jobs:
   main:
-    name: Create PR master-dev to Release
+    name: Create PR master-dev to release
     runs-on: ubuntu-latest
     steps:
       - name: git checkout
@@ -24,11 +24,3 @@ jobs:
           pr_title: "[Automated] Merge ${{ github.ref_name }} into release"
           pr_body: "Automated Pull Request"
           pr_assignee: "adikurniawanid"
-
-      # - name: enable automerge
-      #   if: steps.open-pr.outputs.pr_number != ''
-      #   uses: peter-evans/enable-pull-request-automerge@v2
-      #   with:
-      #     token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-      #     pull-request-number: ${{ steps.open-pr.outputs.pr_number }}
-      #     merge-method: merge
