@@ -6,7 +6,7 @@ class OfferController {
   static async list(req, res, next) {
     try {
       const data = await OfferService.getOfferList(req.user.id);
-      if (data) {
+      if (data.length > 0) {
         res.status(200).json({
           data,
         });
