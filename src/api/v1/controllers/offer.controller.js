@@ -21,6 +21,24 @@ class OfferController {
     }
   }
 
+  static async soldList(req, res, next) {
+    try {
+      const data = await OfferService.getSoldProduct(req.user.id);
+      if (data.length > 0) {
+        res.status(200).json({
+          data,
+        });
+      } else {
+        throw {
+          status: 404,
+          message: "Product list not found",
+        };
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async add(req, res, next) {
     try {
       const product = await ProductService.isProductExists(req.params.id);
