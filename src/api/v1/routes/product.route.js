@@ -37,7 +37,7 @@ router.post("/:id/wishlist", authorization, WishlistController.add);
 router.delete("/:id/wishlist", authorization, WishlistController.delete);
 router.post("/:id/offer", authorization, OfferController.add);
 router.get("/:id", isLogin, ProductController.get);
-router.get("/user/:id/sold", authorization, OfferController.soldList);
+router.get("/user/sold", authorization, OfferController.soldList);
 router.get("/user/:id", ProductController.listByUserId);
 router.post(
   "/",
