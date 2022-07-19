@@ -232,6 +232,7 @@ class ProductService {
     descriptionParam,
     priceParam,
     userIdParam,
+    isPublishedParam,
     transactionParam
   ) {
     return await Product.create(
@@ -240,6 +241,7 @@ class ProductService {
         name: nameParam,
         description: descriptionParam,
         price: priceParam,
+        isPublished: isPublishedParam,
         userId: userIdParam,
       },
       { transaction: transactionParam }
