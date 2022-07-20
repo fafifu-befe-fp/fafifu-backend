@@ -14,7 +14,7 @@ const {
   userRouter,
   productRouter,
   authRouter,
-  offerRouter,
+  // offerRouter,
   notificationRouter,
   categoryRouter,
 } = require("./api/v1/routes");
@@ -36,7 +36,7 @@ app.use("/v1/user", userRouter);
 app.use("/v1/auth", authRouter);
 app.use("/v1/product", productRouter);
 app.use("/v1/category", categoryRouter);
-app.use("/v1/offer", offerRouter);
+// app.use("/v1/offer", offerRouter);
 app.use("/v1/notification", notificationRouter);
 app.use(errorHandler);
 module.exports = app;

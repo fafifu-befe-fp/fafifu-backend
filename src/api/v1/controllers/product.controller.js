@@ -267,18 +267,6 @@ class ProductController {
       if (product) {
         await ProductService.deleteProduct(req.params.id, req.user.id);
 
-        // await Offer.destroy({
-        //   where: {
-        //     productId: product.id,
-        //   },
-        // });
-
-        // await Notification.destroy({
-        //   where: { productId: product.id },
-        // });
-
-        // await WishlistService.deleteWishlist(req.params.id, req.user.id);
-
         res.status(200).json({
           message: "Success delete product",
         });
