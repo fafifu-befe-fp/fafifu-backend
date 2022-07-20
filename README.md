@@ -31,6 +31,18 @@ Start the server
   npm start
 ```
 
+Create the database
+
+```bash
+  sequelize db:create
+```
+
+Migration the database
+
+```bash
+  sequelize db:migrate
+```
+
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your .env file
