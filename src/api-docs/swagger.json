@@ -1,1606 +1,1885 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "1.0.0",
-    "title": "Fafifu-Backend REST API",
-    "description": "buyer / Seller Rest Api Information"
+    "version": "1.0",
+    "title": "fafifu-befe-fp",
+    "contact": {}
   },
-  "host": "127.0.0.1:3000",
-  "basePath": "/",
+  "host": "fafifu-backend-api.herokuapp.com",
+  "basePath": "/v1",
+  "securityDefinitions": {
+    "apiKey": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
   "schemes": [
-    "http",
     "https"
   ],
-  "tags":
-  [
-    {
-      "name": "Auth",
-      "description": "Login / Register operation"
-    },
-    {
-      "name": "Profile",
-      "description": "Profile Information"
-    },
-    {
-      "name": "Product",
-      "description": "Product Information"
-    },
-    {
-      "name": "Offer",
-      "description": "Offer Information"
-    },
-    {
-      "name": "Notification",
-      "description": "notification Information"
-    }
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
   ],
   "paths": {
-    "/register/": {
+    "/auth/register": {
       "post": {
+        "summary": "Register",
         "tags": [
           "Auth"
         ],
-        "summary": "Get token",
+        "operationId": "Register",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=utf-8"
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "email": {
-                  "example": "admin"
-                },
-                "password": {
-                  "example": "admin"
-                },
-                "name": {
-                  "example": "admin"
-                }
-              }
-            }
+            "name": "email",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "name",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
           }
         ],
         "responses": {
           "201": {
             "description": "Created",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "type": "object",
-                      "example": {
-                        "message": "Success register user"
-                    }
-                }
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Success register user"
               }
             }
           },
           "422": {
             "description": "Unprocessable Entity",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "errors": {
-                  "example": {
-                    "email":"Email is required",
-                    "password":"Password is required",
-                    "name":"Name is required"
+            "examples": {
+              "application/json; charset=utf-8": {
+                "errors": [
+                  {
+                    "msg": "Email is required",
+                    "param": "email",
+                    "location": "body"
+                  },
+                  {
+                    "msg": "Password is required",
+                    "param": "password",
+                    "location": "body"
+                  },
+                  {
+                    "msg": "name is required",
+                    "param": "name",
+                    "location": "body"
                   }
-                }
-              }
-            }
-          },
-          "422-b": {
-            "description": "Unprocessable Entity",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "errors": {
-                  "example": {
-                    "email":"Email already in use"
-                  }
-                }
+                ]
               }
             }
           }
         }
       }
     },
-    
-    "/Login/": {
-      "get": {
+    "/auth/login": {
+      "post": {
+        "summary": "Login",
         "tags": [
           "Auth"
         ],
-        "summary": "Get user list",
+        "operationId": "Login",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=utf-8"
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "email": {
-                  "example": "admin"
-                },
-                "password": {
-                  "example": "admin"
-                }
-              }
-            }
+            "name": "email",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
+            "examples": {
+              "application/json; charset=utf-8": {
                 "data": {
-                  "type": "object",
-                      "example": {
-                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6ImExYmUyNTVlLTdmNjAtNDQyOC04MTM5LTE3YTgzMzJhZDZhNyIsImVtYWlsIjoiYWRpa3Vybmlhd2FuQG1haWwuY29tIiwiaWF0IjoxNjU2MzM2NTUxfQ.7GYQDQxkr-kpqV2WJiZD3v3P2DnShEFMxOcoNzHc3Zw"
-                    }
+                  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6ImI3NjRjYjMxLTdhZGQtNGNjMy1iY2YxLWZlMDIzMjJlOWY2MCIsImVtYWlsIjoiYWRpQG1haWwuY29tIiwiaWF0IjoxNjU3NzkyNjYwfQ.TTN_YAdnHJiac9LRpwFeBAwHFdvAVRG1mWbW6C8dp_k",
+                  "user": {
+                    "publicId": "b764cb31-7add-4cc3-bcf1-fe02322e9f60",
+                    "email": "adi@mail.com",
+                    "name": "Adi Kurniawan",
+                    "city": "Sungai Penuh",
+                    "address": "Jalan Pahlawan Bangsa",
+                    "handphone": "080908090909",
+                    "imageUrl": "https://res.cloudinary.com/adikurniawan/image/upload/v1657699474/zewukvoz03iuzqvkqulc.png"
+                  }
                 }
               }
             }
           },
           "401": {
             "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "example": "Invalid email or password"
-                }
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Invalid email or password"
               }
             }
           },
           "422": {
             "description": "Unprocessable Entity",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "errors": {
-                  "example": {
-                    "email":"Email is not Valid",
-                    "password":"Password must between 8 - 21 characters"
+            "examples": {
+              "application/json; charset=utf-8": {
+                "errors": [
+                  {
+                    "value": "adi@mail",
+                    "msg": "Email is not valid",
+                    "param": "email",
+                    "location": "body"
+                  },
+                  {
+                    "value": "adi",
+                    "msg": "Password must between 8 - 21 characters",
+                    "param": "password",
+                    "location": "body"
                   }
-                }
+                ]
               }
             }
           }
         }
       }
     },
-    "/Get Details/": {
+    "/user": {
       "get": {
+        "summary": "Get My Profile Details",
         "tags": [
           "Profile"
         ],
-        "summary": "Get Details",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "Authorization": {
-                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6ImExYmUyNTVlLTdmNjAtNDQyOC04MTM5LTE3YTgzMzJhZDZhNyIsImVtYWlsIjoiYWRpa3Vybmlhd2FuQG1haWwuY29tIiwiaWF0IjoxNjU2MzM3NjU2fQ._KJiFFVKGs3wV9vsAX0UgPhrU_6IEhPhSs3M8JFazD0"
-                }
-              }
-            }
-          }
+        "operationId": "GetMyProfileDetails",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=utf-8"
         ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
+            "examples": {
+              "application/json; charset=utf-8": {
                 "data": {
-                  "type": "object",
-                      "example": {
-                        "publicId": "a1be255e-7f60-4428-8139-17a8332ad6a7",
-                        "email":"adikurniawan@mail.com",
-                        "name":"Adi Kurniawan ID",
-                        "city":"Numerus Sette",
-                        "address":"Pahlawan Bangsa",
-                        "handphone":"080908090909",
-                        "imageUrl":"http://127.0.0.1:3000/avatar/image-1656337995391-the-great-wave.png"
-                    }
+                  "publicId": "b764cb31-7add-4cc3-bcf1-fe02322e9f60",
+                  "email": "adi@mail.com",
+                  "name": "Adi Kurniawan",
+                  "city": "Sungai Penuh",
+                  "address": "Jalan Pahlawan Bangsa",
+                  "handphone": "080908090909",
+                  "imageUrl": "https://res.cloudinary.com/adikurniawan/image/upload/v1657699474/zewukvoz03iuzqvkqulc.png"
                 }
               }
             }
           },
           "401": {
             "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "example": "Unauthorized User"
-                }
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Unauthorized User"
               }
             }
           }
         },
-                
         "security": [
           {
-            "api_key": []
+            "apiKey": []
           }
         ]
-      }
-    },
-    "/Update Profile/": {
+      },
       "put": {
+        "summary": "Update Profile",
         "tags": [
           "Profile"
         ],
-        "summary": "Update Profile",
+        "operationId": "UpdateProfile",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=utf-8"
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "address": {
-                  "example": "Pahlawan Bangsa"
-                },
-                "handphone": {
-                  "example": "080908090909"
-                },
-                "image": {
-                  "example": "/home/akdev/Pictures/Screenshot_2"
-                }
-              }
-            }
+            "name": "name",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "city",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "address",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "handphone",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "image",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "type": "object",
-                      "example": {
-                        "message": "Success update data user"
-                    }
-                }
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Success Update data user"
               }
             }
           },
           "401": {
             "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "example": "Unauthorized User"
-                }
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Unauthorized User"
               }
             }
           },
           "422": {
             "description": "Unprocessable Entity",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "errors": {
-                  "example": {
-                    "city": "city is required",
-                    "address": "address is required",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "errors": [
+                  {
+                    "city": "city is required"
+                  },
+                  {
+                    "address": "address is required"
+                  },
+                  {
                     "handphone": "handphone must be numbers"
-                  }   
-                }
+                  }
+                ]
               }
             }
           }
         },
-                
         "security": [
           {
-            "api_key": []
+            "apiKey": []
           }
         ]
       }
     },
-    "/Get Product/": {
+    "/product": {
       "get": {
+        "summary": "Product List",
         "tags": [
           "Product"
         ],
-        "summary": "Get Product",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "example": "0225dec5-33a1-467f-8567-592628c2ec5f"
-                }
+        "operationId": "ProductList",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=utf-8"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "data": [
+                  {
+                    "publicId": "fde47313-940c-4acc-abe3-51b097b25233",
+                    "name": "[DEBUG#1]APOLLO61 Wireless Mechanical Keyboard by Press Play - Gateron Brown",
+                    "price": 1099000,
+                    "imageUrl": "https://res.cloudinary.com/adikurniawan/image/upload/v1657699796/y0b7dhcfubfgujzii9xu.jpg",
+                    "category": [
+                      {
+                        "categoryId": 1,
+                        "name": "Hobi"
+                      },
+                      {
+                        "categoryId": 4,
+                        "name": "Elektronik"
+                      }
+                    ]
+                  },
+                  {
+                    "publicId": "8bdf8cf7-7b27-46c4-bed4-7380b5edf711",
+                    "name": "[DEBUG#2]Case Custom Akrilik Keyboard Mechanical Vortex Series GT6 - Clear",
+                    "price": 450000,
+                    "imageUrl": "https://res.cloudinary.com/adikurniawan/image/upload/v1657699969/g1vuskmg7xkniy8a25dm.jpg",
+                    "category": [
+                      {
+                        "categoryId": 1,
+                        "name": "Hobi"
+                      },
+                      {
+                        "categoryId": 4,
+                        "name": "Elektronik"
+                      }
+                    ]
+                  },
+                  {
+                    "publicId": "8e3f315e-d598-4194-b1d0-8d0fd56695e4",
+                    "name": "[DEBUG#3]Eva Foam Plate Keyboard Mechanical Vortex Series VX5 60%",
+                    "price": 85000,
+                    "imageUrl": "https://res.cloudinary.com/adikurniawan/image/upload/v1657700128/jynrlr4gcsyy170h2nck.jpg",
+                    "category": [
+                      {
+                        "categoryId": 1,
+                        "name": "Hobi"
+                      },
+                      {
+                        "categoryId": 4,
+                        "name": "Elektronik"
+                      }
+                    ]
+                  },
+                  {
+                    "publicId": "c4a73ae2-6949-470e-8b39-8a2c0403cebd",
+                    "name": "[DEBUG#4]CHESTER X keyboard case | GDYNMCS GEAR tas keyboard Mechanical 60 65 - Navy\n",
+                    "price": 195000,
+                    "imageUrl": "https://res.cloudinary.com/adikurniawan/image/upload/v1657700318/wsgucd3pd4fwmpuresge.jpg",
+                    "category": [
+                      {
+                        "categoryId": 1,
+                        "name": "Hobi"
+                      },
+                      {
+                        "categoryId": 3,
+                        "name": "Baju"
+                      }
+                    ]
+                  },
+                  {
+                    "publicId": "e88c8ecf-9937-483c-9195-6a332f816b62",
+                    "name": "[DEBUG#5]BUNDLING Samurai Collection - PRDX Artisan Keycaps",
+                    "price": 320000,
+                    "imageUrl": "https://res.cloudinary.com/adikurniawan/image/upload/v1657700512/v4kgtuvha6joloxjirk1.jpg",
+                    "category": [
+                      {
+                        "categoryId": 1,
+                        "name": "Hobi"
+                      }
+                    ]
+                  },
+                  {
+                    "publicId": "725926a6-a7a1-42bd-b26c-81bc6bf25064",
+                    "name": "[DEBUG#7]Natur-E Daily Nourishing Natural Vitamin E 100 IU isi 32 kapsul",
+                    "price": 30200,
+                    "imageUrl": "https://res.cloudinary.com/adikurniawan/image/upload/v1657700885/naaasjajhd1rrsgytv6l.jpg",
+                    "category": [
+                      {
+                        "categoryId": 5,
+                        "name": "Kesehatan"
+                      }
+                    ]
+                  },
+                  {
+                    "publicId": "75900da8-8083-4f09-876f-244652243fa2",
+                    "name": "[DEBUG#6]Pharmaton Formula 25s - Multivitamin Jaga Stamina dan Kesehatan",
+                    "price": 130000,
+                    "imageUrl": "https://res.cloudinary.com/adikurniawan/image/upload/v1657700794/oddz1os3kkypvbfcpofl.jpg",
+                    "category": [
+                      {
+                        "categoryId": 5,
+                        "name": "Kesehatan"
+                      }
+                    ]
+                  },
+                  {
+                    "publicId": "1af6afeb-19a3-4628-908f-aa923799bef2",
+                    "name": "[DEBUG#8]Paket Sido Muncul Vitamin C1000mg 3 Pack Lemon dan 2 Pack Sweet Orange",
+                    "price": 48450,
+                    "imageUrl": "https://res.cloudinary.com/adikurniawan/image/upload/v1657701329/o5tiinx3n6amhjwm3w3q.jpg",
+                    "category": [
+                      {
+                        "categoryId": 5,
+                        "name": "Kesehatan"
+                      }
+                    ]
+                  },
+                  {
+                    "publicId": "537b2616-207c-41d4-9b28-472f8a41c3a4",
+                    "name": "[DEBUG#9]VITACIMIN 1 pack isi 20 tablet-vitamin c rasa lemon",
+                    "price": 30500,
+                    "imageUrl": "https://res.cloudinary.com/adikurniawan/image/upload/v1657701485/hk6gbdd0eslcwk7qvvgj.jpg",
+                    "category": [
+                      {
+                        "categoryId": 5,
+                        "name": "Kesehatan"
+                      }
+                    ]
+                  },
+                  {
+                    "publicId": "da101baf-754a-4a0f-bd67-6f09ca41d008",
+                    "name": "[DEBUG#10]HiLo Teen Yoghurt Banana 250gr - Susu Tinggi Kalsium",
+                    "price": 30500,
+                    "imageUrl": "https://res.cloudinary.com/adikurniawan/image/upload/v1657701598/lyvajqvygdmaaiahxcwu.jpg",
+                    "category": [
+                      {
+                        "categoryId": 5,
+                        "name": "Kesehatan"
+                      }
+                    ]
+                  },
+                  {
+                    "publicId": "e6eb7f32-d671-4a67-ad5c-31eeda6211a8",
+                    "name": "[DEBUG#11]FDR FLEMINO 90/90-14 TL Ban Luar Motor Matic",
+                    "price": 205000,
+                    "imageUrl": "https://res.cloudinary.com/adikurniawan/image/upload/v1657702230/m9cw1od9bilqaimjknbh.jpg",
+                    "category": [
+                      {
+                        "categoryId": 2,
+                        "name": "Kendaraan"
+                      }
+                    ]
+                  }
+                ]
               }
             }
+          },
+          "404": {
+            "description": "Not Found",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Product list not found"
+              }
+            }
+          }
+        },
+        "security": []
+      },
+      "post": {
+        "summary": "Add Product",
+        "tags": [
+          "Product"
+        ],
+        "operationId": "AddProduct",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=utf-8"
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "description",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "price",
+            "in": "formData",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "description": "Must be numeric"
+          },
+          {
+            "name": "isPublished",
+            "in": "formData",
+            "required": true,
+            "type": "boolean",
+            "description": ""
+          },
+          {
+            "name": "categoryId",
+            "in": "formData",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "description": "Hobi"
+          },
+          {
+            "name": "image",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "max 5 item"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "type": "object",
-                      "example": {
-                        "publicId": "0225dec5-33a1-467f-8567-592628c2ec5f",
-                        "name": "Chicken",
-                        "description": "New range of formal shirts are designed keeping you in mind. With fits and styling that will make you stand apart",
-                        "price": 286,
-                        "category": [{
-                          "categoryId": 1,
-                          "name": "Hobi"
-                        },
-                        {
-                          "categoryId": 4,
-                          "name": "Elektronik"
-                        },
-                        {
-                          "categoryId": 2,
-                          "name": "Kendaraan"
-                        }
-                      ],
-                      "imageUrl": [{
-                        "imageUrl": "https://needy-veteran.net"
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Success register product"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Unauthorized User"
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "errors": [
+                  {
+                    "msg": "name is required",
+                    "param": "name",
+                    "location": "body"
+                  },
+                  {
+                    "msg": "description is required",
+                    "param": "description",
+                    "location": "body"
+                  },
+                  {
+                    "msg": "price is required",
+                    "param": "price",
+                    "location": "body"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/product/{id}": {
+      "get": {
+        "summary": "Get Product",
+        "tags": [
+          "Product"
+        ],
+        "operationId": "GetProduct",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "data": [
+                  {
+                    "publicId": "86967e80-4f98-4520-a04f-05ee2483d930",
+                    "name": "ciki",
+                    "description": "rasa taro",
+                    "price": 2000,
+                    "category": [
+                      {
+                        "categoryId": 1,
+                        "name": "Hobi"
                       },
                       {
-                        "imageUrl": "https://downright-member.biz"
+                        "categoryId": 2,
+                        "name": "Kendaraan"
                       },
                       {
-                        "imageUrl": "http://fearless-arcade.net"
+                        "categoryId": 3,
+                        "name": "Baju"
+                      },
+                      {
+                        "categoryId": 4,
+                        "name": "Elektronik"
+                      },
+                      {
+                        "categoryId": 5,
+                        "name": "Kesehatan"
+                      }
+                    ],
+                    "imageUrl": [
+                      {
+                        "imageUrl": "https://res.cloudinary.com/adikurniawan/image/upload/v1656680573/c0tpibehhmgj2enrvdl0.png"
+                      },
+                      {
+                        "imageUrl": "https://res.cloudinary.com/adikurniawan/image/upload/v1656680572/sgfbhpllcfuqp5nlmkcm.png"
+                      },
+                      {
+                        "imageUrl": "https://res.cloudinary.com/adikurniawan/image/upload/v1656680572/b7phzcjqip1cnxjhhfxi.png"
+                      },
+                      {
+                        "imageUrl": "https://res.cloudinary.com/adikurniawan/image/upload/v1656680571/ixpix4eei5gzdfx5yocs.png"
+                      },
+                      {
+                        "imageUrl": "https://res.cloudinary.com/adikurniawan/image/upload/v1656680571/ugno1g4j4pg0lrogz8zj.png"
+                      }
+                    ],
+                    "seller": {
+                      "publicId": "d95aac89-f49d-44c0-8fbe-3f94cb39f68f",
+                      "name": "Adi Kurniawan ID",
+                      "city": "Numerus Sette",
+                      "address": "Pahlawan Bangsa",
+                      "handphone": "080908090909",
+                      "imageUrl": "https://res.cloudinary.com/adikurniawan/image/upload/v1656678294/dopzdagzdhmijqa1g1xa.png"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Product not found"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "Update Product",
+        "tags": [
+          "Product"
+        ],
+        "operationId": "UpdateProduct",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=utf-8"
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "name",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "description",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "price",
+            "in": "formData",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "description": ""
+          },
+          {
+            "name": "categoryId",
+            "in": "formData",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "description": ""
+          },
+          {
+            "name": "image",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Success update product"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Unauthorized User"
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "errors": [
+                  {
+                    "name": "name is required"
+                  },
+                  {
+                    "description": "description is required"
+                  },
+                  {
+                    "price": "price must be numeric"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete Product",
+        "tags": [
+          "Product"
+        ],
+        "operationId": "DeleteProduct",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Success delete product"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Unauthorized User"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Product not found"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/product/user/{id}": {
+      "get": {
+        "summary": "Product List by User",
+        "tags": [
+          "Product"
+        ],
+        "operationId": "ProductListbyUser",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "data": [
+                  {
+                    "publicId": "9305ec97-ce9d-4cd7-8489-573beae783f5",
+                    "name": "Pizza",
+                    "description": "The slim & simple Maple Gaming Keyboard from Dev Byte comes with a sleek body and 7- Color RGB LED Back-lighting for smart functionality",
+                    "price": 650,
+                    "category": [
+                      {
+                        "name": "Kesehatan"
+                      },
+                      {
+                        "name": "Hobi"
+                      }
+                    ],
+                    "imageUrl": []
+                  },
+                  {
+                    "publicId": "3d1f8ead-dcd5-45fd-adaa-569e0e082894",
+                    "name": "Bacon",
+                    "description": "The beautiful range of Apple Naturalé that has an exciting mix of natural ingredients. With the Goodness of 100% Natural Ingredients",
+                    "price": 327,
+                    "category": [
+                      {
+                        "name": "Elektronik"
+                      }
+                    ],
+                    "imageUrl": []
+                  },
+                  {
+                    "publicId": "886a6491-3aa7-40cc-b2a6-8582e805cc07",
+                    "name": "Table",
+                    "description": "The automobile layout consists of a front-engine design, with transaxle-type transmissions mounted at the rear of the engine and four wheel drive",
+                    "price": 125,
+                    "category": [
+                      {
+                        "name": "Baju"
+                      }
+                    ],
+                    "imageUrl": []
+                  },
+                  {
+                    "publicId": "63d067a9-86b7-4e3f-b286-6d2677c950fc",
+                    "name": "Gloves",
+                    "description": "New ABC 13 9370, 13.3, 5th Gen CoreA5-8250U, 8GB RAM, 256GB SSD, power UHD Graphics, OS 10 Home, OS Office A & J 2016",
+                    "price": 84,
+                    "category": [],
+                    "imageUrl": []
+                  },
+                  {
+                    "publicId": "40ac3dbe-2c6e-44ee-a733-15c785be57e3",
+                    "name": "Mouse",
+                    "description": "New range of formal shirts are designed keeping you in mind. With fits and styling that will make you stand apart",
+                    "price": 70,
+                    "category": [],
+                    "imageUrl": []
+                  }
+                ]
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Seller not found"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/product/user/{id}/sold": {
+      "get": {
+        "summary": "Sold Product List by User",
+        "tags": [
+          "Product"
+        ],
+        "operationId": "SoldProductListbyUser",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Unauthorized User"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Product list not found"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/category": {
+      "get": {
+        "summary": "Get Category List",
+        "tags": [
+          "Category"
+        ],
+        "operationId": "GetCategoryList",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/product/wishlist": {
+      "get": {
+        "summary": "Wishlist",
+        "tags": [
+          "Wishlist"
+        ],
+        "operationId": "Wishlist",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=utf-8"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "data": [
+                  {
+                    "publicId": "0225dec5-33a1-467f-8567-592628c2ec5f",
+                    "name": "Chicken",
+                    "description": "New range of formal shirts are designed keeping you in mind. With fits and styling that will make you stand apart",
+                    "price": 286,
+                    "category": [
+                      {
+                        "categoryId": 4,
+                        "name": "Elektronik"
+                      },
+                      {
+                        "categoryId": 4,
+                        "name": "Elektronik"
+                      },
+                      {
+                        "categoryId": 1,
+                        "name": "Hobi"
+                      }
+                    ],
+                    "imageUrl": [
+                      {
+                        "imageUrl": "http://idealistic-walker.info"
                       },
                       {
                         "imageUrl": "https://unruly-sarong.org"
                       },
                       {
-                        "imageUrl": "http://idealistic-walker.info"
+                        "imageUrl": "http://fearless-arcade.net"
+                      },
+                      {
+                        "imageUrl": "https://downright-member.biz"
+                      },
+                      {
+                        "imageUrl": "https://needy-veteran.net"
                       }
                     ]
-                    }
-                }
+                  }
+                ]
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Unauthorized User"
               }
             }
           },
           "404": {
             "description": "Not Found",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "example": "Product not found"
-                }
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Wishlist list not found"
               }
             }
           }
         },
-                
         "security": [
           {
-            "api_key": []
+            "apiKey": []
           }
         ]
       }
     },
-    "/Product List/": {
-      "get": {
-        "tags": [
-          "Product"
-        ],
-        "summary": "Product List",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "categoryId": {
-                  "example": 3
-                },
-                "page": {
-                  "example": 2
-                },
-                "limit": {
-                  "example": 1
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "type": "object",
-                      "example": {
-                        "publicId": "c9ca54af-4cf8-4bd7-98a1-3b451460bde1",
-                        "name": "Table",
-                        "description": "New ABC 13 9370, 13.3, 5th Gen CoreA5-8250U, 8GB RAM, 256GB SSD, power UHD Graphics, OS 10 Home, OS Office A & J 2016",
-                        "price": 258,
-                        "category": [{
-                          "categoryId": 1,
-                          "name": "Hobi"
-                        }        
-                      ],
-                      "imageUrl": []
-                  }
-                }
-              }
-            }
-          },
-          "200-b": {
-            "description": "Success with Param",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "type": "object",
-                      "example": {
-                        "publicId": "886a6491-3aa7-40cc-b2a6-8582e805cc07",
-                        "name": "Table",
-                        "description": "The automobile layout consists of a front-engine design, with transaxle-type transmissions mounted at the rear of the engine and four wheel drive",
-                        "price": 125,
-                        "category": [
-                        {
-                        "categoryId": 3,
-                        "name": "Baju"
-                      }
-                    ],
-                      "imageUrl": []
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Product List by User Id/": {
-      "get": {
-        "tags": [
-          "Product"
-        ],
-        "summary": "Product List by User Id",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "Id": {
-                  "example": "9e50ab39-8f99-4333-b2b4-8b6344bd23b6"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "type": "object",
-                      "example": {
-                          "publicId": "9305ec97-ce9d-4cd7-8489-573beae783f5",
-                          "name": "Pizza",
-                          "description": "The slim & simple Maple Gaming Keyboard from Dev Byte comes with a sleek body and 7- Color RGB LED Back-lighting for smart functionality",
-                          "price": 650,
-                          "category": [
-                       {
-                         "name": "Kesehatan"
-                       },
-                       {
-                        "name": "Hobi"
-                       }
-                       ],
-                          "imageUrl": []
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Seller not found"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Add Product/": {
+    "/product/{id}/wishlist": {
       "post": {
-        "tags": [
-          "Product"
-        ],
-        "summary": "Add Product",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "ciki"
-                },
-                "description": {
-                  "example": "rasa taro"
-                },
-                "price": {
-                  "example": 2000
-                },
-                "image1": {
-                  "example": "/home/akdev/Pictures/Screenshot_2"
-                },
-                "image2": {
-                  "example": "/home/akdev/Pictures/Screenshot_2"
-                },
-                "image3": {
-                  "example": "/home/akdev/Pictures/Screenshot_2"
-                },
-                "image4": {
-                  "example": "/home/akdev/Pictures/Screenshot_2"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Success register product"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example":"Unauthorized User"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "errors": {
-                  "type": "object",
-                      "example":[
-                        {
-                          "name": "name is required"
-                        },
-                        {
-                          "description": "description is required"
-                        },
-                        {
-                          "price": "price must be numeric"
-                        }
-                      ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Update Product/": {
-      "put": {
-        "tags": [
-          "Product"
-        ],
-        "summary": "Update Product",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "ciki"
-                },
-                "description": {
-                  "example": "rasa taro"
-                },
-                "price": {
-                  "example": 20001
-                },
-                "categoryId": {
-                  "example": 1
-                },
-                "categoryId-2": {
-                  "example": 2
-                },
-                "image": {
-                  "example": "/home/akdev/Pictures/Screenshot_2"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Success update product"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Unauthorized User"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "errors": {
-                  "type": "object",
-                      "example":[
-                        {
-                          "name": "name is required"
-                        },
-                        {
-                          "description": "description is required"
-                        },
-                        {
-                          "price": "price must be numeric"
-                        }
-                      ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Delete Product/": {
-      "delete": {
-        "tags": [
-          "Product"
-        ],
-        "summary": "Delete Product",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "example": "6b31f241-8e65-48f3-981e-b337fd46b14a"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Success deleted product"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Unauthorized User"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Product not found"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Wishlist/": {
-      "get": {
-        "tags": [
-          "Product"
-        ],
-        "summary": "Wishlist",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "Authorization": {
-                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6ImExYmUyNTVlLTdmNjAtNDQyOC04MTM5LTE3YTgzMzJhZDZhNyIsImVtYWlsIjoiYWRpa3Vybmlhd2FuQG1haWwuY29tIiwiaWF0IjoxNjU2MzM2NTUxfQ.7GYQDQxkr-kpqV2WJiZD3v3P2DnShEFMxOcoNzHc3Zw"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "type": "object",
-                      "example": [
-                        {
-                          "publicId": "0225dec5-33a1-467f-8567-592628c2ec5f",
-                          "name": "Chicken",
-                          "description": "New range of formal shirts are designed keeping you in mind. With fits and styling that will make you stand apart",
-                          "price": 286,
-                          "category":[
-                            {
-                              "categoryId": 4,
-                              "name": "Elektronik"
-                            },
-                            {
-                              "categoryId": 4,
-                              "name": "Elektronik"
-                            },
-                            {
-                              "categoryId": 1,
-                              "name": "Hobi"
-                            }
-                          ],
-                          "imageurl":[
-                            {
-                              "imageUrl": "http://idealistic-walker.info"
-                            },
-                            {
-                              "imageUrl": "https://unruly-sarong.org"
-                            },
-                            {
-                              "imageUrl": "http://fearless-arcade.net"
-                            },
-                            {
-                              "imageUrl": "https://downright-member.biz"
-                            },
-                            {
-                              "imageUrl": "https://needy-veteran.net"
-                            }
-                          ]
-                        }
-                      ]
-                }
-              }
-            }
-          },
-          "200-b": {
-            "description": "Ok",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Wishlist still empty"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Unauthorized User"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Add Wishlist/": {
-      "post": {
-        "tags": [
-          "Product"
-        ],
         "summary": "Add Wishlist",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "example": "3c263f37-b5a9-4929-8cb4-c5640caa83b7"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Success add wishlist"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Unauthorized User"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Wishlist already exists"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Delete Wishlist/": {
-      "post": {
         "tags": [
-          "Product"
+          "Wishlist"
         ],
-        "summary": "Delete Wishlist",
+        "operationId": "AddWishlist",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=utf-8"
+        ],
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "example": "3c263f37-b5a9-4929-8cb4-c5640caa83b7"
-                }
-              }
-            }
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": ""
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Success delete wishlist"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Unauthorized User"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Unprocessable Entity",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example":  "Wishlist not found"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Add Offer/": {
-      "post": {
-        "tags": [
-          "Offer"
-        ],
-        "summary": "Buyer Add Offer",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "productId": {
-                  "example": "80c399a8-f8c6-401d-8b61-a3dcc0b94f79"
-                },
-                "price": {
-                  "example": 2000000
-                }
-              }
-            }
-          }
-        ],
-        
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Success add offer"
-                }
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Success add wishlist"
               }
             }
           },
           "400": {
             "description": "Bad Request",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Offer already exists"
-                }
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Product already in wishlist"
               }
             }
           },
           "401": {
             "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Unauthorized User"
-                }
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Unauthorized User"
               }
             }
           }
-        }
-      }
-    },
-    "/Offer List/": {
-      "get": {
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete Wishlist",
         "tags": [
-          "Offer"
+          "Wishlist"
         ],
-        "summary": "Seller Offer list",
+        "operationId": "DeleteWishlist",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=utf-8"
+        ],
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "Authorization": {
-                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6ImM3ODQwYjAwLTY4OTItNDRlOS04ZjFkLTgyNTM3MzFiNmY2YyIsImVtYWlsIjoiYWRpa3Vybmlhd2FuQG1haWwuY29tIiwiaWF0IjoxNjU2NDI1ODQ3fQ.whjfAqHUYL9UGCccBKaUmnjUFZ0ELPlnM-1LoCv5-g0"
-                }
-              }
-            }
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": ""
           }
         ],
-        
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "type": "object",
-                      "example": [
-                        {
-                          "name": "Adi Kurniawan ID"
-                        },
-                        {
-                          "description": "New ABC 13 9370, 13.3, 5th Gen CoreA5-8250U, 8GB RAM, 256GB SSD, power UHD Graphics, OS 10 Home, OS Office A & J 2016"
-                        },
-                        {
-                          "price": 779
-                        },
-                        {
-                          "offerPrice": 2000000
-                        },
-                        {
-                          "statusOfferId": null
-                        },
-                        {
-                          "category": [
-                            {
-                              "categoryId": 4,
-                              "name": "Elektronik"
-                            }
-                          ],
-                          "imageUrl": [],
-                          "city": "Numerus Sette",
-                          "address": "Pahlawan Bangsa"
-                        },
-                        {
-                          "name": "Adi Kurniawan ID",
-                          "description": "The Football Is Good For Training And Recreational Purposes",
-                          "price": 205,
-                          "offerPrice": 2000000,
-                          "statusOfferId": null,
-                          "category": [
-                              {
-                                  "categoryId": 3,
-                                  "name": "Baju"
-                              },
-                              {
-                                  "categoryId": 4,
-                                  "name": "Elektronik"
-                              }
-                          ],
-                          "imageUrl": [],
-                          "city": "Numerus Sette",
-                          "address": "Pahlawan Bangsa"
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Success delete wishlist"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Unauthorized User"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Wishlist not found"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/product/{id}/offer": {
+      "post": {
+        "summary": "Add Offer",
+        "tags": [
+          "Offer-Buyer"
+        ],
+        "operationId": "AddOffer",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=utf-8"
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "price",
+            "in": "formData",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Success add offer"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Offer already exists"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Unauthorized User"
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "errors": [
+                  {
+                    "value": "1000000a",
+                    "msg": "price must be numeric",
+                    "param": "price",
+                    "location": "body"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/product/offer": {
+      "get": {
+        "summary": "Offer List",
+        "tags": [
+          "Offer-Seller"
+        ],
+        "operationId": "OfferList",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=utf-8"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "data": [
+                  {
+                    "offerPublicId": "bf13e054-a91c-4a58-af9c-9bc1ff683f03",
+                    "productPublicId": "fde47313-940c-4acc-abe3-51b097b25233",
+                    "name": "[DEBUG#1]APOLLO61 Wireless Mechanical Keyboard by Press Play - Gateron Brown",
+                    "productPrice": 1099000,
+                    "offerPrice": 1000000,
+                    "category": [
+                      {
+                        "id": 1,
+                        "name": "Hobi"
                       },
                       {
-                          "name": "Adi Kurniawan ID",
-                          "description": "Boston's most advanced compression wear technology increases muscle oxygenation, stabilizes active muscles",
-                          "price": 737,
-                          "offerPrice": 2000000,
-                          "statusOfferId": null,
-                          "category": [],
-                          "imageUrl": [
-                              {
-                                  "imageUrl": "http://oblong-step-uncle.net"
-                              },
-                              {
-                                  "imageUrl": "http://astonishing-diversity.net"
-                              },
-                              {
-                                  "imageUrl": "http://gigantic-driver.net"
-                              },
-                              {
-                                  "imageUrl": "https://lined-pyramid.info"
-                              },
-                              {
-                                  "imageUrl": "http://bogus-ginseng.net"
-                              }
-                            ],
-                              "city": "Numerus Sette",
-                              "address": "Pahlawan Bangsa"
+                        "id": 2,
+                        "name": "Elektronik"
                       }
-                    ]
-                }
+                    ],
+                    "imageUrl": "https://res.cloudinary.com/adikurniawan/image/upload/v1657699796/y0b7dhcfubfgujzii9xu.jpg",
+                    "buyerName": "Adi Kurniawan"
+                  }
+                ]
               }
             }
           },
           "401": {
             "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Unauthorized User"
-                }
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Unauthorized User"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Offer list not found"
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
       }
     },
-    "/Update Offer Status/": {
+    "/offer/{id}": {
       "put": {
-        "tags": [
-          "Offer"
-        ],
         "summary": "Update Offer Status",
+        "tags": [
+          "Offer-Seller"
+        ],
+        "operationId": "UpdateOfferStatus",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=utf-8"
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "example": "3d9835ae-1153-4242-8047-263eda596b09"
-                }
-              }
-            }
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "statusOfferId",
+            "in": "formData",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "description": ""
           }
         ],
-        
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Success update status offer"
-                }
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Success update status offer"
               }
             }
           },
           "401": {
             "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Unauthorized User"
-                }
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Unauthorized User"
               }
             }
           },
           "404": {
-            "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Offer not found"
-                }
+            "description": "Not Found",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Offer not found"
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
       }
     },
-    "/Get unsent Notification/": {
+    "/notification": {
       "get": {
+        "summary": "Get Unseen Notification",
         "tags": [
           "Notification"
         ],
-        "summary": "Get unsent Notification",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "example": "3d9835ae-1153-4242-8047-263eda596b09"
-                }
-              }
-            }
-          }
+        "operationId": "GetUnseenNotification",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=utf-8"
         ],
-        
+        "parameters": [],
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Success update status offer"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Unauthorized User"
-                }
+            "examples": {
+              "application/json; charset=utf-8": {
+                "data": [
+                  {
+                    "publicId": "4b8d8cb7-c6a0-42e6-a5b8-f1244b9573a7",
+                    "statusNotification": "Accepted Offer",
+                    "product": {
+                      "publicId": "fde47313-940c-4acc-abe3-51b097b25233",
+                      "name": "[DEBUG#1]APOLLO61 Wireless Mechanical Keyboard by Press Play - Gateron Brown",
+                      "price": 1099000,
+                      "image": "https://res.cloudinary.com/adikurniawan/image/upload/v1657699796/y0b7dhcfubfgujzii9xu.jpg"
+                    },
+                    "offer": {
+                      "publicId": "a7a08c29-b771-42c7-984a-8fe5c6b56d4b",
+                      "price": 1000000
+                    },
+                    "createdAt": "2022-07-16T02:38:44.249Z"
+                  },
+                  {
+                    "publicId": "910494a5-22cb-4ccc-a831-a012412d2463",
+                    "statusNotification": "Incoming Offer",
+                    "product": {
+                      "publicId": "fde47313-940c-4acc-abe3-51b097b25233",
+                      "name": "[DEBUG#1]APOLLO61 Wireless Mechanical Keyboard by Press Play - Gateron Brown",
+                      "price": 1099000,
+                      "image": "https://res.cloudinary.com/adikurniawan/image/upload/v1657699796/y0b7dhcfubfgujzii9xu.jpg"
+                    },
+                    "offer": {
+                      "publicId": "a7a08c29-b771-42c7-984a-8fe5c6b56d4b",
+                      "price": 1000000
+                    },
+                    "createdAt": "2022-07-16T02:38:27.665Z"
+                  },
+                  {
+                    "publicId": "77eecc95-008e-41e1-a3ac-4c749764cd4a",
+                    "statusNotification": "Published Offer",
+                    "product": {
+                      "publicId": "fde47313-940c-4acc-abe3-51b097b25233",
+                      "name": "[DEBUG#1]APOLLO61 Wireless Mechanical Keyboard by Press Play - Gateron Brown",
+                      "price": 1099000,
+                      "image": "https://res.cloudinary.com/adikurniawan/image/upload/v1657699796/y0b7dhcfubfgujzii9xu.jpg"
+                    },
+                    "offer": {
+                      "publicId": "a7a08c29-b771-42c7-984a-8fe5c6b56d4b",
+                      "price": 1000000
+                    },
+                    "createdAt": "2022-07-16T02:38:27.665Z"
+                  },
+                  {
+                    "publicId": "140da74c-783b-4e49-bb51-1c66c6bc3719",
+                    "statusNotification": "Published Product",
+                    "product": {
+                      "publicId": "fde47313-940c-4acc-abe3-51b097b25233",
+                      "name": "[DEBUG#1]APOLLO61 Wireless Mechanical Keyboard by Press Play - Gateron Brown",
+                      "price": 1099000,
+                      "image": "https://res.cloudinary.com/adikurniawan/image/upload/v1657699796/y0b7dhcfubfgujzii9xu.jpg"
+                    },
+                    "createdAt": "2022-07-16T02:38:19.259Z"
+                  },
+                  {
+                    "publicId": "36887616-1a80-433e-ab7d-32ed1b3fdc59",
+                    "statusNotification": "Published Product",
+                    "product": {
+                      "publicId": "8bdf8cf7-7b27-46c4-bed4-7380b5edf711",
+                      "name": "[DEBUG#2]Case Custom Akrilik Keyboard Mechanical Vortex Series GT6 - Clear",
+                      "price": 450000,
+                      "image": "https://res.cloudinary.com/adikurniawan/image/upload/v1657699969/g1vuskmg7xkniy8a25dm.jpg"
+                    },
+                    "createdAt": "2022-07-16T02:38:19.259Z"
+                  },
+                  {
+                    "publicId": "78d4365c-9ef1-4e5c-9508-74d851be931d",
+                    "statusNotification": "Published Product",
+                    "product": {
+                      "publicId": "8e3f315e-d598-4194-b1d0-8d0fd56695e4",
+                      "name": "[DEBUG#3]Eva Foam Plate Keyboard Mechanical Vortex Series VX5 60%",
+                      "price": 85000,
+                      "image": "https://res.cloudinary.com/adikurniawan/image/upload/v1657700128/jynrlr4gcsyy170h2nck.jpg"
+                    },
+                    "createdAt": "2022-07-16T02:38:19.259Z"
+                  },
+                  {
+                    "publicId": "4cad2588-3ff3-419e-8034-e527be05cf47",
+                    "statusNotification": "Published Product",
+                    "product": {
+                      "publicId": "c4a73ae2-6949-470e-8b39-8a2c0403cebd",
+                      "name": "[DEBUG#4]CHESTER X keyboard case | GDYNMCS GEAR tas keyboard Mechanical 60 65 - Navy\n",
+                      "price": 195000,
+                      "image": "https://res.cloudinary.com/adikurniawan/image/upload/v1657700318/wsgucd3pd4fwmpuresge.jpg"
+                    },
+                    "createdAt": "2022-07-16T02:38:19.259Z"
+                  },
+                  {
+                    "publicId": "5441bbd6-2566-4d8b-a3cf-20aad892e548",
+                    "statusNotification": "Published Product",
+                    "product": {
+                      "publicId": "e88c8ecf-9937-483c-9195-6a332f816b62",
+                      "name": "[DEBUG#5]BUNDLING Samurai Collection - PRDX Artisan Keycaps",
+                      "price": 320000,
+                      "image": "https://res.cloudinary.com/adikurniawan/image/upload/v1657700512/v4kgtuvha6joloxjirk1.jpg"
+                    },
+                    "createdAt": "2022-07-16T02:38:19.259Z"
+                  }
+                ]
               }
             }
           },
           "404": {
-            "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Offer not found"
-                }
+            "description": "Not Found",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Notification not found"
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
       }
     },
-    "/Get all Notification/": {
+    "/notification/all": {
       "get": {
+        "summary": "Get All Notification",
         "tags": [
           "Notification"
         ],
-        "summary": "Get all Notification",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "example": "3d9835ae-1153-4242-8047-263eda596b09"
-                }
-              }
-            }
-          }
+        "operationId": "GetAllNotification",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=utf-8"
         ],
-        
+        "parameters": [],
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Success update status offer"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Unauthorized User"
-                }
+            "examples": {
+              "application/json; charset=utf-8": {
+                "data": [
+                  {
+                    "publicId": "4929b030-c748-4250-9d7d-622f0fb90afc",
+                    "statusNotification": "Accepted Offer",
+                    "product": {
+                      "publicId": "fde47313-940c-4acc-abe3-51b097b25233",
+                      "name": "[DEBUG#1]APOLLO61 Wireless Mechanical Keyboard by Press Play - Gateron Brown",
+                      "price": 1099000,
+                      "image": "https://res.cloudinary.com/adikurniawan/image/upload/v1657699796/y0b7dhcfubfgujzii9xu.jpg"
+                    },
+                    "offer": {
+                      "publicId": "7beabbc5-f7a6-4a49-bd01-d687ae6fe8bf",
+                      "price": 1000000
+                    },
+                    "createdAt": "2022-07-16T04:13:37.892Z",
+                    "isRead": false
+                  },
+                  {
+                    "publicId": "135b8270-a382-4468-8b8c-68a79d339c79",
+                    "statusNotification": "Incoming Offer",
+                    "product": {
+                      "publicId": "fde47313-940c-4acc-abe3-51b097b25233",
+                      "name": "[DEBUG#1]APOLLO61 Wireless Mechanical Keyboard by Press Play - Gateron Brown",
+                      "price": 1099000,
+                      "image": "https://res.cloudinary.com/adikurniawan/image/upload/v1657699796/y0b7dhcfubfgujzii9xu.jpg"
+                    },
+                    "offer": {
+                      "publicId": "7beabbc5-f7a6-4a49-bd01-d687ae6fe8bf",
+                      "price": 1000000
+                    },
+                    "createdAt": "2022-07-16T04:13:27.897Z",
+                    "isRead": false
+                  },
+                  {
+                    "publicId": "782da29f-81bd-4a93-a72c-52319bc010e0",
+                    "statusNotification": "Published Offer",
+                    "product": {
+                      "publicId": "fde47313-940c-4acc-abe3-51b097b25233",
+                      "name": "[DEBUG#1]APOLLO61 Wireless Mechanical Keyboard by Press Play - Gateron Brown",
+                      "price": 1099000,
+                      "image": "https://res.cloudinary.com/adikurniawan/image/upload/v1657699796/y0b7dhcfubfgujzii9xu.jpg"
+                    },
+                    "offer": {
+                      "publicId": "7beabbc5-f7a6-4a49-bd01-d687ae6fe8bf",
+                      "price": 1000000
+                    },
+                    "createdAt": "2022-07-16T04:13:27.897Z",
+                    "isRead": false
+                  },
+                  {
+                    "publicId": "c9cf648a-5bca-4510-a480-5c8aabe52599",
+                    "statusNotification": "Published Product",
+                    "product": {
+                      "publicId": "fde47313-940c-4acc-abe3-51b097b25233",
+                      "name": "[DEBUG#1]APOLLO61 Wireless Mechanical Keyboard by Press Play - Gateron Brown",
+                      "price": 1099000,
+                      "image": "https://res.cloudinary.com/adikurniawan/image/upload/v1657699796/y0b7dhcfubfgujzii9xu.jpg"
+                    },
+                    "createdAt": "2022-07-16T04:12:42.427Z",
+                    "isRead": false
+                  },
+                  {
+                    "publicId": "a128382b-c814-4038-bf6c-28520ee579c9",
+                    "statusNotification": "Published Product",
+                    "product": {
+                      "publicId": "8bdf8cf7-7b27-46c4-bed4-7380b5edf711",
+                      "name": "[DEBUG#2]Case Custom Akrilik Keyboard Mechanical Vortex Series GT6 - Clear",
+                      "price": 450000,
+                      "image": "https://res.cloudinary.com/adikurniawan/image/upload/v1657699969/g1vuskmg7xkniy8a25dm.jpg"
+                    },
+                    "createdAt": "2022-07-16T04:12:42.427Z",
+                    "isRead": true
+                  },
+                  {
+                    "publicId": "3d553e5c-4727-4966-9c0e-fb1cbb6d4a6a",
+                    "statusNotification": "Published Product",
+                    "product": {
+                      "publicId": "8e3f315e-d598-4194-b1d0-8d0fd56695e4",
+                      "name": "[DEBUG#3]Eva Foam Plate Keyboard Mechanical Vortex Series VX5 60%",
+                      "price": 85000,
+                      "image": "https://res.cloudinary.com/adikurniawan/image/upload/v1657700128/jynrlr4gcsyy170h2nck.jpg"
+                    },
+                    "createdAt": "2022-07-16T04:12:42.427Z",
+                    "isRead": true
+                  },
+                  {
+                    "publicId": "d2103436-4e61-4f99-8234-5b878a5c0abf",
+                    "statusNotification": "Published Product",
+                    "product": {
+                      "publicId": "c4a73ae2-6949-470e-8b39-8a2c0403cebd",
+                      "name": "[DEBUG#4]CHESTER X keyboard case | GDYNMCS GEAR tas keyboard Mechanical 60 65 - Navy\n",
+                      "price": 195000,
+                      "image": "https://res.cloudinary.com/adikurniawan/image/upload/v1657700318/wsgucd3pd4fwmpuresge.jpg"
+                    },
+                    "createdAt": "2022-07-16T04:12:42.427Z",
+                    "isRead": true
+                  },
+                  {
+                    "publicId": "636166eb-cd23-452a-bddb-dc1d8abedb0f",
+                    "statusNotification": "Published Product",
+                    "product": {
+                      "publicId": "e88c8ecf-9937-483c-9195-6a332f816b62",
+                      "name": "[DEBUG#5]BUNDLING Samurai Collection - PRDX Artisan Keycaps",
+                      "price": 320000,
+                      "image": "https://res.cloudinary.com/adikurniawan/image/upload/v1657700512/v4kgtuvha6joloxjirk1.jpg"
+                    },
+                    "createdAt": "2022-07-16T04:12:42.427Z",
+                    "isRead": true
+                  }
+                ]
               }
             }
           },
           "404": {
-            "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Offer not found"
-                }
+            "description": "Not Found",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Notification list not found"
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
       }
     },
-    "/set seen Notification/": {
+    "/notification/{id}/read": {
       "post": {
+        "summary": "Set Seen Notification",
         "tags": [
           "Notification"
         ],
-        "summary": "set seen Notification",
+        "operationId": "SetSeenNotification",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=utf-8"
+        ],
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "example": "3d9835ae-1153-4242-8047-263eda596b09"
-                }
-              }
-            }
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": ""
           }
         ],
-        
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Success update status offer"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Unauthorized User"
-                }
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Success read notification"
               }
             }
           },
           "404": {
-            "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Offer not found"
-                }
+            "description": "Not Found",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Notification not found"
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
       }
     },
-    "/Set seen all Notification/": {
+    "/notification/read-all": {
       "post": {
+        "summary": "Set Seen All Notification",
         "tags": [
           "Notification"
         ],
-        "summary": "Set seen all Notification",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "example": "3d9835ae-1153-4242-8047-263eda596b09"
-                }
-              }
-            }
-          }
+        "operationId": "SetSeenAllNotification",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=utf-8"
         ],
-        
+        "parameters": [],
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Success update status offer"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Unauthorized User"
-                }
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Success read all notification"
               }
             }
           },
           "404": {
-            "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Offer not found"
-                }
+            "description": "Not Found",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Notification list not found"
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
       }
     },
-    "/Remove notification/": {
+    "/notification/{id}/remove": {
       "delete": {
+        "summary": "Remove Notification",
         "tags": [
           "Notification"
         ],
-        "summary": "Remove notification",
+        "operationId": "RemoveNotification",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=utf-8"
+        ],
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "example": "3d9835ae-1153-4242-8047-263eda596b09"
-                }
-              }
-            }
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": ""
           }
         ],
-        
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Success update status offer"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Unauthorized User"
-                }
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Success remove notification"
               }
             }
           },
           "404": {
-            "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Offer not found"
-                }
+            "description": "Not Found",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Notification not found"
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
       }
     },
-    "/Remove notification Copy/": {
-      "get": {
+    "/notification/remove-all": {
+      "delete": {
+        "summary": "Remove All Notification",
         "tags": [
           "Notification"
         ],
-        "summary": "Remove notification Copy",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "example": "3d9835ae-1153-4242-8047-263eda596b09"
-                }
-              }
-            }
-          }
+        "operationId": "RemoveAllNotification",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=utf-8"
         ],
-        
+        "parameters": [],
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Success update status offer"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Unauthorized User"
-                }
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Success remove all notification"
               }
             }
           },
           "404": {
-            "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "object",
-                      "example": "Offer not found"
-                }
+            "description": "Not Found",
+            "examples": {
+              "application/json; charset=utf-8": {
+                "message": "Notification list not found"
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
       }
     }
-  }
+  },
+  "security": [],
+  "tags": [
+    {
+      "name": "Auth"
+    },
+    {
+      "name": "Profile"
+    },
+    {
+      "name": "Product"
+    },
+    {
+      "name": "Category"
+    },
+    {
+      "name": "Wishlist"
+    },
+    {
+      "name": "Offer-Buyer"
+    },
+    {
+      "name": "Offer-Seller"
+    },
+    {
+      "name": "Notification"
+    }
+  ]
 }
