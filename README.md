@@ -25,12 +25,6 @@ Install dependencies
   npm install
 ```
 
-Start the server
-
-```bash
-  npm start
-```
-
 Create the database
 
 ```bash
@@ -41,6 +35,12 @@ Migration the database
 
 ```bash
   sequelize db:migrate
+```
+
+Start the server
+
+```bash
+  npm start
 ```
 
 ## Environment Variables
