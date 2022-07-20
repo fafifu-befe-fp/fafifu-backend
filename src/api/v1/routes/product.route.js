@@ -10,6 +10,7 @@ const {
   addProductValidationRules,
   updateProductValidationRules,
 } = require("../validations/product.validation");
+const { addOfferValidationRules } = require("../validations/offer.validation");
 
 const multer = require("multer");
 const { storage } = require("../helpers");
@@ -35,7 +36,13 @@ router.put("/:id/offer", authorization, OfferController.update);
 router.get("/wishlist", authorization, WishlistController.list);
 router.post("/:id/wishlist", authorization, WishlistController.add);
 router.delete("/:id/wishlist", authorization, WishlistController.delete);
-router.post("/:id/offer", authorization, OfferController.add);
+router.post(
+  "/:id/offer",
+  authorization,
+  addOfferValidationRules(),
+  validation,
+  OfferController.add
+);
 router.get("/:id", isLogin, ProductController.get);
 router.get("/user/sold", authorization, OfferController.soldList);
 router.get("/user/:id", ProductController.listByUserId);

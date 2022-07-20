@@ -12,6 +12,7 @@ const addProductValidationRules = () => {
       .withMessage("price is required")
       .isNumeric()
       .withMessage("price must be numeric"),
+    body("image").notEmpty().withMessage("image is required"),
   ];
 };
 
