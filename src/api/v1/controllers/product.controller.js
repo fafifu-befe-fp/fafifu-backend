@@ -299,6 +299,25 @@ class ProductController {
       next(error);
     }
   }
+
+  static async search(req, res, next) {
+    try {
+      const search = await ProductService.searchProduct(req.query.search);
+
+      if (search) {
+        res.status(200).json({
+          data: search,
+        });
+      } else {
+        throw {
+          status: 404,
+          message: "Product not found",
+        };
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = ProductController;

@@ -3,6 +3,29 @@ const { Offer, Product } = require("../models");
 const { ProductService, OfferService } = require("../services");
 
 class OfferController {
+  static async get(req, res, next) {
+    try {
+      const offer = await Offer.findAll({
+        where: {
+          publicId: req.params.id,
+        },
+      });
+
+      if (offer.length > 0) {
+        const data = await OfferService.getDetailOffer(req.params.id);
+        res.status(200).json({
+          data: data,
+        });
+      } else {
+        throw {
+          status: 404,
+          message: "Offer not found",
+        };
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
   static async list(req, res, next) {
     try {
       const data = await OfferService.getOfferList(req.user.id);

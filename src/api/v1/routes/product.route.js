@@ -28,11 +28,11 @@ const upload = multer({
   },
 });
 
+router.get("/search", ProductController.search);
 router.get("/", isLogin, ProductController.list);
 router.delete("/:id", authorization, ProductController.delete);
 router.get("/offer", authorization, OfferController.list);
 router.delete("/:id/offer", authorization, OfferController.add);
-router.put("/:id/offer", authorization, OfferController.update);
 router.get("/wishlist", authorization, WishlistController.list);
 router.post("/:id/wishlist", authorization, WishlistController.add);
 router.delete("/:id/wishlist", authorization, WishlistController.delete);

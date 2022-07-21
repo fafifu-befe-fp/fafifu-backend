@@ -319,6 +319,69 @@ class ProductService {
       attributes: ["id", "name"],
     });
   }
+
+  static async searchProduct(searchKeyParam) {
+    const product = await Product.findAll({
+      attributes: ["publicId", "name", "price"],
+      include: [
+        {
+          model: ProductCategory,
+          include: [
+            {
+              model: Category,
+              attributes: ["id", "name"],
+            },
+          ],
+          where: {},
+        },
+        {
+          model: ProductImage,
+          attributes: ["imageUrl"],
+        },
+        {
+          model: User,
+          attributes: ["publicId"],
+        },
+      ],
+      order: [
+        [ProductImage, "id", "ASC"],
+        [ProductCategory, "id", "ASC"],
+      ],
+      where: {
+        [Op.or]: [
+          {
+            name: {
+              [Op.iLike]: "%" + searchKeyParam + "%",
+            },
+          },
+          {
+            description: {
+              [Op.iLike]: "%" + searchKeyParam + "%",
+            },
+          },
+        ],
+      },
+    });
+
+    if (product.length > 0) {
+      return product.map((item) => {
+        return {
+          publicId: item.publicId,
+          name: item.name,
+          price: item.price,
+          imageUrl: item.ProductImages[0].imageUrl,
+          category: item.ProductCategories.map((item) => {
+            return {
+              categoryId: item.Category.id,
+              name: item.Category.name,
+            };
+          }),
+        };
+      });
+    } else {
+      return null;
+    }
+  }
 }
 
 module.exports = ProductService;
