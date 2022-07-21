@@ -20,7 +20,7 @@ class ProductController {
         });
       } else {
         throw {
-          status: 204,
+          status: 404,
           message: "Product not found",
         };
       }
