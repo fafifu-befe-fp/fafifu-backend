@@ -62,7 +62,7 @@ class ProductService {
         },
         {
           model: Offer,
-          attributes: ["publicId"],
+          attributes: ["statusOfferId"],
           where: {
             buyerId: authorizationParam,
           },
@@ -83,10 +83,14 @@ class ProductService {
       }
 
       if (Array.isArray(product.Offers)) {
-        if (product.Offers.length > 0 && product.Offers[0].publicId) {
+        if (
+          product.Offers.length > 0 &&
+          product.Offers[0].statusOfferId !== 2
+        ) {
           offerStatus = true;
         }
       }
+
       return {
         publicId: product.publicId,
         name: product.name,
