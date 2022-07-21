@@ -7,9 +7,57 @@ const {
   Category,
   ProductImage,
   UserBiodata,
+  User,
 } = require("../models");
 
 class OfferService {
+  static async getDetailOffer(publicIdParam) {
+    const offer = await Offer.findOne({
+      include: [
+        {
+          model: Product,
+          attributes: ["publicId", "name", "price"],
+          include: [
+            {
+              model: ProductImage,
+              attributes: ["imageUrl"],
+            },
+          ],
+        },
+        {
+          model: UserBiodata,
+          attributes: ["name", "city", "imageUrl"],
+        },
+      ],
+      where: {
+        publicId: publicIdParam,
+      },
+      order: [[Product, ProductImage, "id", "ASC"]],
+    });
+
+    const result = {
+      offer: {
+        publicId: offer.publicId,
+        price: offer.price,
+        status: offer.statusOfferId,
+        createdAt: offer.createdAt,
+      },
+      seller: {
+        name: offer.UserBiodatum.name,
+        city: offer.UserBiodatum.city,
+        imageUrl: offer.UserBiodatum.imageUrl,
+      },
+      product: {
+        publicId: offer.Product.publicId,
+        name: offer.Product.name,
+        price: offer.Product.price,
+        imageUrl: offer.Product.ProductImages[0].imageUrl,
+      },
+    };
+
+    return result;
+  }
+
   static async getOfferList(userIdParam) {
     return (
       await Offer.findAll({
