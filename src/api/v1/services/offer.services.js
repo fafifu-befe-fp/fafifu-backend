@@ -42,7 +42,7 @@ class OfferService {
         status: offer.statusOfferId,
         createdAt: offer.createdAt,
       },
-      seller: {
+      buyer: {
         name: offer.UserBiodatum.name,
         city: offer.UserBiodatum.city,
         imageUrl: offer.UserBiodatum.imageUrl,
