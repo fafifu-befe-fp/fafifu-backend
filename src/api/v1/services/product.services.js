@@ -65,6 +65,7 @@ class ProductService {
           attributes: ["publicId"],
           where: {
             buyerId: authorizationParam,
+            statusOfferId: 0,
           },
           required: false,
         }
@@ -87,6 +88,7 @@ class ProductService {
           offerStatus = true;
         }
       }
+
       return {
         publicId: product.publicId,
         name: product.name,
