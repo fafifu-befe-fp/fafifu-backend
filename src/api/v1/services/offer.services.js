@@ -26,7 +26,7 @@ class OfferService {
         },
         {
           model: UserBiodata,
-          attributes: ["name", "city", "imageUrl"],
+          attributes: ["name", "city", "imageUrl", "handphone"],
         },
       ],
       where: {
@@ -46,6 +46,7 @@ class OfferService {
         name: offer.UserBiodatum.name,
         city: offer.UserBiodatum.city,
         imageUrl: offer.UserBiodatum.imageUrl,
+        handphone: offer.UserBiodatum.handphone,
       },
       product: {
         publicId: offer.Product.publicId,
