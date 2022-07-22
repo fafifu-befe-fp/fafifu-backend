@@ -28,7 +28,7 @@ const upload = multer({
   },
 });
 
-router.get("/search", ProductController.search);
+router.get("/search", isLogin, ProductController.search);
 router.get("/", isLogin, ProductController.list);
 router.delete("/:id", authorization, ProductController.delete);
 router.get("/offer", authorization, OfferController.list);

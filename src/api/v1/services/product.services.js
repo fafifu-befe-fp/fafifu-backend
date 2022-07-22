@@ -324,8 +324,8 @@ class ProductService {
     });
   }
 
-  static async searchProduct(searchKeyParam) {
-    const product = await Product.findAll({
+  static async searchProduct(searchKeyParam, authorizationFilterParam) {
+    const option = {
       attributes: ["publicId", "name", "price"],
       include: [
         {
@@ -365,7 +365,16 @@ class ProductService {
           },
         ],
       },
-    });
+    };
+
+    if (authorizationFilterParam) {
+      option.where.userId = {
+        [Op.not]: authorizationFilterParam,
+      };
+      console.log("option.where", option.where);
+    }
+
+    const product = await Product.findAll(option);
 
     if (product.length > 0) {
       return product.map((item) => {
