@@ -302,7 +302,15 @@ class ProductController {
 
   static async search(req, res, next) {
     try {
-      const search = await ProductService.searchProduct(req.query.search);
+      let userId;
+      if (req.headers.authorization) {
+        userId = req.user.id;
+      }
+
+      const search = await ProductService.searchProduct(
+        req.query.search,
+        userId
+      );
 
       if (search) {
         res.status(200).json({
