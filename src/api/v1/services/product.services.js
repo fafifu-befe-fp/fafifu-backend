@@ -1,6 +1,5 @@
 "use strict";
 const {
-  sequelize,
   Product,
   ProductImage,
   ProductCategory,
@@ -161,7 +160,6 @@ class ProductService {
       order: [
         [ProductImage, "id", "ASC"],
         [ProductCategory, "id", "ASC"],
-        sequelize.random(),
       ],
     };
 
