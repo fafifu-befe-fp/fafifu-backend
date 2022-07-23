@@ -30,7 +30,8 @@ class NotificationController {
     try {
       const notification = await NotificationService.getNotification(
         req.user.id,
-        { [Op.or]: [true, false] }
+        { [Op.or]: [true, false] },
+        req.query.status
       );
 
       if (notification.length > 0) {
