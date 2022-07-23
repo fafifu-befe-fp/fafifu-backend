@@ -9,38 +9,46 @@ const {
 const { Op } = require("sequelize");
 
 class NotificationService {
-  static async getNotification(userIdParam, isReadParam) {
-    return (
-      await Notification.findAll({
-        attributes: ["publicId", "statusNotificationId", "isRead", "createdAt"],
-        include: [
-          {
-            model: Product,
-            attributes: ["publicId", "name", "price"],
-            include: {
-              model: ProductImage,
-              attributes: ["imageUrl"],
-            },
+  static async getNotification(
+    userIdParam,
+    isReadParam,
+    statusNotificationIdParam
+  ) {
+    const option = {
+      attributes: ["publicId", "statusNotificationId", "isRead", "createdAt"],
+      include: [
+        {
+          model: Product,
+          attributes: ["publicId", "name", "price"],
+          include: {
+            model: ProductImage,
+            attributes: ["imageUrl"],
           },
-          {
-            model: Offer,
-            attributes: ["publicId", "price"],
-          },
-          {
-            model: StatusNotificationDetail,
-            attributes: ["description"],
-          },
-        ],
-        order: [
-          ["createdAt", "DESC"],
-          [Product, ProductImage, "id", "ASC"],
-        ],
-        where: {
-          isRead: isReadParam,
-          userId: userIdParam,
         },
-      })
-    ).map((item) => {
+        {
+          model: Offer,
+          attributes: ["publicId", "price"],
+        },
+        {
+          model: StatusNotificationDetail,
+          attributes: ["description"],
+        },
+      ],
+      order: [
+        ["createdAt", "DESC"],
+        [Product, ProductImage, "id", "ASC"],
+      ],
+      where: {
+        isRead: isReadParam,
+        userId: userIdParam,
+      },
+    };
+
+    if (statusNotificationIdParam) {
+      option.where.statusNotificationId = statusNotificationIdParam;
+    }
+
+    return (await Notification.findAll(option)).map((item) => {
       if (item.statusNotificationId === 1) {
         return {
           publicId: item.publicId,
