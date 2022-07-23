@@ -35,7 +35,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "../public")));
 
 app.use((req, res, next) => {
-  req.sentry = sentry;
+  req.sentry = Sentry;
   next();
 });
 app.use("/api-docs", swaggerUi.serve);
