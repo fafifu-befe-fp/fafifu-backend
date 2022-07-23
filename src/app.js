@@ -3,6 +3,9 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const Sentry = require("@sentry/node");
+const Tracing = require("@sentry/tracing");
+const sentryConfig = require("./config/sentry.config");
 
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./api-docs/swagger.json");
@@ -20,13 +23,21 @@ const {
 } = require("./api/v1/routes");
 
 const app = express();
-
 app.use(logger("dev"));
+Sentry.init({
+  dsn: sentryConfig.SENTRY_DSN,
+  tracesSampleRate: sentryConfig.SENTRY_TRACES_SAMPLE_RATE,
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "../public")));
 
+app.use((req, res, next) => {
+  req.sentry = sentry;
+  next();
+});
 app.use("/api-docs", swaggerUi.serve);
 
 app.use(cors());

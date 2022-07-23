@@ -73,6 +73,9 @@ To run this project, you will need to add the following environment variables to
 `CLOUDINARY_API_KEY`
 `CLOUDINARY_API_SECRET`
 
+`SENTRY_DSN`
+`SENTRY_TRACES_SAMPLE_RATE`
+
 ## Documentation
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/13454122-81013ead-a659-40c7-83f9-87df92dc9ba0?action=collection%2Ffork&collection-url=entityId%3D13454122-81013ead-a659-40c7-83f9-87df92dc9ba0%26entityType%3Dcollection%26workspaceId%3Dfcb8e2d3-0d53-4651-8163-19095143be9a#?env%5BRelease%20Environment%5D=W3sia2V5IjoiVVJMX0FQSSIsInZhbHVlIjoiaHR0cHM6Ly9mYWZpZnUtYmFja2VuZC1hcGkuaGVyb2t1YXBwLmNvbSIsImVuYWJsZWQiOnRydWUsInR5cGUiOiJkZWZhdWx0Iiwic2Vzc2lvblZhbHVlIjoiaHR0cHM6Ly9mYWZpZnUtYmFja2VuZC1hcGkuaGVyb2t1YXBwLmNvbSIsInNlc3Npb25JbmRleCI6MH0seyJrZXkiOiJBQ0NFU1NfVE9LRU4iLCJ2YWx1ZSI6IiIsImVuYWJsZWQiOnRydWUsInR5cGUiOiJzZWNyZXQiLCJzZXNzaW9uVmFsdWUiOiJleUpoYkdjaU9pSklVekkxTmlJc0luUjVjQ0k2SWtwWFZDSjkuZXlKd2RXSnNhV05KWkNJNkltSTNOalJqWWpNeExUZGhaR1F0TkdOak15MWlZMll4TFdabE1ESXpNakpsT1dZMk1DSXNJbVZ0WVdsc0lqb2lZV1JwUUcxaGFXd3VZMjl0SWl3aS4uLiIsInNlc3Npb25JbmRleCI6MX1d)
