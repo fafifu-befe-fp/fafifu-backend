@@ -83,6 +83,7 @@ class OfferService {
             ],
             where: {
               userId: userIdParam,
+              isAvailable: true,
             },
           },
           {
