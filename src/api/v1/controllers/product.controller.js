@@ -50,6 +50,7 @@ class ProductController {
       if (data) {
         res.status(200).json({
           data,
+          count: data.length,
         });
       } else {
         throw {
