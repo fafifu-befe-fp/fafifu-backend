@@ -6,9 +6,6 @@
     "start": "nodemon ./bin/www"
   },
   "dependencies": {
-    "@faker-js/faker": "^6.1.2",
-    "@sentry/node": "^7.7.0",
-    "@sentry/tracing": "^7.7.0",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",
     "cloudinary": "^1.30.0",
@@ -21,10 +18,11 @@
     "jsonwebtoken": "^8.5.1",
     "morgan": "~1.9.1",
     "multer": "^1.4.5-lts.1",
-    "nodemon": "^2.0.16",
     "pg": "^8.7.3",
     "sequelize": "^6.20.1",
     "swagger-ui-express": "^4.4.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "@faker-js/faker": "^6.1.2",
+    "nodemon": "^2.0.16"
   }
 }
