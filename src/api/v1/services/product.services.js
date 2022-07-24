@@ -129,6 +129,7 @@ class ProductService {
     categoryIdParam,
     limitParam,
     pageParam,
+    sortingParam,
     authorizationFilterParam,
     userIdParam,
     isPublishedParam,
@@ -175,6 +176,25 @@ class ProductService {
     if (pageParam) {
       option.offset = Number(pageParam - 1);
     }
+
+    if (sortingParam) {
+      switch (sortingParam) {
+        case 1:
+          option.order[0] = ["id", "DESC"];
+          break;
+        case 2:
+          option.order[0] = ["id", "ASC"];
+          break;
+        case 3:
+          option.order[0] = ["price", "ASC"];
+          break;
+        default:
+          option.order[0] = ["price", "DESC"];
+          break;
+      }
+    }
+
+    console.log("option", option);
 
     if (authorizationFilterParam) {
       option.where = {
