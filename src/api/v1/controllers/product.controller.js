@@ -136,19 +136,32 @@ class ProductController {
 
       let productImageList = [];
 
-      for (let index = 0; index < req.files.length; index++) {
-        const image = await cloudinary.uploader.upload(req.files[index].path);
-        productImageList.push({
-          productId: product.id,
-          imageUrl: image.secure_url,
-        });
-        fs.unlinkSync(req.files[index].path);
-      }
+      if (req.files) {
+        for (let index = 0; index < req.files.length; index++) {
+          const image = await cloudinary.uploader.upload(req.files[index].path);
+          productImageList.push({
+            productId: product.id,
+            imageUrl: image.secure_url,
+          });
+          fs.unlinkSync(req.files[index].path);
+        }
 
-      await ProductService.addProductImage(
-        productImageList,
-        addProductTransaction
-      );
+        await ProductService.addProductImage(
+          productImageList,
+          addProductTransaction
+        );
+      } else {
+        await ProductService.addProductImage(
+          [
+            {
+              productId: product.id,
+              imageUrl:
+                "https://res.cloudinary.com/adikurniawan/image/upload/v1658674915/WhatsApp_Image_2022-07-24_at_21.59.45_dqjdho.jpg",
+            },
+          ],
+          addProductTransaction
+        );
+      }
 
       let productCategoryList;
 
