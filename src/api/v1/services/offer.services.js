@@ -91,6 +91,9 @@ class OfferService {
             attributes: ["name"],
           },
         ],
+        where: {
+          statusOfferId: 0,
+        },
         order: [
           [Product, ProductImage, "id", "ASC"],
           [Product, ProductCategory, "id", "ASC"],
