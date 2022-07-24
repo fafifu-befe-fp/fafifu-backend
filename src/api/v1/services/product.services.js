@@ -158,6 +158,7 @@ class ProductService {
       ],
       where: {},
       order: [
+        ["id", "DESC"],
         [ProductImage, "id", "ASC"],
         [ProductCategory, "id", "ASC"],
       ],
