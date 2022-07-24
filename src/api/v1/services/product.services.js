@@ -194,8 +194,6 @@ class ProductService {
       }
     }
 
-    console.log("option", option);
-
     if (authorizationFilterParam) {
       option.where = {
         userId: {
@@ -392,7 +390,6 @@ class ProductService {
       option.where.userId = {
         [Op.not]: authorizationFilterParam,
       };
-      console.log("option.where", option.where);
     }
 
     const product = await Product.findAll(option);
