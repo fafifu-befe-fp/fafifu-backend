@@ -74,7 +74,7 @@ class ProductController {
         false,
         req.params.id,
         null,
-        null
+        true
       );
 
       if (data) {
