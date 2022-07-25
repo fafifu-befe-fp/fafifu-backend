@@ -180,13 +180,13 @@ class ProductService {
       option.include[0].where.categoryId = Number(categoryIdParam);
     }
 
-    if (limitParam) {
+    if (limitParam && pageParam) {
       option.limit = Number(limitParam);
+      option.offset = Number(pageParam * limitParam - 1);
     }
 
-    if (pageParam) {
-      option.offset = Number(pageParam - 1);
-    }
+    // if (pageParam) {
+    // }
 
     if (sortingParam) {
       switch (sortingParam) {
