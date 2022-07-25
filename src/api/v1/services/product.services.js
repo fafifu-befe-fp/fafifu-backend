@@ -111,7 +111,7 @@ class ProductService {
           };
         }),
         imageUrl: product.ProductImages.map(function (item) {
-          return item.imageUrl;
+          return typeof item.imageUrl != "undefined" ? item.imageUrl : null;
         }),
         seller: {
           publicId: product.User.publicId,
@@ -414,7 +414,10 @@ class ProductService {
           publicId: item.publicId,
           name: item.name,
           price: item.price,
-          imageUrl: item.ProductImages[0].imageUrl,
+          imageUrl:
+            typeof item.ProductImages[0].imageUrl != "undefined"
+              ? item.ProductImages[0].imageUrl
+              : null,
           category: item.ProductCategories.map((item) => {
             return {
               categoryId: item.Category.id,
