@@ -74,7 +74,7 @@ class ProductController {
         false,
         req.params.id,
         null,
-        null
+        true
       );
 
       if (data) {
@@ -124,7 +124,6 @@ class ProductController {
     const addProductTransaction = await sequelize.transaction();
 
     try {
-      console.log("req.body", req.body);
       const product = await ProductService.createProduct(
         req.body.name,
         req.body.description,
