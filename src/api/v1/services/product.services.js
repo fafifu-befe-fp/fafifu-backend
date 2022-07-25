@@ -415,7 +415,7 @@ class ProductService {
           name: item.name,
           price: item.price,
           imageUrl:
-            typeof item.ProductImages[0].imageUrl != "undefined"
+            typeof item.ProductImages[0] != "undefined"
               ? item.ProductImages[0].imageUrl
               : null,
           category: item.ProductCategories.map((item) => {
