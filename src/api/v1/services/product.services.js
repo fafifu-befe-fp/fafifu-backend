@@ -182,7 +182,7 @@ class ProductService {
 
     if (limitParam && pageParam) {
       option.limit = Number(limitParam);
-      option.offset = Number(pageParam * limitParam - 1);
+      option.offset = Number(pageParam * limitParam - limitParam);
     }
 
     // if (pageParam) {
