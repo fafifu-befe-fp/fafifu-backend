@@ -329,6 +329,27 @@ class ProductController {
       next(error);
     }
   }
+
+  static async publishProduct(req, res, next) {
+    try {
+      const product = await ProductService.isProductExists(req.params.id);
+
+      if (product) {
+        await ProductService.setPublishProduct(req.params.id);
+
+        res.status(200).json({
+          message: "Success set published",
+        });
+      } else {
+        throw {
+          status: 404,
+          message: "Product not found",
+        };
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = ProductController;

@@ -430,6 +430,19 @@ class ProductService {
       return null;
     }
   }
+
+  static async setPublishProduct(publicIdParam) {
+    return await Product.update(
+      {
+        isPublished: true,
+      },
+      {
+        where: {
+          publicId: publicIdParam,
+        },
+      }
+    );
+  }
 }
 
 module.exports = ProductService;
