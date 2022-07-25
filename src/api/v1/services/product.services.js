@@ -236,7 +236,10 @@ class ProductService {
           publicId: item.publicId,
           name: item.name,
           price: item.price,
-          imageUrl: item.ProductImages[0].imageUrl,
+          imageUrl:
+            typeof item.ProductImages[0] != "undefined"
+              ? item.ProductImages[0].imageUrl
+              : null,
           category: item.ProductCategories.map((item) => {
             return {
               categoryId: item.Category.id,
