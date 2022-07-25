@@ -179,13 +179,13 @@ class ProductService {
 
     if (sortingParam) {
       switch (sortingParam) {
-        case 1:
+        case '1':
           option.order[0] = ["id", "DESC"];
           break;
-        case 2:
+        case '2':
           option.order[0] = ["id", "ASC"];
           break;
-        case 3:
+        case '3':
           option.order[0] = ["price", "ASC"];
           break;
         default:
