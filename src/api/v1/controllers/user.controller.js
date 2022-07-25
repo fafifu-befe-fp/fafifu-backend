@@ -77,6 +77,32 @@ class UserController {
       next(error);
     }
   }
+
+  static async updateUser(req, res, next) {
+    try {
+      if (req.user) {
+        await UserService.updateUserBiodata(
+          req.body.name,
+          req.body.city,
+          req.body.address,
+          req.body.handphone,
+          req.body.image,
+          req.user.id
+        );
+
+        res.status(200).json({
+          message: "Success update data user",
+        });
+      } else {
+        throw {
+          status: 404,
+          message: "User not found",
+        };
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = UserController;
