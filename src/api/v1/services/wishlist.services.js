@@ -49,7 +49,10 @@ class WishlistService {
           publicId: item.Product.publicId,
           name: item.Product.name,
           price: item.Product.price,
-          imageUrl: item.Product.ProductImages[0].imageUrl,
+          imageUrl:
+            typeof item.Product.ProductImages[0] != "undefined"
+              ? item.Product.ProductImages[0].imageUrl
+              : null,
           category: item.Product.ProductCategories.map((item) => {
             return {
               categoryId: item.Category.id,

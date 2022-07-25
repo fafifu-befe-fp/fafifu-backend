@@ -45,14 +45,20 @@ class OfferService {
       buyer: {
         name: offer.UserBiodatum.name,
         city: offer.UserBiodatum.city,
-        imageUrl: offer.UserBiodatum.imageUrl,
+        imageUrl:
+          typeof offer.UserBiodatum.imageUrl != "undefined"
+            ? offer.UserBiodatum.imageUrl
+            : null,
         handphone: offer.UserBiodatum.handphone,
       },
       product: {
         publicId: offer.Product.publicId,
         name: offer.Product.name,
         price: offer.Product.price,
-        imageUrl: offer.Product.ProductImages[0].imageUrl,
+        imageUrl:
+          typeof offer.Product.ProductImages[0].imageUrl != "undefined"
+            ? offer.Product.ProductImages[0].imageUrl
+            : null,
       },
     };
 
@@ -113,7 +119,10 @@ class OfferService {
             name: item.Category.name,
           };
         }),
-        imageUrl: item.Product.ProductImages[0].imageUrl,
+        imageUrl:
+          typeof item.Product.ProductImages[0].imageUrl != "undefined"
+            ? item.Product.ProductImages[0].imageUrl
+            : null,
         buyerName: item.UserBiodatum.name,
       };
     });
@@ -172,7 +181,10 @@ class OfferService {
             name: item.Category.name,
           };
         }),
-        imageUrl: item.Product.ProductImages[0].imageUrl,
+        imageUrl:
+          typeof item.Product.ProductImages[0].imageUrl != "undefined"
+            ? item.Product.ProductImages[0].imageUrl
+            : null,
         buyerName: item.UserBiodatum.name,
       };
     });
