@@ -51,11 +51,8 @@ class UserController {
 
   static async update(req, res, next) {
     try {
-      let image;
-      if (req.file) {
-        image = await cloudinary.uploader.upload(req.file.path);
-        fs.unlinkSync(req.file.path);
-      }
+      const image = await cloudinary.uploader.upload(req.file.path);
+      fs.unlinkSync(req.file.path);
 
       if (req.user) {
         await UserService.updateUserBiodata(
