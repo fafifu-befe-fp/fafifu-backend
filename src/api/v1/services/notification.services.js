@@ -58,7 +58,7 @@ class NotificationService {
             name: item.Product.name,
             price: item.Product.price,
             imageUrl:
-              typeof item.Product.ProductImages[0].imageUrl != "undefined"
+              typeof item.Product.ProductImages[0] != "undefined"
                 ? item.Product.ProductImages[0].imageUrl
                 : null,
           },
@@ -79,7 +79,7 @@ class NotificationService {
             name: item.Product.name,
             price: item.Product.price,
             imageUrl:
-              typeof item.Product.ProductImages[0].imageUrl != "undefined"
+              typeof item.Product.ProductImages[0] != "undefined"
                 ? item.Product.ProductImages[0].imageUrl
                 : null,
           },
@@ -100,7 +100,7 @@ class NotificationService {
             name: item.Product.name,
             price: item.Product.price,
             imageUrl:
-              typeof item.Product.ProductImages[0].imageUrl != "undefined"
+              typeof item.Product.ProductImages[0] != "undefined"
                 ? item.Product.ProductImages[0].imageUrl
                 : null,
           },
@@ -117,7 +117,7 @@ class NotificationService {
             name: item.Product.name,
             price: item.Product.price,
             imageUrl:
-              typeof item.Product.ProductImages[0].imageUrl != "undefined"
+              typeof item.Product.ProductImages[0] != "undefined"
                 ? item.Product.ProductImages[0].imageUrl
                 : null,
           },
