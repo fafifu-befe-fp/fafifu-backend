@@ -119,7 +119,10 @@ class ProductService {
           city: product.User.UserBiodatum.city,
           address: product.User.UserBiodatum.address,
           handphone: product.User.UserBiodatum.handphone,
-          imageUrl: product.User.UserBiodatum.imageUrl,
+          imageUrl:
+            typeof product.User.UserBiodatum.imageUrl != "undefined"
+              ? product.User.UserBiodatum.imageUrl
+              : null,
         },
         status: {
           wishlist: wishlistStatus,

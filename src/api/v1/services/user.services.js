@@ -30,7 +30,10 @@ class UserService {
       city: user.UserBiodatum.city,
       address: user.UserBiodatum.address,
       handphone: user.UserBiodatum.handphone,
-      imageUrl: user.UserBiodatum.imageUrl,
+      imageUrl:
+        typeof user.UserBiodatum.imageUrl != "undefined"
+          ? user.UserBiodatum.imageUrl
+          : null,
     };
   }
 

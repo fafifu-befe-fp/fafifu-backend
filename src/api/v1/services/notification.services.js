@@ -57,7 +57,10 @@ class NotificationService {
             publicId: item.Product.publicId,
             name: item.Product.name,
             price: item.Product.price,
-            image: item.Product.ProductImages[0].imageUrl,
+            imageUrl:
+              typeof item.Product.ProductImages[0].imageUrl != "undefined"
+                ? item.Product.ProductImages[0].imageUrl
+                : null,
           },
           offer: {
             publicId: item.Offer.publicId,
@@ -75,7 +78,10 @@ class NotificationService {
             publicId: item.Product.publicId,
             name: item.Product.name,
             price: item.Product.price,
-            image: item.Product.ProductImages[0].imageUrl,
+            imageUrl:
+              typeof item.Product.ProductImages[0].imageUrl != "undefined"
+                ? item.Product.ProductImages[0].imageUrl
+                : null,
           },
           offer: {
             publicId: item.Offer.publicId,
@@ -93,7 +99,10 @@ class NotificationService {
             publicId: item.Product.publicId,
             name: item.Product.name,
             price: item.Product.price,
-            image: item.Product.ProductImages[0].imageUrl,
+            imageUrl:
+              typeof item.Product.ProductImages[0].imageUrl != "undefined"
+                ? item.Product.ProductImages[0].imageUrl
+                : null,
           },
           createdAt: item.createdAt,
           isRead: item.isRead,
@@ -107,7 +116,10 @@ class NotificationService {
             publicId: item.Product.publicId,
             name: item.Product.name,
             price: item.Product.price,
-            image: item.Product.ProductImages[0].imageUrl,
+            imageUrl:
+              typeof item.Product.ProductImages[0].imageUrl != "undefined"
+                ? item.Product.ProductImages[0].imageUrl
+                : null,
           },
           offer: {
             publicId: item.Offer.publicId,
