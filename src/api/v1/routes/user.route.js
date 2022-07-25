@@ -33,4 +33,12 @@ router.put(
   UserController.update
 );
 
+router.put(
+  "/update",
+  authorization,
+  updateUserValidationRules(),
+  validation,
+  UserController.updateUser
+);
+
 module.exports = router;
