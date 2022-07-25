@@ -15,7 +15,14 @@ const { generateUUID } = require("../helpers");
 class ProductService {
   static async getProductDetail(publicIdParam, authorizationParam) {
     let option = {
-      attributes: ["publicId", "name", "description", "price", "isAvailable"],
+      attributes: [
+        "publicId",
+        "name",
+        "description",
+        "price",
+        "isAvailable",
+        "isPublished",
+      ],
       include: [
         {
           model: ProductCategory,
@@ -118,6 +125,7 @@ class ProductService {
           wishlist: wishlistStatus,
           offer: offerStatus,
           sold: !product.isAvailable,
+          published: product.isPublished,
         },
       };
     } else {
