@@ -182,7 +182,7 @@ class OfferService {
           };
         }),
         imageUrl:
-          typeof item.Product.ProductImages[0].imageUrl != "undefined"
+          typeof item.Product.ProductImages[0] != "undefined"
             ? item.Product.ProductImages[0].imageUrl
             : null,
         buyerName: item.UserBiodatum.name,
