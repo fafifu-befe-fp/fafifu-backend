@@ -56,7 +56,7 @@ class OfferService {
         name: offer.Product.name,
         price: offer.Product.price,
         imageUrl:
-          typeof offer.Product.ProductImages[0].imageUrl != "undefined"
+          typeof offer.Product.ProductImages[0] != "undefined"
             ? offer.Product.ProductImages[0].imageUrl
             : null,
       },
